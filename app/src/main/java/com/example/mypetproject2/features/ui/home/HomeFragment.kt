@@ -41,6 +41,7 @@ class HomeFragment : Fragment() {
 
     private fun launchGameFragment() {
         findNavController().navigate(R.id.action_navigation_home_to_navigation_dashboard)
+        
     }
 
     override fun onDestroyView() {
