@@ -19,21 +19,34 @@
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.example.mypetproject2.features.ui.dashboard.GamesFragment"
+        android:name="com.example.mypetproject2.features.ui.games.GamesFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_games" >
         <action
-            android:id="@+id/action_navigation_dashboard_to_navigation_home"
-            app:destination="@id/navigation_home" />
+            android:id="@+id/action_navigation_dashboard_to_gameFinishedFragment"
+            app:destination="@id/gameFinishedFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/navigation_notifications"
-        android:name="com.example.mypetproject2.features.ui.notifications.ProfileFragment"
+        android:name="com.example.mypetproject2.features.ui.profile.ProfileFragment"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_profile" >
-        <action
-            android:id="@+id/action_navigation_notifications_to_navigation_home"
-            app:destination="@id/navigation_home" />
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/gameFinishedFragment"
+        android:name="com.example.mypetproject2.features.GameFinishedFragment"
+        android:label="fragment_game_finished"
+        tools:layout="@layout/fragment_game_finished" >
+        <argument
+            android:name="score"
+            app:argType="integer" />
+        <argument
+            android:name="percentage"
+            app:argType="float" />
+
+        <!--        <argument-->
+<!--            android:name="incorrectAnswers"-->
+<!--            app:argType="integer"/>-->
+
     </fragment>
 </navigation>

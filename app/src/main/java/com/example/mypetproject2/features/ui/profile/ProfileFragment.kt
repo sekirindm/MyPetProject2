@@ -1,4 +1,4 @@
-package com.example.mypetproject2.features.ui.notifications
+package com.example.mypetproject2.features.ui.profile
 
 import android.os.Bundle
 import android.view.LayoutInflater

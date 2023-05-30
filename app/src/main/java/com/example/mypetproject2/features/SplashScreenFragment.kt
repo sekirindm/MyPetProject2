@@ -2,6 +2,7 @@ package com.example.mypetproject2.features
 
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,10 +41,9 @@ class SplashScreenFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Handler().postDelayed({
+        Handler(Looper.getMainLooper()).postDelayed({
             requireActivity().supportFragmentManager.beginTransaction().remove(this).commit() // Закрываем заставку
-        }, SPLASH_SCREEN_DELAY)
-    }
+        }, SPLASH_SCREEN_DELAY) }
 
     companion object {
          val SPLASH_SCREEN_DELAY: Long = 2000

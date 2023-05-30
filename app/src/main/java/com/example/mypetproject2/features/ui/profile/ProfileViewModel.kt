@@ -1,4 +1,4 @@
-package com.example.mypetproject2.features.ui.notifications
+package com.example.mypetproject2.features.ui.profile
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

@@ -1,4 +1,4 @@
-package com.example.mypetproject2.features.ui.dashboard
+package com.example.mypetproject2.features.ui.games
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
