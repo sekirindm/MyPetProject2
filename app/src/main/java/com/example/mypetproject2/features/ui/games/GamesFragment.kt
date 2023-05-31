@@ -67,8 +67,8 @@ class GamesFragment : Fragment() {
         val word = stress[wordIndex]
         spannableStringBuilder = SpannableStringBuilder(word.lowercase(Locale.getDefault()))
 
-        for (i in word.indices) {
-            val character = word[i]
+        for (characterIndex in word.indices) {
+            val character = word[characterIndex]
             if (isVowel(character)) {
                 val clickableSpan = object : ClickableSpan() {
                     override fun onClick(view: View) {
@@ -90,15 +90,15 @@ class GamesFragment : Fragment() {
 
                         spannableStringBuilder.setSpan(
                             ForegroundColorSpan(Color.BLACK),
-                            i,
-                            i + 1,
+                            characterIndex,
+                            characterIndex + 1,
                             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                         )
                         val uppercaseChar = character.uppercaseChar()
 
-                        spannableStringBuilder.replace(i, i + 1, uppercaseChar.toString())
+                        spannableStringBuilder.replace(characterIndex, characterIndex + 1, uppercaseChar.toString())
 
-                        selectedVowelIndex = i
+                        selectedVowelIndex = characterIndex
                         selectedVowelChar = character
 
                         tvWord.text = spannableStringBuilder
@@ -106,7 +106,7 @@ class GamesFragment : Fragment() {
                         binding.bNextWord.isEnabled = true // Включение кнопки "Дальше" после выбора гласной буквы
                     }
                 }
-                spannableStringBuilder.setSpan(clickableSpan, i, i + 1,
+                spannableStringBuilder.setSpan(clickableSpan, characterIndex, characterIndex + 1,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
             }
         }
@@ -128,7 +128,7 @@ class GamesFragment : Fragment() {
         }
     }
 
-    private fun checkWordTest() {
+     fun checkWordTest() {
         if (selectedVowelIndex != -1) {
             val word = stress[wordIndex]
             val correctIndex = stress[wordIndex].indexOfFirst { it.isUpperCase() }
@@ -174,7 +174,7 @@ class GamesFragment : Fragment() {
 
             updateScore(correctIndex == selectedVowelIndex)
             totalAttempts++
-            if (totalAttempts >= 15) {
+            if (totalAttempts >= MAX_ATTEMPTS) {
                 showGameResults()
             }
         }
@@ -197,6 +197,10 @@ class GamesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+    }
+
+    companion object {
+        private const val MAX_ATTEMPTS = 15
     }
 
     override fun onDestroyView() {
