@@ -34,7 +34,7 @@
         tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/gameFinishedFragment"
-        android:name="com.example.mypetproject2.features.GameFinishedFragment"
+        android:name="com.example.mypetproject2.features.ui.games.GameFinishedFragment"
         android:label="fragment_game_finished"
         tools:layout="@layout/fragment_game_finished" >
         <argument
@@ -43,10 +43,9 @@
         <argument
             android:name="percentage"
             app:argType="float" />
-
-        <!--        <argument-->
-<!--            android:name="incorrectAnswers"-->
-<!--            app:argType="integer"/>-->
+        <argument
+            android:name="answers"
+            app:argType="boolean[]" />
 
     </fragment>
 </navigation>
