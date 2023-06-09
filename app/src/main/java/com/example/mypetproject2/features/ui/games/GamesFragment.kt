@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.mypetproject2.data.stress
 import com.example.mypetproject2.databinding.FragmentGamesBinding
+import com.example.mypetproject2.features.getPair
 import com.example.mypetproject2.features.isVowel
 import java.util.*
 
@@ -105,7 +106,7 @@ class GamesFragment : Fragment() {
     //handleVowelClick(characterIndex, character): Обрабатывает клик на гласную букву.
     // Устанавливает выбранный индекс и символ гласной буквы в ViewModel и обновляет форматирование выбранной гласной буквы
     // с помощью метода updateSelectedVowelFormatting().
-    private fun handleVowelClick(characterIndex: Int, character: Char) {
+     fun handleVowelClick(characterIndex: Int, character: Char) {
         viewModel.setSelectedVowelIndex(characterIndex)
         viewModel.setSelectedVowelChar(character)
         updateSelectedVowelFormatting()
@@ -176,6 +177,7 @@ class GamesFragment : Fragment() {
             viewModel.updateScore(isCorrect)
             viewModel.incrementTotalAttempts()
             viewModel.addUserAnswer(isCorrect)
+            viewModel.setUserAnswers(word)
 
             val resultSpannableStringBuilder = createResultSpannableStringBuilder(word, correctIndex)
 
@@ -205,7 +207,7 @@ class GamesFragment : Fragment() {
             }
         }
 
-        val selectedCharIndex = viewModel.selectedVowelIndex.value?.let {
+         val selectedCharIndex = viewModel.selectedVowelIndex.value?.let {
             viewModel.selectedVowelChar.value?.let { it1 ->
                 word.indexOf(
                     it1
@@ -253,11 +255,15 @@ class GamesFragment : Fragment() {
 
         val userAnswers = getUserAnswers()
 
+        val userAnswersHistory = viewModel.userAnswersHistory.value ?: emptyList()
+        val wordPairs = getPair(userAnswersHistory)
+
         val action =
             GamesFragmentDirections.actionNavigationDashboardToGameFinishedFragment(
                 viewModel.score.value ?: 0,
                 percentage,
-                userAnswers
+                userAnswers,
+                userAnswersHistory.toTypedArray()
             )
         findNavController().navigate(action)
     }

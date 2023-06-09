@@ -11,12 +11,15 @@ import com.example.mypetproject2.R
  class ContainerAdapter(
     private val score: Int,
     private val percentage: Float,
-    private val answers: List<Boolean>
+    private val answers: List<Boolean>,
+    private val answersHistory: List<Pair<String, String>>
+
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val VIEW_TYPE_SCORE = 0
     private val VIEW_TYPE_PERCENTAGE = 2
     private val VIEW_TYPE_ANSWER_HISTORY = 1
+     private val VIEW_TYPE_WORD_ANSWER_HISTORY = 3
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -32,6 +35,10 @@ import com.example.mypetproject2.R
             VIEW_TYPE_ANSWER_HISTORY -> {
                 val view = inflater.inflate(R.layout.item_answer_history_rv, parent, false)
                 AnswerHistoryViewHolder(view)
+            }
+            VIEW_TYPE_WORD_ANSWER_HISTORY -> {
+                val view = inflater.inflate(R.layout.item_full_answer_history_rv, parent, false)
+                WordAnswerHistoryViewHolder(view)
             }
             else -> throw IllegalArgumentException("Invalid view type")
         }
@@ -51,11 +58,15 @@ import com.example.mypetproject2.R
                 val answerHistoryViewHolder = holder as AnswerHistoryViewHolder
                 answerHistoryViewHolder.bind(answers)
             }
+            VIEW_TYPE_WORD_ANSWER_HISTORY -> {
+                val wordAnswerHistoryViewHolder = holder as WordAnswerHistoryViewHolder
+                wordAnswerHistoryViewHolder.bind(answersHistory)
+            }
         }
     }
 
     override fun getItemCount(): Int {
-        return 3
+        return 4
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -63,6 +74,7 @@ import com.example.mypetproject2.R
             0 -> VIEW_TYPE_SCORE
             1 -> VIEW_TYPE_ANSWER_HISTORY
             2 -> VIEW_TYPE_PERCENTAGE
+            3 -> VIEW_TYPE_WORD_ANSWER_HISTORY
             else -> throw IllegalArgumentException("Invalid position")
         }
     }
@@ -94,4 +106,15 @@ import com.example.mypetproject2.R
             rvHistoryAnswer.layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
         }
     }
+
+     inner class WordAnswerHistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+         private val rvWordHistoryAnswer: RecyclerView = itemView.findViewById(R.id.full_answer_history_rv)
+
+         fun bind(answersHistory: List<Pair<String, String>>) {
+             val wordAnswerHistoryAdapter = WordAnswerHistoryAdapter(answersHistory)
+             rvWordHistoryAnswer.adapter = wordAnswerHistoryAdapter
+             rvWordHistoryAnswer.layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
+         }
+     }
 }

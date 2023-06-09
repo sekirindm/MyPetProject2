@@ -19,8 +19,13 @@ class GamesViewModel : ViewModel() {
     private val _vowelIndices = MutableLiveData<List<Int>>()
     val vowelIndices: LiveData<List<Int>> get() = _vowelIndices
 
+    private val _userAnswersHistory = MutableLiveData<MutableList<String>>()
+    val userAnswersHistory: LiveData<MutableList<String>> = _userAnswersHistory
+
+
     private val _score = MutableLiveData<Int>()
     val score: LiveData<Int> get() = _score
+
     private val _userAnswers: MutableLiveData<MutableList<Boolean>> = MutableLiveData()
     val userAnswers: LiveData<MutableList<Boolean>> get() = _userAnswers
 
@@ -42,6 +47,13 @@ class GamesViewModel : ViewModel() {
 
     fun setSelectedVowelIndex(index: Int) {
         _selectedVowelIndex.value = index
+    }
+
+    fun setUserAnswers(answersHistory: String) {
+        val updatedList = _userAnswersHistory.value ?: mutableListOf()
+        updatedList.add(answersHistory)
+        _userAnswersHistory.value = updatedList
+
     }
 
     fun setSelectedVowelChar(char: Char?) {

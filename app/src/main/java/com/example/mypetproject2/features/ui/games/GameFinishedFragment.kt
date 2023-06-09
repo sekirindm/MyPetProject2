@@ -22,6 +22,8 @@ class GameFinishedFragment : Fragment() {
     private var score: Int = 0
     private var answers: List<Boolean> = emptyList()
     private var percentage: Float = 0f
+    private var answersHistory: List<Pair<String, String>> = emptyList()
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,11 +36,16 @@ class GameFinishedFragment : Fragment() {
         score = arguments?.getInt("score") ?: 0
         percentage = arguments?.getFloat("percentage") ?: 0f
         answers = arguments?.getBooleanArray("answers")?.toList() ?: emptyList()
+        answersHistory = arguments?.getStringArrayList("answersHistory")?.map {
+            val pair = it.split(":")
+            Pair(pair[0], pair[1])
+        } ?: emptyList()
 
         val layoutManager = LinearLayoutManager(requireContext())
 
         binding.rvContainer.layoutManager = layoutManager
-        binding.rvContainer.adapter = ContainerAdapter(score, percentage, answers)
+        binding.rvContainer.adapter = ContainerAdapter(score, percentage, answers, answersHistory)
+
 
         return rootView
     }
