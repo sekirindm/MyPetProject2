@@ -1,6 +1,6 @@
 package com.example.mypetproject2.data
 
-val stress = listOf<String>(
+val stress = listOf(
     "нАнял",
     "солгалА",
     "сытА",

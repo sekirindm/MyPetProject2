@@ -47,7 +47,7 @@
             android:name="answers"
             app:argType="boolean[]" />
         <argument
-            android:name="answerHistory"
+            android:name="uswerAnswerHistory"
             app:argType="string[]" />
 
     </fragment>

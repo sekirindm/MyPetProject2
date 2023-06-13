@@ -1,5 +1,6 @@
 package com.example.mypetproject2.features.ui.games.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,6 +31,7 @@ class WordAnswerHistoryAdapter(private val wordPairs: List<Pair<String, String>>
                 itemView.findViewById<TextView>(R.id.tv_right_answer).text = wordPair.first
                 itemView.findViewById<TextView>(R.id.tv_answer_user).text = wordPair.second
             }
+
         }
     }
 

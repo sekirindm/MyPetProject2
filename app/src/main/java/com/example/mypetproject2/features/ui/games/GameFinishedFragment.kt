@@ -1,6 +1,7 @@
 package com.example.mypetproject2.features.ui.games
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,6 +41,7 @@ class GameFinishedFragment : Fragment() {
             val pair = it.split(":")
             Pair(pair[0], pair[1])
         } ?: emptyList()
+        Log.d("onCreateView", "answersHistory $answersHistory")
 
         val layoutManager = LinearLayoutManager(requireContext())
 

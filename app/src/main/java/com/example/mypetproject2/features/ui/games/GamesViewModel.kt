@@ -1,5 +1,6 @@
 package com.example.mypetproject2.features.ui.games
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,43 +8,23 @@ import com.example.mypetproject2.features.ui.games.GamesFragment.Companion.MAX_A
 
 class GamesViewModel : ViewModel() {
 
-    private val _shouldShowGameResults = MutableLiveData<Boolean>()
-    val shouldShowGameResults: LiveData<Boolean> get() = _shouldShowGameResults
-
-    private val _selectedVowelIndex = MutableLiveData<Int>()
+    private val _selectedVowelIndex = MutableLiveData<Int>(-1)
     val selectedVowelIndex: LiveData<Int> get() = _selectedVowelIndex
 
-    private val _selectedVowelChar = MutableLiveData<Char?>()
+    private val _selectedVowelChar = MutableLiveData<Char?>(null)
     val selectedVowelChar: LiveData<Char?> get() = _selectedVowelChar
 
-    private val _vowelIndices = MutableLiveData<List<Int>>()
-    val vowelIndices: LiveData<List<Int>> get() = _vowelIndices
-
-    private val _userAnswersHistory = MutableLiveData<MutableList<String>>()
+    private val _userAnswersHistory = MutableLiveData<MutableList<String>>(mutableListOf())
     val userAnswersHistory: LiveData<MutableList<String>> = _userAnswersHistory
 
-
-    private val _score = MutableLiveData<Int>()
+    private val _score = MutableLiveData<Int>(0)
     val score: LiveData<Int> get() = _score
 
-    private val _userAnswers: MutableLiveData<MutableList<Boolean>> = MutableLiveData()
+    private val _userAnswers = MutableLiveData<MutableList<Boolean>>(mutableListOf())
     val userAnswers: LiveData<MutableList<Boolean>> get() = _userAnswers
 
     private val _totalAttempts = MutableLiveData<Int>(0)
     val totalAttempts: LiveData<Int> get() = _totalAttempts
-
-    var previousVowelIndex: Int = -1
-
-
-    init {
-        _selectedVowelIndex.value = -1
-        _vowelIndices.value = mutableListOf()
-        _selectedVowelChar.value = null
-        _score.value = 0
-        _totalAttempts.value = 0
-        _userAnswers.value = mutableListOf()
-
-    }
 
     fun setSelectedVowelIndex(index: Int) {
         _selectedVowelIndex.value = index
@@ -53,7 +34,6 @@ class GamesViewModel : ViewModel() {
         val updatedList = _userAnswersHistory.value ?: mutableListOf()
         updatedList.add(answersHistory)
         _userAnswersHistory.value = updatedList
-
     }
 
     fun setSelectedVowelChar(char: Char?) {
@@ -74,10 +54,6 @@ class GamesViewModel : ViewModel() {
 
     fun incrementTotalAttempts() {
         val currentAttempts = _totalAttempts.value ?: 0
-        if (currentAttempts >= MAX_ATTEMPTS) {
-            _shouldShowGameResults.value = true
-        } else {
-            _totalAttempts.value = currentAttempts + 1
-        }
+        _totalAttempts.value = currentAttempts + 1
     }
 }
