@@ -7,19 +7,22 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mypetproject2.R
+import com.example.mypetproject2.features.ui.games.GamesViewModel
 
- class ContainerAdapter(
+class ContainerAdapter(
+    private val viewModel: GamesViewModel,
     private val score: Int,
     private val percentage: Float,
     private val answers: List<Boolean>,
     private val answersHistory: List<Pair<String, String>>
 
-) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val VIEW_TYPE_SCORE = 0
     private val VIEW_TYPE_PERCENTAGE = 2
     private val VIEW_TYPE_ANSWER_HISTORY = 1
-     private val VIEW_TYPE_WORD_ANSWER_HISTORY = 3
+    private val VIEW_TYPE_WORD_ANSWER_HISTORY = 3
+    private val VIEW_TYPE_REPORT = 4
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -39,6 +42,10 @@ import com.example.mypetproject2.R
             VIEW_TYPE_WORD_ANSWER_HISTORY -> {
                 val view = inflater.inflate(R.layout.item_full_answer_history_rv, parent, false)
                 WordAnswerHistoryViewHolder(view)
+            }
+            VIEW_TYPE_REPORT -> {
+                val view = inflater.inflate(R.layout.item_report, parent, false)
+                ReportViewHolder(view)
             }
             else -> throw IllegalArgumentException("Invalid view type")
         }
@@ -62,11 +69,15 @@ import com.example.mypetproject2.R
                 val wordAnswerHistoryViewHolder = holder as WordAnswerHistoryViewHolder
                 wordAnswerHistoryViewHolder.bind(answersHistory)
             }
+            VIEW_TYPE_REPORT -> {
+                val reportViewHolder = holder as ReportViewHolder
+                reportViewHolder.bind()
+            }
         }
     }
 
     override fun getItemCount(): Int {
-        return 4
+        return 5
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -74,7 +85,8 @@ import com.example.mypetproject2.R
             0 -> VIEW_TYPE_SCORE
             1 -> VIEW_TYPE_ANSWER_HISTORY
             2 -> VIEW_TYPE_PERCENTAGE
-            3 -> VIEW_TYPE_WORD_ANSWER_HISTORY
+            4 -> VIEW_TYPE_WORD_ANSWER_HISTORY
+            3 -> VIEW_TYPE_REPORT
             else -> throw IllegalArgumentException("Invalid position")
         }
     }
@@ -87,14 +99,14 @@ import com.example.mypetproject2.R
         }
     }
 
-     inner class PercentageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-         private val tvPercentage: TextView = itemView.findViewById(R.id.tv_percentage)
+    inner class PercentageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val tvPercentage: TextView = itemView.findViewById(R.id.tv_percentage)
 
-         fun bind(percentage: Float) {
-             val formattedPercentage = String.format("%.0f%%", percentage)
-             tvPercentage.text = formattedPercentage
-         }
-     }
+        fun bind(percentage: Float) {
+            val formattedPercentage = String.format("%.0f%%", percentage)
+            tvPercentage.text = formattedPercentage
+        }
+    }
 
     inner class AnswerHistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -103,18 +115,29 @@ import com.example.mypetproject2.R
         fun bind(answers: List<Boolean>) {
             val answerHistoryAdapter = AnswerHistoryAdapter(answers)
             rvHistoryAnswer.adapter = answerHistoryAdapter
-            rvHistoryAnswer.layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
+            rvHistoryAnswer.layoutManager =
+                LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
         }
     }
 
-     inner class WordAnswerHistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ReportViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val tvReport: TextView = itemView.findViewById(R.id.tv_report)
 
-         private val rvWordHistoryAnswer: RecyclerView = itemView.findViewById(R.id.full_answer_history_rv)
+        fun bind() {
+            tvReport.text = "Отчет"
+        }
+    }
 
-         fun bind(answersHistory: List<Pair<String, String>>) {
-             val wordAnswerHistoryAdapter = WordAnswerHistoryAdapter(answersHistory)
-             rvWordHistoryAnswer.adapter = wordAnswerHistoryAdapter
-             rvWordHistoryAnswer.layoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
-         }
-     }
+    inner class WordAnswerHistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        private val rvWordHistoryAnswer: RecyclerView =
+            itemView.findViewById(R.id.full_answer_history_rv)
+
+        fun bind(answersHistory: List<Pair<String, String>>) {
+            val wordAnswerHistoryAdapter = WordAnswerHistoryAdapter(answersHistory, viewModel, answers)
+            rvWordHistoryAnswer.adapter = wordAnswerHistoryAdapter
+            rvWordHistoryAnswer.layoutManager =
+                LinearLayoutManager(itemView.context, LinearLayoutManager.VERTICAL, false)
+        }
+    }
 }

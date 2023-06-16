@@ -1,5 +1,6 @@
 package com.example.mypetproject2.features.ui.games
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -9,13 +10,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import com.example.mypetproject2.R
 import com.example.mypetproject2.data.stress
 import com.example.mypetproject2.databinding.FragmentGamesBinding
 import com.example.mypetproject2.features.*
 import com.example.mypetproject2.features.S.SpannableStringBuilderHelper
 import com.example.mypetproject2.utils.navigateToGameFinishedFragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class GamesFragment : Fragment() {
 
@@ -28,6 +33,7 @@ class GamesFragment : Fragment() {
     private lateinit var gamesLogic: GamesLogic
 
     private lateinit var viewModel: GamesViewModel
+
 
     private var wordIndex: Int = 0
 
@@ -44,13 +50,39 @@ class GamesFragment : Fragment() {
         gamesLogic = GamesLogic()
         spannableStringBuilderHelper = SpannableStringBuilderHelper()
 
-
-
         initializeViews()
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                showExitConfirmationDialog()
+            }
+        })
+
 
         return rootView
     }
 
+    private fun showExitConfirmationDialog() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Выход из игры")
+        builder.setMessage("Вы точно хотите выйти из игры?")
+        builder.setPositiveButton("Да") { dialog, _ ->
+            dialog.dismiss()
+            findNavController().popBackStack()
+            navViewVisible()
+        }
+        builder.setNegativeButton("Нет") { dialog, _ ->
+            dialog.dismiss()
+        }
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+
+    private fun navViewVisible() {
+        val navView = requireActivity().findViewById<BottomNavigationView>(R.id.nav_view)
+        navView.visibility = View.VISIBLE
+    }
     /**
      * initializeViews(): Инициализирует необходимые представления и настраивает обработчик клика для кнопки "Проверить".
      * Также вызывается метод setupWordClick() и устанавливается LinkMovementMethod для TextView tvWord.
@@ -68,13 +100,13 @@ class GamesFragment : Fragment() {
         tvWord.movementMethod = LinkMovementMethod.getInstance()
     }
 
-    private fun saveUserAnswers(userAnswers: List<String>) {
-        val selectedVowelIndex = viewModel.selectedVowelIndex.value
-        if (selectedVowelIndex != null && selectedVowelIndex < userAnswers.size) {
-            val userAnswerHistory = userAnswers[selectedVowelIndex]
-            viewModel.setUserAnswers(userAnswerHistory)
-        }
-    }
+//    private fun saveUserAnswers(userAnswers: List<String>) {
+//        val selectedVowelIndex = viewModel.selectedVowelIndex.value
+//        if (selectedVowelIndex != null && selectedVowelIndex < userAnswers.size) {
+//            val userAnswerHistory = userAnswers[selectedVowelIndex]
+//            viewModel.setUserAnswers(userAnswerHistory)
+//        }
+//    }
 
 
     /**
@@ -193,15 +225,25 @@ class GamesFragment : Fragment() {
     private fun showGameResults() {
         val percentage = calculatePercentage()
         val userAnswers = getUserAnswers()
-        val userAnswerHistory = saveUserAnswers(stress)
-        val wordPairs = getPair(viewModel.userAnswersHistory.value ?: emptyList())
-        navigateToGameFinishedFragment(viewModel.score.value ?: 0, percentage, userAnswers, userAnswerHistory)
+        val userAnswerHistory = viewModel.userAnswersHistory.value?.toTypedArray()!!
+        navigateToGameFinishedFragment(
+            viewModel.score.value ?: 0,
+            percentage,
+            userAnswers,
+            userAnswerHistory
+        )
     }
 
     private fun calculatePercentage(): Float {
         return (viewModel.score.value?.toFloat() ?: 0f) / MAX_ATTEMPTS * 100
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val navView = requireActivity().findViewById<BottomNavigationView>(R.id.nav_view)
+        navView.visibility = View.GONE
+
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

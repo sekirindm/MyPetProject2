@@ -1,27 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    >
+    android:orientation="horizontal"
+    android:layout_marginTop="24dp">
 
-
-    <TextView
-        android:id="@+id/tv_answer_user"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="8dp"
-        android:layout_weight="1"
-        android:textSize="20sp"
-        android:text="TextView" />
+        android:orientation="horizontal"
+        android:layout_gravity="center">
+        <ImageView
+            android:id="@+id/iv_user_answer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/rectangle_63" />
 
-    <TextView
-        android:id="@+id/tv_right_answer"
+    </LinearLayout>
+
+
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:textSize="16sp"
-        android:layout_weight="1"
-        android:text="TextView" />
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_right_answer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="TextView"
+            android:layout_marginStart="16dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textColor="#070707"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_user_answer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:text="TextView"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+
 </LinearLayout>

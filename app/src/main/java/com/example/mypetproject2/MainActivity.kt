@@ -1,6 +1,7 @@
 package com.example.mypetproject2
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Toolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -28,10 +29,8 @@ class MainActivity : AppCompatActivity() {
             .commit()
 
         val navView: BottomNavigationView = binding.navView
-
+        navView.visibility = View.VISIBLE
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         navView.setupWithNavController(navController)
     }
 }

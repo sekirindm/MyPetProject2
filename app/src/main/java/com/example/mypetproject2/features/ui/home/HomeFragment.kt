@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.mypetproject2.R
 import com.example.mypetproject2.databinding.FragmentHomeBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class HomeFragment : Fragment() {
 
@@ -30,6 +31,8 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
          return binding.root
 
+
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -40,8 +43,8 @@ class HomeFragment : Fragment() {
     }
 
     private fun launchGameFragment() {
-        findNavController().navigate(R.id.action_navigation_home_to_navigation_dashboard)
-        
+          findNavController().navigate(R.id.action_navigation_home_to_navigation_dashboard)
+
     }
 
     override fun onDestroyView() {

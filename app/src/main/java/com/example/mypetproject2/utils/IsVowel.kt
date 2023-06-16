@@ -1,5 +1,6 @@
 package com.example.mypetproject2.features
 
+import android.app.Activity
 import android.graphics.Color
 import android.text.Spannable
 import android.text.SpannableStringBuilder
@@ -8,8 +9,12 @@ import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.View
+import com.example.mypetproject2.R
 import com.example.mypetproject2.data.stress
+import com.example.mypetproject2.features.ui.games.GamesViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.util.*
+
 
 fun isVowel(c: Char): Boolean {
     val vowels = listOf('а', 'е', 'ё', 'и', 'о', 'у', 'ы', 'э', 'ю', 'я')
@@ -55,13 +60,47 @@ fun check(list: List<Pair<String, String>>) = list.map { it.first == it.second }
     return builder
 }
 
-//    createForegroundColorSpan(i, correctIndex):
-//    Создает ForegroundColorSpan для форматирования гласной буквы в зеленый или красный цвет в зависимости от ее правильности.
- fun createForegroundColorSpan(i: Int, correctIndex: Int): CharacterStyle {
-    return if (i == correctIndex) {
-        ForegroundColorSpan(Color.GREEN)
-    } else {
-        ForegroundColorSpan(Color.RED)
+
+fun createCustomResultSpannableStringBuilder(
+    word: String,
+    correctIndex: Int,
+    selectedVowelIndex: Int?,
+    selectedVowelChar: Char?
+): SpannableStringBuilder {
+    val builder = SpannableStringBuilder(word)
+    for (i in word.indices) {
+        val currentChar = word[i]
+
+        if (currentChar.isUpperCase()) {
+            val color = if (i == correctIndex) Color.GREEN else Color.RED
+
+            if (i == selectedVowelIndex && selectedVowelChar != null) {
+                if (currentChar.equals(selectedVowelChar, ignoreCase = true)) {
+                    builder.setSpan(
+                        ForegroundColorSpan(Color.GREEN),
+                        i,
+                        i + 1,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                } else {
+                    builder.setSpan(
+                        ForegroundColorSpan(Color.RED),
+                        i,
+                        i + 1,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                }
+            } else {
+                builder.setSpan(
+                    ForegroundColorSpan(color),
+                    i,
+                    i + 1,
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                )
+            }
+        }
     }
+
+    return builder
 }
 
