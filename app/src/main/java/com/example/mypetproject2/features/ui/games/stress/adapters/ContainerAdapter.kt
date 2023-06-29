@@ -1,13 +1,14 @@
-package com.example.mypetproject2.features.ui.games.adapters
+package com.example.mypetproject2.features.ui.games.stress.adapters
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mypetproject2.R
-import com.example.mypetproject2.features.ui.games.GamesViewModel
+import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
 
 class ContainerAdapter(
     private val viewModel: GamesViewModel,
@@ -23,6 +24,7 @@ class ContainerAdapter(
     private val VIEW_TYPE_ANSWER_HISTORY = 1
     private val VIEW_TYPE_WORD_ANSWER_HISTORY = 3
     private val VIEW_TYPE_REPORT = 4
+    private val VIEW_TYPE_NEW_GAME = 5
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -47,6 +49,10 @@ class ContainerAdapter(
                 val view = inflater.inflate(R.layout.item_report, parent, false)
                 ReportViewHolder(view)
             }
+        VIEW_TYPE_NEW_GAME -> {
+            val view = inflater.inflate(R.layout.item_start_new_game, parent, false)
+            StartNewGameViewHolder(view)
+        }
             else -> throw IllegalArgumentException("Invalid view type")
         }
     }
@@ -73,6 +79,10 @@ class ContainerAdapter(
                 val reportViewHolder = holder as ReportViewHolder
                 reportViewHolder.bind()
             }
+            VIEW_TYPE_NEW_GAME -> {
+                val startNewGameViewHolder = holder as StartNewGameViewHolder
+                startNewGameViewHolder.bind()
+            }
         }
     }
 
@@ -87,6 +97,7 @@ class ContainerAdapter(
             2 -> VIEW_TYPE_PERCENTAGE
             4 -> VIEW_TYPE_WORD_ANSWER_HISTORY
             3 -> VIEW_TYPE_REPORT
+            5 -> VIEW_TYPE_NEW_GAME
             else -> throw IllegalArgumentException("Invalid position")
         }
     }
@@ -125,6 +136,15 @@ class ContainerAdapter(
 
         fun bind() {
             tvReport.text = "Отчет"
+        }
+    }
+    inner class StartNewGameViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val bNewGame: Button = itemView.findViewById(R.id.b_restart_game)
+
+        fun bind() {
+            bNewGame.setOnClickListener {
+
+            }
         }
     }
 

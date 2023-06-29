@@ -1,4 +1,4 @@
-package com.example.mypetproject2.features.ui.games
+package com.example.mypetproject2.features.ui.games.stress
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -18,7 +18,8 @@ import com.example.mypetproject2.R
 import com.example.mypetproject2.data.stress
 import com.example.mypetproject2.databinding.FragmentGamesBinding
 import com.example.mypetproject2.features.*
-import com.example.mypetproject2.features.S.SpannableStringBuilderHelper
+import com.example.mypetproject2.features.ui.games.stress.logic.GamesLogic
+import com.example.mypetproject2.features.ui.games.stress.logic.SpannableStringBuilderHelper
 import com.example.mypetproject2.utils.navigateToGameFinishedFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -81,7 +82,7 @@ class GamesFragment : Fragment() {
 
     private fun navViewVisible() {
         val navView = requireActivity().findViewById<BottomNavigationView>(R.id.nav_view)
-        navView.visibility = View.VISIBLE
+        navView.visibility = View.GONE
     }
     /**
      * initializeViews(): Инициализирует необходимые представления и настраивает обработчик клика для кнопки "Проверить".
@@ -222,6 +223,8 @@ class GamesFragment : Fragment() {
      * showGameResults(): Показывает результаты игры. Вычисляет процент правильных ответов и передает его,
      * счет и ответы пользователя в следующий фрагмент GameFinishedFragment с помощью навигации.
      * */
+
+    // GamesFragment
     private fun showGameResults() {
         val percentage = calculatePercentage()
         val userAnswers = getUserAnswers()
@@ -230,7 +233,8 @@ class GamesFragment : Fragment() {
             viewModel.score.value ?: 0,
             percentage,
             userAnswers,
-            userAnswerHistory
+            userAnswerHistory,
+            "stress"
         )
     }
 
@@ -251,6 +255,6 @@ class GamesFragment : Fragment() {
     }
 
     companion object {
-        val MAX_ATTEMPTS = 3
+        val MAX_ATTEMPTS = 5
     }
 }

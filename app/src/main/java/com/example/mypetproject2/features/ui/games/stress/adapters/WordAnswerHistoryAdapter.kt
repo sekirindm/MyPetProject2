@@ -1,14 +1,19 @@
-package com.example.mypetproject2.features.ui.games.adapters
+package com.example.mypetproject2.features.ui.games.stress.adapters
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mypetproject2.R
 import com.example.mypetproject2.features.createCustomResultSpannableStringBuilder
-import com.example.mypetproject2.features.ui.games.GamesViewModel
+import com.example.mypetproject2.features.ui.games.stress.GamesFragment
+import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
 
 class WordAnswerHistoryAdapter(private val wordPairs: List<Pair<String, String>>, private val viewModel: GamesViewModel, private val historyItems: List<Boolean>) :
         RecyclerView.Adapter<WordAnswerHistoryAdapter.ViewHolder>() {
@@ -38,7 +43,7 @@ class WordAnswerHistoryAdapter(private val wordPairs: List<Pair<String, String>>
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvRightAnswer: TextView = itemView.findViewById(R.id.tv_right_answer)
         private val tvAnswerUser: TextView = itemView.findViewById(R.id.tv_user_answer)
-         val ivUserAnswer: ImageView = itemView.findViewById(R.id.iv_user_answer)
+        val ivUserAnswer: ImageView = itemView.findViewById(R.id.iv_user_answer)
 
         fun bind(wordPair: Pair<String, String>) {
             val formattedWordPair = formatWordPair(wordPair)
@@ -51,7 +56,7 @@ class WordAnswerHistoryAdapter(private val wordPairs: List<Pair<String, String>>
             val rightAnswer = wordPair.first
             val userAnswer = wordPair.second
 
-            val correctIndex = rightAnswer.indexOfFirst { it.isUpperCase() }
+            val correctIndex = userAnswer == rightAnswer
             val selectedVowelIndex = viewModel.selectedVowelIndex.value
             val selectedVowelChar = viewModel.selectedVowelChar.value
 

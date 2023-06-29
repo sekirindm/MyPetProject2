@@ -1,4 +1,4 @@
-package com.example.mypetproject2.features
+package com.example.mypetproject2.features.ui.games.stress.logic
 
 import android.graphics.Color
 import android.text.Spannable

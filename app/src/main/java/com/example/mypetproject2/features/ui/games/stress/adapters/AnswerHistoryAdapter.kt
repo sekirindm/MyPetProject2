@@ -1,4 +1,4 @@
-package com.example.mypetproject2.features.ui.games.adapters
+package com.example.mypetproject2.features.ui.games.stress.adapters
 
 import android.view.LayoutInflater
 import android.view.View

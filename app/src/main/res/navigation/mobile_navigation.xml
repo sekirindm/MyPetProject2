@@ -11,21 +11,20 @@
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_navigation_home_to_navigation_dashboard"
-            app:destination="@id/navigation_dashboard"
-            app:popUpTo="@id/navigation_home"
-            app:popUpToInclusive="false" />
+            android:id="@+id/action_navigation_home_to_titleFragment"
+            app:destination="@id/titleFragment"
+            app:popUpTo="@id/navigation_home" />
     </fragment>
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.example.mypetproject2.features.ui.games.GamesFragment"
+        android:name="com.example.mypetproject2.features.ui.games.stress.GamesFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_games" >
         <action
             android:id="@+id/action_navigation_dashboard_to_gameFinishedFragment"
             app:destination="@id/gameFinishedFragment"
-            app:launchSingleTop="false"
+            app:launchSingleTop="true"
             app:popUpToInclusive="false" />
     </fragment>
 
@@ -36,7 +35,7 @@
         tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/gameFinishedFragment"
-        android:name="com.example.mypetproject2.features.ui.games.GameFinishedFragment"
+        android:name="com.example.mypetproject2.features.ui.games.stress.GameFinishedFragment"
         android:label="fragment_game_finished"
         tools:layout="@layout/fragment_game_finished" >
         <argument
@@ -51,6 +50,38 @@
         <argument
             android:name="uswerAnswerHistory"
             app:argType="string[]" />
-
+        <argument
+            android:name="gameType"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/titleFragment"
+        android:name="com.example.mypetproject2.features.ui.games.TitleFragment"
+        android:label="fragment_title"
+        tools:layout="@layout/fragment_title" >
+        <action
+            android:id="@+id/action_titleFragment_to_navigation_dashboard"
+            app:destination="@id/navigation_dashboard" />
+        <action
+            android:id="@+id/action_titleFragment_to_spellingNNFragment"
+            app:destination="@id/spellingNNFragment" />
+        <argument
+            android:name="descriptions"
+            app:argType="string" />
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <argument
+            android:name="gameNumber"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/spellingNNFragment"
+        android:name="com.example.mypetproject2.features.ui.games.spelling.SpellingNNFragment"
+        android:label="fragment_spelling_n_n"
+        tools:layout="@layout/fragment_spelling_n_n" >
+        <action
+            android:id="@+id/action_spellingNNFragment_to_gameFinishedFragment"
+            app:destination="@id/gameFinishedFragment" />
     </fragment>
 </navigation>

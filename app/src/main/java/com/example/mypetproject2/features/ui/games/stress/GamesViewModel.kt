@@ -1,10 +1,9 @@
-package com.example.mypetproject2.features.ui.games
+package com.example.mypetproject2.features.ui.games.stress
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.mypetproject2.features.ui.games.GamesFragment.Companion.MAX_ATTEMPTS
 
 class GamesViewModel : ViewModel() {
 
@@ -34,6 +33,7 @@ class GamesViewModel : ViewModel() {
         val updatedList = _userAnswersHistory.value ?: mutableListOf()
         updatedList.add(answersHistory)
         _userAnswersHistory.value = updatedList
+        Log.d("setUserAnswers", "updatedList $updatedList")
     }
 
     fun setSelectedVowelChar(char: Char?) {
@@ -44,6 +44,7 @@ class GamesViewModel : ViewModel() {
         _score.value = _score.value?.let { score ->
             if (isCorrect) score + 1 else score
         }
+        Log.d("updateScore", "_score.value ${_score.value} $isCorrect")
     }
 
     fun addUserAnswer(answer: Boolean) {

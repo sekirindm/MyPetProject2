@@ -1,4 +1,4 @@
-package com.example.mypetproject2.features.ui.games
+package com.example.mypetproject2.features.ui.games.stress
 
 import android.os.Bundle
 import android.util.Log
@@ -7,19 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.mypetproject2.features.ui.games.adapters.AnswerHistoryAdapter
 import com.example.mypetproject2.R
-import com.example.mypetproject2.data.stress
 import com.example.mypetproject2.databinding.FragmentGameFinishedBinding
 import com.example.mypetproject2.features.getPair
-import com.example.mypetproject2.features.isVowel
-import com.example.mypetproject2.features.ui.games.adapters.ContainerAdapter
+import com.example.mypetproject2.features. getPair
+import com.example.mypetproject2.features.getPairSpelling
+import com.example.mypetproject2.features.ui.games.stress.adapters.ContainerAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class GameFinishedFragment : Fragment() {
@@ -30,7 +26,10 @@ class GameFinishedFragment : Fragment() {
     private var score: Int = 0
     private var answers: List<Boolean> = emptyList()
     private var percentage: Float = 0f
+    private var gameType: String = ""
     private lateinit var viewModel: GamesViewModel
+
+
 
 
 
@@ -46,11 +45,16 @@ class GameFinishedFragment : Fragment() {
         score = arguments?.getInt("score") ?: 0
         percentage = arguments?.getFloat("percentage") ?: 0f
         answers = arguments?.getBooleanArray("answers")?.toList() ?: emptyList()
+        gameType = arguments?.getString("gameType") ?: ""
         val answersHistory = (arguments?.getStringArray("uswerAnswerHistory") ?: arrayOf()).toList()
-        val pair = getPair(answersHistory)
         viewModel = ViewModelProvider(this)[GamesViewModel::class.java]
+        val pair = when (gameType) {
+            "stress" -> getPair(answersHistory)
+            "spelling" -> getPairSpelling(answersHistory)
+            else -> emptyList()
+        }
 
-        Log.d("onCreateView", "answersHistory $answersHistory")
+        Log.d("onCreateView", "answersHistory $pair")
 
         val layoutManager = LinearLayoutManager(requireContext())
 
@@ -64,11 +68,13 @@ class GameFinishedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val navView = requireActivity().findViewById<BottomNavigationView>(R.id.nav_view)
-        navView.visibility = View.VISIBLE
+        navView.visibility = View.GONE
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 val navController = findNavController()
-                navController.navigate(R.id.navigation_home)
+                navController.popBackStack(R.id.navigation_home, true)
+                navView.visibility = View.VISIBLE
+
 
             }
         })

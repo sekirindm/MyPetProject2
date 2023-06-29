@@ -1,10 +1,9 @@
-package com.example.mypetproject2.features.S
+package com.example.mypetproject2.features.ui.games.stress.logic
 
 import android.graphics.Color
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
-import com.example.mypetproject2.data.stress
 import com.example.mypetproject2.features.isVowel
 import java.util.*
 

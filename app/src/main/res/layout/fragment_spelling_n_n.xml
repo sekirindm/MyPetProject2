@@ -4,29 +4,55 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFf"
-    android:id="@+id/games_fragment"
-    tools:context=".features.ui.games.stress.GamesFragment">
+
+    tools:context=".features.ui.games.spelling.SpellingNNFragment">
 
     <TextView
-        android:id="@+id/tv_word"
-        android:layout_width="match_parent"
+        android:id="@+id/spelling_word"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:text="серебряный"
         android:textAlignment="center"
+        android:textColor="#000000"
         android:textSize="28sp"
-        android:text="Бралась"
-        android:textColor="#666666"
+        android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/tv_one_n"
+        style="@style/SpellingTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="135dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:text="Н"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spelling_word" />
+
+
+
+    <TextView
+        android:id="@+id/tv_two_n"
+        style="@style/SpellingTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="135dp"
+        android:text="НН"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spelling_word" />
+
     <Button
-        android:id="@+id/b_check"
-        android:layout_width="match_parent"
+        android:id="@+id/b_next_page"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
@@ -34,9 +60,9 @@
         android:background="@drawable/group_7"
         android:text="@string/b_check"
         android:textColor="@color/white"
-        android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
