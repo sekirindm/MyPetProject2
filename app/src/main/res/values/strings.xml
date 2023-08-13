@@ -12,12 +12,15 @@
     <string name="b_check">проверить</string>
     <string name="spelling_title">Добро пожаловать в игру с ударениями! Вам предстоит расставлять ударения в словах. Определите правильное расположение ударения и преуспейте в игре. Улучшайте свои навыки в русском языке и научитесь правильно ставить ударения. Проверьте свои знания и станьте мастером ударений в словах!</string>
     <string name="stress_title">Игра "Спеллинг с буквой 'Н'" - это увлекательная игра, в которой вам нужно правильно составить слова, используя одну или две буквы "Н". Вам будет представлено случайно выбранное слово, в котором одна или две буквы "Н" заменены символами подчеркивания "_". Ваша задача - угадать пропущенные буквы и правильно составить слово.</string>
+
     <style name="SpellingTextStyle">
         <item name="android:textColor">#ffffff</item>
         <item name="android:textSize">22sp</item>
         <item name="android:background">#FD8F47</item>
         <item name="android:padding">6dp</item>
         <item name="android:layout_marginTop">72dp</item>
-        
+
     </style>
+
+    <string name="title_activity_main">MainActivity</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.example.mypetproject2.features.ui.games.spelling
+package com.example.mypetproject2.features.ui.games.spelling.spellingnn
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -17,6 +17,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.mypetproject2.R
 import com.example.mypetproject2.data.spellingNN
 import com.example.mypetproject2.databinding.FragmentSpellingNNBinding
+import com.example.mypetproject2.features.ui.games.spelling.setupOnBackPressedCallback
 import com.example.mypetproject2.features.ui.games.stress.GamesFragment
 import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
 import com.example.mypetproject2.utils.navigateSpellingToGameFinishedFragment
@@ -86,7 +87,7 @@ class SpellingNNFragment : Fragment() {
                 if (!isReplaced) {
                     displayedWord.append('_')
                     isReplaced = true
-                    isUnderscorePresent = true // Устанавливаем флаг, если символ "_" присутствует
+                    isUnderscorePresent = true
                 }
             } else {
                 displayedWord.append(letter)
@@ -284,48 +285,6 @@ class SpellingNNFragment : Fragment() {
             userAnswerHistory,
             "spelling"
         )
-    }
-
-    /**
-     * Устанавливает обработчик события для нажатия кнопки "Назад" на устройстве,
-     * который вызывает функцию showExitConfirmationDialog.
-     * */
-    private fun setupOnBackPressedCallback() {
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    showExitConfirmationDialog()
-                }
-            })
-    }
-
-    /**
-     * Отображает диалоговое окно с подтверждением выхода из игры.
-     * Если пользователь подтверждает выход. возвращается на предыдущий фрагмент и скрывается нижняя навигационная панель.
-     * */
-    private fun showExitConfirmationDialog() {
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Выход из игры")
-        builder.setMessage("Вы точно хотите выйти из игры?")
-        builder.setPositiveButton("Да") { dialog, _ ->
-            dialog.dismiss()
-            findNavController().popBackStack()
-            hideNavView()
-        }
-        builder.setNegativeButton("Нет") { dialog, _ ->
-            dialog.dismiss()
-        }
-        val dialog = builder.create()
-        dialog.show()
-    }
-
-    /**
-     *Скрывает нижнюю навигационную панель.
-     * */
-    private fun hideNavView() {
-        val navView = requireActivity().findViewById<BottomNavigationView>(R.id.nav_view)
-        navView.visibility = View.GONE
     }
 
     /**

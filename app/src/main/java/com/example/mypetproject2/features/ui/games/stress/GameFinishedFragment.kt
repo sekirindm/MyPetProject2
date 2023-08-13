@@ -12,9 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mypetproject2.R
 import com.example.mypetproject2.databinding.FragmentGameFinishedBinding
-import com.example.mypetproject2.features.getPair
-import com.example.mypetproject2.features. getPair
-import com.example.mypetproject2.features.getPairSpelling
+import com.example.mypetproject2.features.*
 import com.example.mypetproject2.features.ui.games.stress.adapters.ContainerAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
@@ -28,10 +26,6 @@ class GameFinishedFragment : Fragment() {
     private var percentage: Float = 0f
     private var gameType: String = ""
     private lateinit var viewModel: GamesViewModel
-
-
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,6 +45,9 @@ class GameFinishedFragment : Fragment() {
         val pair = when (gameType) {
             "stress" -> getPair(answersHistory)
             "spelling" -> getPairSpelling(answersHistory)
+            "spellingpref" -> getPairSpellingPref(answersHistory)
+            "spellingroot" -> getPairSpellingRoot(answersHistory)
+            "spellingsuffix" -> getPairSpellingSuffix(answersHistory)
             else -> emptyList()
         }
 
@@ -72,11 +69,10 @@ class GameFinishedFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 val navController = findNavController()
-                navController.popBackStack(R.id.navigation_home, true)
+                navController.popBackStack(R.id.navigation_dashboard, false)
                 navView.visibility = View.VISIBLE
-
-
             }
+
         })
     }
 

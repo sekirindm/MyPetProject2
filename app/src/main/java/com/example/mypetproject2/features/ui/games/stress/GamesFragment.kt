@@ -18,6 +18,7 @@ import com.example.mypetproject2.R
 import com.example.mypetproject2.data.stress
 import com.example.mypetproject2.databinding.FragmentGamesBinding
 import com.example.mypetproject2.features.*
+import com.example.mypetproject2.features.ui.games.spelling.setupOnBackPressedCallback
 import com.example.mypetproject2.features.ui.games.stress.logic.GamesLogic
 import com.example.mypetproject2.features.ui.games.stress.logic.SpannableStringBuilderHelper
 import com.example.mypetproject2.utils.navigateToGameFinishedFragment
@@ -53,37 +54,12 @@ class GamesFragment : Fragment() {
 
         initializeViews()
 
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                showExitConfirmationDialog()
-            }
-        })
+       setupOnBackPressedCallback()
 
 
         return rootView
     }
 
-    private fun showExitConfirmationDialog() {
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Выход из игры")
-        builder.setMessage("Вы точно хотите выйти из игры?")
-        builder.setPositiveButton("Да") { dialog, _ ->
-            dialog.dismiss()
-            findNavController().popBackStack()
-            navViewVisible()
-        }
-        builder.setNegativeButton("Нет") { dialog, _ ->
-            dialog.dismiss()
-        }
-        val dialog = builder.create()
-        dialog.show()
-    }
-
-
-    private fun navViewVisible() {
-        val navView = requireActivity().findViewById<BottomNavigationView>(R.id.nav_view)
-        navView.visibility = View.GONE
-    }
     /**
      * initializeViews(): Инициализирует необходимые представления и настраивает обработчик клика для кнопки "Проверить".
      * Также вызывается метод setupWordClick() и устанавливается LinkMovementMethod для TextView tvWord.

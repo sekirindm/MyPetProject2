@@ -7,8 +7,10 @@ import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.util.Log
 import android.view.View
-import com.example.mypetproject2.data.spellingNN
-import com.example.mypetproject2.data.stress
+import com.example.mypetproject2.data.*
+import com.example.mypetproject2.features.ui.games.Rules
+import com.example.mypetproject2.features.ui.games.spelling.transformWord
+import com.example.mypetproject2.features.ui.games.spelling.transformWordSuf
 import java.util.*
 
 
@@ -19,24 +21,91 @@ fun isVowel(c: Char): Boolean {
 
 
 /**
- * нам нужен метод gatPairSpelling которыйц будет сравнивать слово из списка с сответом пользователя.
+ * нам нужен метод gatPairSpelling который будет сравнивать слово из списка с сответом пользователя.
  * 1. Ответ пользователя нужно передавать в параметры(List<String>).
  * 2. Возвращает List<Pair<String, String>>, где первое слово является словом из списка, а второе - ответом пользователя.
  * 3. для каждого ответа пользователя С помощью цикла forEach, ищем соответсвующее слово из списка
  * 3.1
  *
  * */
+fun markString(string: String): String {
+    val markedString = "!$string!"
+    return markedString
+}
+fun main() {
+    for(wordIndex in spellingPref.indices) {
+        var words = spellingPref[wordIndex].replace("!", "")
+        words = transformWord(words).lowercase()
+        val markerWord = words
 
-//fun main() {
-//    val word = "dskfqqwertyuioplkjhgfdsazxcvbnmadrgawwwdfrrdegdfdcfxzrett"
-//    print(word.toSortedSet().joinToString(""))
+        println("\"$markerWord\" to \"\",")
+    }
+
+
+
+//    val correct = "усид!чИЕв!ый"
 //
-//}
+//    val rules = mapOf(
+//        "чИЕв" to "В суффиксах -ЛИВ- и -ЧИВ- (производных от -ИВ-) пишется буква и: заботлИВый, заносчИВый. Следует различать прилагательные с суффиксами -ЕВ-, с одной стороны, и -ИВ-, -ЛИВ-, -ЧИВ с другой. Слова на -ЕВый — напр., соЕВый, ферзЕВый, фланелЕВый, матчЕВый, замшЕВый, — содержат суффикс -ЕВ- (орфографическая разновидность суффикса -ОВ-), проверяющийся под ударением в таких словах, как дубо́вый, рублёвый.\n "
+//    )
+//
+//    val suffixStart = correct.indexOf('!') + 1
+//    val suffixEnd = correct.lastIndexOf('!')
+//    val suffix = correct.substring(suffixStart, suffixEnd)
+//
+//    val rule = rules[suffix]
+//
+//        println(rule)
+
+}
+
+//    val userAnswers = "прИнеприятная"
+//    val modified = userAnswers.filter { it.isLowerCase() }
+//    println(userAnswers.filter { it.isLowerCase() } == correct.filter { it.isLowerCase() })
+
+//    println("${userAnswers.replace("ЕИ", "") == correct.replace("ЕИ", "")}")
+
 fun getPairSpelling(userAnswers: List<String>): List<Pair<String, String>> {
     val map = mutableListOf<Pair<String, String>>()
     userAnswers.forEach { answers ->
         spellingNN.forEach {
-            if (answers.replace("Н", "") == it.replace("Н", "")) map.add(Pair(it, answers ))
+            if (answers.replace("Н", "") == it.replace("Н", "")) map.add(Pair(it, answers))
+        }
+    }
+    Log.d("getPair", "map $map")
+    return map
+}
+
+fun getPairSpellingPref(userAnswers: List<String>): List<Pair<String, String>> {
+    val map = mutableListOf<Pair<String, String>>()
+    userAnswers.forEach { answer ->
+        spellingPref.forEach {
+            if (answer.replace(Regex("[А-Я]")) { "" } == it.replace(Regex("[А-Я]")) { "" })
+                map.add(Pair(transformWordSuf(it), answer))
+        }
+    }
+    Log.d("getPair", "map $map")
+    return map
+}
+
+fun getPairSpellingRoot(userAnswers: List<String>): List<Pair<String, String>> {
+    val map = mutableListOf<Pair<String, String>>()
+    userAnswers.forEach { answer ->
+        spellingRoot.forEach {
+            if (answer.replace(Regex("[А-Я!]")) { "" } == it.replace(Regex("[А-Я!]")) { "" })
+                map.add(Pair(transformWordSuf(it), answer))
+        }
+    }
+    Log.d("getPair", "map $map")
+    return map
+}
+
+fun getPairSpellingSuffix(userAnswers: List<String>): List<Pair<String, String>> {
+    val map = mutableListOf<Pair<String, String>>()
+    userAnswers.forEach { answer ->
+        spellingSuffix.forEach {
+            if (answer.replace(Regex("[А-Я!]")) { "" } == it.replace(Regex("[А-Я!]")) { "" })
+                map.add(Pair(transformWordSuf(it), answer))
         }
     }
     Log.d("getPair", "map $map")

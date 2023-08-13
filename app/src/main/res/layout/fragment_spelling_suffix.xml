@@ -4,51 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
-    tools:context=".features.ui.games.spelling.spellingnn.SpellingNNFragment">
-
-    <TextView
-        android:id="@+id/spelling_word"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:text="серебряный"
-        android:textAlignment="center"
-        android:textColor="#000000"
-        android:textSize="28sp"
-        android:textStyle="italic"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_one_n"
-        style="@style/SpellingTextStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="135dp"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
-        android:text="Н"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spelling_word" />
-
-
-
-    <TextView
-        android:id="@+id/tv_two_n"
-        style="@style/SpellingTextStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="135dp"
-        android:text="НН"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spelling_word" />
+    tools:context=".features.ui.games.spelling.spellingsuffix.SpellingSuffixFragment">
 
     <Button
         android:id="@+id/b_next_page"
@@ -56,13 +12,52 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/rectangle_61__1_"
-        android:text="@string/b_check"
+        android:layout_marginBottom="8dp"
+        android:text="проверить"
         android:textColor="@color/white"
+        android:background="@drawable/rectangle_61__1_"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <TextView
+        android:id="@+id/tv_spelling_pref"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="усидчивый"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textSize="28sp"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toTopOf="@+id/b_next_page"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
+
+    <TextView
+        android:id="@+id/tv_one_n"
+        style="@style/SpellingTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="132dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:text="А"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_spelling_pref" />
+
+    <TextView
+        android:id="@+id/tv_two_n"
+        style="@style/SpellingTextStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="132dp"
+        android:text="О"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_spelling_pref" />
 </androidx.constraintlayout.widget.ConstraintLayout>

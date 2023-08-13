@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mypetproject2.R
@@ -49,10 +50,10 @@ class ContainerAdapter(
                 val view = inflater.inflate(R.layout.item_report, parent, false)
                 ReportViewHolder(view)
             }
-        VIEW_TYPE_NEW_GAME -> {
-            val view = inflater.inflate(R.layout.item_start_new_game, parent, false)
-            StartNewGameViewHolder(view)
-        }
+            VIEW_TYPE_NEW_GAME -> {
+                val view = inflater.inflate(R.layout.item_start_new_game, parent, false)
+                StartNewGameViewHolder(view)
+            }
             else -> throw IllegalArgumentException("Invalid view type")
         }
     }
@@ -87,7 +88,7 @@ class ContainerAdapter(
     }
 
     override fun getItemCount(): Int {
-        return 5
+        return 6
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -139,10 +140,15 @@ class ContainerAdapter(
         }
     }
     inner class StartNewGameViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
         private val bNewGame: Button = itemView.findViewById(R.id.b_restart_game)
 
         fun bind() {
             bNewGame.setOnClickListener {
+                val navController = itemView.findNavController()
+                itemView.findNavController()
+                    .navigate(R.id.action_gameFinishedFragment_to_navigation_dashboard)
+                navController.popBackStack()
 
             }
         }
