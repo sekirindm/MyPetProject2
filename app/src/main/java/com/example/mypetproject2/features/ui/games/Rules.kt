@@ -1,6 +1,6 @@
 package com.example.mypetproject2.features.ui.games
 
-class Rules {
+object Rules {
     val rules: Map<String, String> = mapOf(
         "усидчивый" to "суф. ЧИВ, в краткой форме: усидЧИВ",
         "переменчивый" to "суф. ЧИВ, в краткой форме: переменЧИВ",

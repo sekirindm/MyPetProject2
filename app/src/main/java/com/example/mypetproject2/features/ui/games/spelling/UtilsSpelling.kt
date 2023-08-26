@@ -7,6 +7,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.mypetproject2.R
+import com.example.mypetproject2.features.ui.games.Rules
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 fun transformWord(word: String): String {
@@ -24,6 +25,21 @@ fun transformWord(word: String): String {
     }
 
     return transformedWord
+}
+
+
+
+fun applyRule(word: String): String {
+    val transformedWord = transformWord(word).lowercase()
+    val suffixStart = transformedWord.indexOf('!') + 1
+    val suffixEnd = transformedWord.lastIndexOf('!')
+    if (suffixStart in 1 until suffixEnd) {
+        val suffix = transformedWord.substring(suffixStart, suffixEnd)
+        val rules = Rules.rules
+        val rule = rules[suffix]
+        return rule ?: ""
+    }
+    return ""
 }
 
 fun transformWordSuf(word: String): String {

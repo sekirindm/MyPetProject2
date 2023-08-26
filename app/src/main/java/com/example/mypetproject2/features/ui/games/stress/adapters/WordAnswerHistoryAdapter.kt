@@ -1,5 +1,6 @@
 package com.example.mypetproject2.features.ui.games.stress.adapters
 
+import android.opengl.Visibility
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,10 @@ import com.example.mypetproject2.features.markString
 import com.example.mypetproject2.features.ui.games.Rules
 import com.example.mypetproject2.features.ui.games.spelling.transformWord
 import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class WordAnswerHistoryAdapter(
     private val wordPairs: List<Pair<String, String>>,
@@ -29,7 +34,7 @@ class WordAnswerHistoryAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val wordPair = wordPairs[position]
-        holder.bind(wordPair)
+        holder.bind(wordPair, viewModel)
         val item = historyItems[position]
 
         if (item) {
@@ -37,26 +42,67 @@ class WordAnswerHistoryAdapter(
         } else {
             holder.ivUserAnswer.setImageResource(R.drawable.rectangle_incorrect_answer)
         }
+        holder.tvRules.visibility = if (holder.isRulesVisible) View.VISIBLE else View.GONE
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvRightAnswer: TextView = itemView.findViewById(R.id.tv_right_answer)
         private val tvAnswerUser: TextView = itemView.findViewById(R.id.tv_user_answer)
+        private val ivFavouritesWords: ImageView = itemView.findViewById(R.id.iv_favourites_words)
         val ivUserAnswer: ImageView = itemView.findViewById(R.id.iv_user_answer)
-        private val tvRules: TextView = itemView.findViewById(R.id.tv_rules)
+         val tvRules: TextView = itemView.findViewById(R.id.tv_rules)
+        private val ivRules: ImageView = itemView.findViewById(R.id.iv_rules)
 
-        fun bind(wordPair: Pair<String, String>) {
+         var isRulesVisible = false
+
+
+        init {
+            ivRules.setOnClickListener {
+                isRulesVisible = !isRulesVisible
+                tvRules.visibility = if (isRulesVisible) View.VISIBLE else View.GONE
+            }
+        }
+
+        fun bind(wordPair: Pair<String, String>, viewModel: GamesViewModel) {
             val formattedWordPair = formatWordPair(wordPair)
+            val word = formattedWordPair.first.toString()
+
             tvRightAnswer.text = formattedWordPair.first
             tvAnswerUser.text = formattedWordPair.second
 
-            val rule = applyRule(markString((formattedWordPair.first).toString()).lowercase())
+            CoroutineScope(Dispatchers.Main).launch {
+                var isWordAdded = viewModel.isWordAdded(word)
 
+                updateIcon(isWordAdded)
+
+                ivFavouritesWords.setOnClickListener {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        if (isWordAdded) {
+                            viewModel.removeWord(word)
+                        } else {
+                            viewModel.insertWord(word)
+                        }
+                        isWordAdded = !isWordAdded
+                        updateIcon(isWordAdded)
+                    }
+                }
+            }
+
+            val rule = applyRule(markString(formattedWordPair.first.toString()).lowercase())
             tvRules.text = rule
             Log.d(
                 "suffixRule",
-                "suffixRule: ${applyRule(markString((formattedWordPair.first).toString()).lowercase())}"
+                "suffixRule: ${applyRule(markString(formattedWordPair.first.toString()).lowercase())}"
             )
+        }
+
+
+        private fun updateIcon(isWordAdded: Boolean) {
+            if (isWordAdded) {
+                ivFavouritesWords.setImageResource(R.drawable.group_17__2_)
+            } else {
+                ivFavouritesWords.setImageResource(R.drawable.group_19)
+            }
         }
 
         private fun applyRule(word: String): String {
@@ -65,7 +111,7 @@ class WordAnswerHistoryAdapter(
             val suffixEnd = transformedWord.lastIndexOf('!')
             if (suffixStart in 1 until suffixEnd) {
                 val suffix = transformedWord.substring(suffixStart, suffixEnd)
-                val rules = Rules().rules
+                val rules = Rules.rules
                 val rule = rules[suffix]
                 return rule ?: ""
             }

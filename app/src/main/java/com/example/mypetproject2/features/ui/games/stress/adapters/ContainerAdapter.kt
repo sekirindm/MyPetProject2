@@ -5,6 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -164,6 +166,10 @@ class ContainerAdapter(
             rvWordHistoryAnswer.adapter = wordAnswerHistoryAdapter
             rvWordHistoryAnswer.layoutManager =
                 LinearLayoutManager(itemView.context, LinearLayoutManager.VERTICAL, false)
+
+            val dividerDrawable = ContextCompat.getDrawable(itemView.context, R.drawable.divider_drawable)
+            val itemDecoration = DividerItemDecoration(itemView.context, dividerDrawable!!)
+            rvWordHistoryAnswer.addItemDecoration(itemDecoration)
         }
     }
 }

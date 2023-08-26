@@ -5,9 +5,19 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "game_items")
 data class GameItemDb(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
     val rightAnswer: String,
-    val userAnswer: String,
-    val rule: String
+    var position: Int
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is GameItemDb) return false
+        return id == other.id
+    }
 
-)
+    override fun hashCode(): Int {
+        return id.hashCode()
+    }
+
+}

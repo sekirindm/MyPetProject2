@@ -4,23 +4,27 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_marginTop="24dp">
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_gravity="end">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_gravity="center">
+
             <ImageView
                 android:id="@+id/iv_user_answer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/rectangle_63" />
+
 
         </LinearLayout>
 
@@ -53,7 +57,7 @@
 
             <TextView
                 android:id="@+id/tv_rules"
-                android:layout_width="wrap_content"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_weight="1"
@@ -61,5 +65,29 @@
                 android:textSize="16sp" />
 
         </LinearLayout>
-</LinearLayout>
-</LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="end"
+            android:layout_gravity="center">
+
+            <ImageView
+                android:id="@+id/iv_rules"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+                app:srcCompat="@drawable/group_18__1_"
+                android:layout_marginEnd="16dp"/>
+
+            <ImageView
+                android:id="@+id/iv_favourites_words"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/group_19"
+                android:layout_marginEnd="16dp"/>
+        </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
