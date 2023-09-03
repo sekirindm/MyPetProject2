@@ -1,6 +1,5 @@
 package com.example.mypetproject2.features.ui.games.stress
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -10,19 +9,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import com.example.mypetproject2.R
 import com.example.mypetproject2.data.stress
 import com.example.mypetproject2.databinding.FragmentGamesBinding
-import com.example.mypetproject2.features.*
+import com.example.mypetproject2.features.createSpannableStringBuilder
 import com.example.mypetproject2.features.ui.games.spelling.setupOnBackPressedCallback
 import com.example.mypetproject2.features.ui.games.stress.logic.GamesLogic
 import com.example.mypetproject2.features.ui.games.stress.logic.SpannableStringBuilderHelper
 import com.example.mypetproject2.utils.navigateToGameFinishedFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import java.util.*
 
 class GamesFragment : Fragment() {
 
@@ -36,6 +34,8 @@ class GamesFragment : Fragment() {
 
     private lateinit var viewModel: GamesViewModel
 
+    private val random = Random()
+    private var usedIndexes: MutableList<Int> = mutableListOf()
 
     private var wordIndex: Int = 0
 
@@ -67,6 +67,7 @@ class GamesFragment : Fragment() {
 
     private fun initializeViews() {
         viewModel = ViewModelProvider(this)[GamesViewModel::class.java]
+
         tvWord = binding.tvWord
         binding.bCheck.setOnClickListener {
             checkWord()
@@ -91,11 +92,28 @@ class GamesFragment : Fragment() {
      *  с помощью метода createSpannableStringBuilder(word).
      * */
     private fun setupWordClick() {
-        val word = stress[wordIndex]
+        val word = getRandomWordFromList()
         spannableStringBuilder = createSpannableStringBuilder(word) { characterIndex, character ->
             handleVowelClick(characterIndex, character)
         }
         binding.tvWord.text = spannableStringBuilder
+    }
+
+    private fun getRandomWordFromList(): String {
+        if (usedIndexes.size == stress.size) {
+            // Если все индексы использованы, начинаем заново
+            usedIndexes.clear()
+        }
+
+        var newIndex: Int
+        do {
+            newIndex = random.nextInt(stress.size)
+        } while (newIndex in usedIndexes)
+
+        usedIndexes.add(newIndex)
+        wordIndex = newIndex
+
+        return stress[wordIndex]
     }
 
     /**
@@ -148,6 +166,10 @@ class GamesFragment : Fragment() {
         }
     }
 
+    fun initObserver() {
+
+    }
+
     private fun displayNextWord() {
         wordIndex = (wordIndex + 1) % stress.size
         setupWordClick()
@@ -163,14 +185,23 @@ class GamesFragment : Fragment() {
      * иначе вызывается метод showNextWord() через 1 секунду.
      * */
     private fun checkWord() {
+        val correctIndex = stress[wordIndex].indexOfFirst { it.isUpperCase() }
+        val isCorrect = correctIndex == viewModel.selectedVowelIndex.value
         if (viewModel.selectedVowelIndex.value != -1) {
             val word = stress[wordIndex]
-            val correctIndex = stress[wordIndex].indexOfFirst { it.isUpperCase() }
 
-            val isCorrect = correctIndex == viewModel.selectedVowelIndex.value
+            viewModel.getWordCount(word)
+
+            viewModel.wordCountLiveData.observe(viewLifecycleOwner) {
+
+                val newCount = if (isCorrect) it + 1 else 0
+                viewModel.insertWordToAllWords(word, newCount)
+            }
+
             viewModel.updateScore(isCorrect)
             viewModel.incrementTotalAttempts()
             viewModel.addUserAnswer(isCorrect)
+
 
             val resultSpannableStringBuilder =
                 spannableStringBuilderHelper.createResultSpannableStringBuilder(

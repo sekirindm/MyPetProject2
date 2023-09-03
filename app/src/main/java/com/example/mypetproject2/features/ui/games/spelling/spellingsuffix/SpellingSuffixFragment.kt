@@ -19,6 +19,10 @@ import com.example.mypetproject2.features.ui.games.spelling.transformWord
 import com.example.mypetproject2.features.ui.games.stress.GamesFragment
 import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
 import com.example.mypetproject2.utils.navigateSpellingSuffixToGameFinishedFragment
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.util.*
 
 
 class SpellingSuffixFragment : Fragment() {
@@ -31,10 +35,13 @@ class SpellingSuffixFragment : Fragment() {
     private var isLetterRemoved = false
     private var words: String = ""
     private var isUnderscorePresent = false
+    private var isNextButtonEnabled = true
 
     private val handler = Handler(Looper.getMainLooper())
     private val runnable = Runnable { showNextWord() }
 
+
+    private val random = Random()
 
     private val DELAY_MILLIS = 1000L
 
@@ -80,12 +87,13 @@ class SpellingSuffixFragment : Fragment() {
         displayWord()
         resetViewState()
 
-        words = spellingSuffix[wordIndex].replace("!", "")
         tvWord.text = displayedWord
 
         setTextViewLetters(words)
 
         binding.bNextPage.isEnabled = !isUnderscorePresent
+
+        isNextButtonEnabled = true
     }
 
     private fun displayWord() {
@@ -94,7 +102,7 @@ class SpellingSuffixFragment : Fragment() {
     }
 
     private fun generateRandomWord() {
-        words = spellingSuffix[wordIndex].replace("!", "")
+        words = spellingSuffix[random.nextInt(spellingSuffix.size)].replace("!", "")
 
         displayedWord.clear()
         isUnderscorePresent = false
@@ -201,12 +209,20 @@ class SpellingSuffixFragment : Fragment() {
     }
 
     private fun setupNextPageButtonListener() {
-        val bNextPage = binding.bNextPage
-        bNextPage.isEnabled = !tvWord.text.contains("_")
+        binding.bNextPage.setOnClickListener {
+            if (isNextButtonEnabled) {
+                isNextButtonEnabled = false
+                it.isEnabled = false
+                val userAnswer = tvWord.text.toString()
+                viewModel.getWordCount(userAnswer) // Запросите счетчик
 
-        bNextPage.setOnClickListener {
-            val userAnswer = tvWord.text.toString()
-            checkAnswer(userAnswer)
+                viewModel.wordCountLiveData.observe(viewLifecycleOwner, androidx.lifecycle.Observer { count ->
+                    val isCorrect = userAnswer.equals(transformWord(words), ignoreCase = true)
+                    val newCount = if (isCorrect) count + 1 else 0
+
+                    viewModel.insertWordToAllWords(transformWord(words), newCount)
+                })
+            }
         }
     }
 
@@ -228,7 +244,6 @@ class SpellingSuffixFragment : Fragment() {
     }
 
     private fun checkAnswer(userAnswer: String) {
-        words = spellingSuffix[wordIndex].replace("!", "")
         val transformedWord = transformWord(words)
 
         val isCorrect = transformedWord == userAnswer

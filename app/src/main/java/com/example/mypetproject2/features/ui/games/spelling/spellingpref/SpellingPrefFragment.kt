@@ -1,6 +1,5 @@
 package com.example.mypetproject2.features.ui.games.spelling.spellingpref
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -9,13 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import com.example.mypetproject2.R
-import com.example.mypetproject2.data.spellingNN
 import com.example.mypetproject2.data.spellingPref
 import com.example.mypetproject2.databinding.FragmentSpellingPrefBinding
 import com.example.mypetproject2.features.ui.games.spelling.setupOnBackPressedCallback
@@ -23,8 +19,11 @@ import com.example.mypetproject2.features.ui.games.spelling.transformWord
 import com.example.mypetproject2.features.ui.games.stress.GamesFragment
 import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
 import com.example.mypetproject2.utils.navigateSpellingPrefToGameFinishedFragment
-import com.example.mypetproject2.utils.navigateSpellingToGameFinishedFragment
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.util.*
+
 
 class SpellingPrefFragment : Fragment() {
 
@@ -37,6 +36,11 @@ class SpellingPrefFragment : Fragment() {
     private var isLetterRemoved = false
     private var words: String = ""
     private var isUnderscorePresent = false
+
+    private val random = Random()
+
+
+    private var isNextButtonEnabled = true
 
     private val handler = Handler(Looper.getMainLooper())
     private val runnable = Runnable { showNextWord() }
@@ -60,12 +64,15 @@ class SpellingPrefFragment : Fragment() {
         setupNextPageButtonListener()
         setupOnBackPressedCallback()
 
+
+        TODO("сделать два метода, один для clicklisteners, другой для observer")
         return rootView
     }
 
     private fun initializeViews() {
         viewModel = ViewModelProvider(this)[GamesViewModel::class.java]
         tvWord = binding.tvSpellingPref
+
     }
 
     private fun resetViewState() {
@@ -73,6 +80,7 @@ class SpellingPrefFragment : Fragment() {
         binding.tvTwoN.visibility = View.VISIBLE
         requireView().setBackgroundResource(R.color.white)
     }
+
 
     private fun showNextWord() {
         wordIndex++
@@ -85,13 +93,15 @@ class SpellingPrefFragment : Fragment() {
         displayWord()
         resetViewState()
 
-        words = spellingPref[wordIndex]
-        tvWord.text = displayedWord
+        tvWord.text = displayedWord  // Уберите здесь присваивание tvWord.text
 
         setTextViewLetters(words)
 
         binding.bNextPage.isEnabled = !isUnderscorePresent
+
+        isNextButtonEnabled = true
     }
+
 
     private fun displayWord() {
         val finalWord = displayedWord.toString()
@@ -99,10 +109,8 @@ class SpellingPrefFragment : Fragment() {
     }
 
     private fun generateRandomWord() {
-        words = spellingPref[wordIndex]
-
+        words = spellingPref[random.nextInt(spellingPref.size)]
         displayedWord.clear()
-        isUnderscorePresent = false
 
         var isReplaced = false
         for (i in words.indices) {
@@ -119,7 +127,6 @@ class SpellingPrefFragment : Fragment() {
             }
         }
     }
-
 
     private fun setupTextViewClickListeners() {
         val tvOne = binding.tvOneN
@@ -205,13 +212,22 @@ class SpellingPrefFragment : Fragment() {
         binding.bNextPage.isEnabled = !tvWord.text.contains("_")
     }
 
-    private fun setupNextPageButtonListener() {
-        val bNextPage = binding.bNextPage
-        bNextPage.isEnabled = !tvWord.text.contains("_")
 
-        bNextPage.setOnClickListener {
-            val userAnswer = tvWord.text.toString()
-            checkAnswer(userAnswer)
+    private fun setupNextPageButtonListener() {
+        binding.bNextPage.setOnClickListener {
+            if (isNextButtonEnabled) {
+                isNextButtonEnabled = false
+                it.isEnabled = false
+                val userAnswer = tvWord.text.toString()
+                viewModel.getWordCount(userAnswer) // Запросите счетчик
+
+                viewModel.wordCountLiveData.observe(viewLifecycleOwner, androidx.lifecycle.Observer { count ->
+                    val isCorrect = userAnswer.equals(transformWord(words), ignoreCase = true)
+                    val newCount = if (isCorrect) count + 1 else 0
+
+                    viewModel.insertWordToAllWords(transformWord(words), newCount)
+                })
+            }
         }
     }
 
@@ -233,7 +249,6 @@ class SpellingPrefFragment : Fragment() {
     }
 
     private fun checkAnswer(userAnswer: String) {
-        words = spellingPref[wordIndex]
         val transformedWord = transformWord(words)
 
         val isCorrect = transformedWord == userAnswer

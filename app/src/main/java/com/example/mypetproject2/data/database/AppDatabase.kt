@@ -6,8 +6,10 @@ import android.database.sqlite.SQLiteDatabase
 import androidx.room.*
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.example.mypetproject2.data.database.allwordsdb.AllWordsDao
+import com.example.mypetproject2.data.database.allwordsdb.AllWordsDb
 
-@Database(entities = [GameItemDb::class], version = 1)
+@Database(entities = [GameItemDb::class, AllWordsDb::class],  version = 2)
 abstract class AppDatabase : RoomDatabase() {
 
     companion object {
@@ -27,5 +29,8 @@ abstract class AppDatabase : RoomDatabase() {
         }
     }
 
+
     abstract fun gameItemDao(): GameItemDao
+
+    abstract fun allWordsDao(): AllWordsDao
 }

@@ -8,19 +8,24 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.mypetproject2.data.database.AppDatabase
 import com.example.mypetproject2.data.database.GameItemDb
+import com.example.mypetproject2.data.database.allwordsdb.AllWordsDb
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.text.FieldPosition
 
 class GamesViewModel(application: Application) : AndroidViewModel(application) {
 
     private val gameItemDao = AppDatabase.getInstance(application).gameItemDao()
 
+    val allWordsDao = AppDatabase.getInstance(application).allWordsDao()
+
     private val _gameItemsLiveData = MutableLiveData<List<GameItemDb>>()
     val gameItemsLiveData: LiveData<List<GameItemDb>> get() = _gameItemsLiveData
 
-    private val _selectedVowelIndex = MutableLiveData<Int>(-1)
+    private val _allItemsLiveData = MutableLiveData<List<AllWordsDb>>()
+    val allItemsLiveData: LiveData<List<AllWordsDb>> get() = _allItemsLiveData
+
+    private val _selectedVowelIndex = MutableLiveData(-1)
     val selectedVowelIndex: LiveData<Int> get() = _selectedVowelIndex
 
     private val _selectedVowelChar = MutableLiveData<Char?>(null)
@@ -29,17 +34,19 @@ class GamesViewModel(application: Application) : AndroidViewModel(application) {
     private val _userAnswersHistory = MutableLiveData<MutableList<String>>(mutableListOf())
     val userAnswersHistory: LiveData<MutableList<String>> = _userAnswersHistory
 
-    private val _score = MutableLiveData<Int>(0)
+    private val _score = MutableLiveData(0)
     val score: LiveData<Int> get() = _score
 
     private val _userAnswers = MutableLiveData<MutableList<Boolean>>(mutableListOf())
     val userAnswers: LiveData<MutableList<Boolean>> get() = _userAnswers
 
-    private val _totalAttempts = MutableLiveData<Int>(0)
+    private val _totalAttempts = MutableLiveData(0)
     val totalAttempts: LiveData<Int> get() = _totalAttempts
 
+    val isWordAddedLiveData = MutableLiveData<Boolean>()
 
-//    private val coinInfoDao = AppDatabase.getInstance(application).coinPriceInfoDao()
+    val wordCountLiveData = MutableLiveData<Int>()
+
 
     fun setSelectedVowelIndex(index: Int) {
         _selectedVowelIndex.value = index
@@ -56,13 +63,21 @@ class GamesViewModel(application: Application) : AndroidViewModel(application) {
         _selectedVowelChar.value = char
     }
 
-    suspend fun isWordAdded(word: String): Boolean {
-        val gameItems = gameItemDao.getAllGameItems()
-        return gameItems.any { it.rightAnswer == word }
+//    fun checkWord(word: String) {
+//        val isWordValid = allWordsDao.isWordValid(word)
+//        Log.d("checkWord", "isWordValid $isWordValid")
+//    }
+
+    fun isWordAdded(word: String) {
+        viewModelScope.launch {
+            val gameItems = gameItemDao.getAllGameItems()
+            isWordAddedLiveData.postValue(gameItems.any { it.rightAnswer == word })
+        }
     }
 
-    suspend fun removeWord(word: String) {
-        withContext(Dispatchers.IO) {
+
+    fun removeWord(word: String) {
+        viewModelScope.launch {
             val gameItemToDelete = gameItemDao.getAllGameItems().find { it.rightAnswer == word }
             gameItemToDelete?.let {
                 gameItemDao.delete(it)
@@ -70,18 +85,50 @@ class GamesViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun toggleWord(word: String) {
+    fun insertWordToAllWords(word: String, count: Int) {
         viewModelScope.launch {
-            if (isWordAdded(word)) {
-                removeWord(word)
+            val allWords = allWordsDao.getAllWords()
+            val existingWord = allWords.find { it.words == word }
+
+            if (existingWord != null) {
+                existingWord.count = count
+                allWordsDao.updateWordCount(existingWord)
             } else {
-                insertWord(word)
+                val newWord = AllWordsDb(words = word, count = count)
+                allWordsDao.insert(newWord)
             }
+        }
+    }
+
+    fun getWordCount(word: String) {
+        viewModelScope.launch {
+            val allWords = allWordsDao.getAllWords()
+            val wordItem = allWords.find { it.words == word }
+            val count = wordItem?.count ?: 0
+            wordCountLiveData.postValue(count)
+        }
+    }
+
+
+//    fun getWordCount(word: String) {
+//        viewModelScope.launch {
+//            val allWords = allWordsDao.getAllWords()
+//            val wordItem = allWords.find { it.word == word }
+//            wordCountLiveData.postValue(wordItem?.count)
+//        }
+//    }
+
+
+    fun updateWordCount(word: String, countDelta: Int) {
+        viewModelScope.launch {
+            val currentCount = allWordsDao.getWordCount(word) ?: 0
+            allWordsDao.updateWordCount(word, currentCount + countDelta)
         }
     }
 
     fun insertWord(word: String) {
         viewModelScope.launch {
+
             val currentItems = gameItemsLiveData.value ?: emptyList()
             val newPosition = currentItems.size
             val gameItem = GameItemDb(rightAnswer = word, position = newPosition)
@@ -94,21 +141,12 @@ class GamesViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun updateIconAndDatabase(word: String) {
+    fun deleteGameItem(item: GameItemDb) {
         viewModelScope.launch {
-            if (isWordAdded(word)) {
-                removeWord(word)
-            } else {
-                insertWord(word)
-            }
-        }
-    }
-
-    suspend fun deleteGameItem(item: GameItemDb) {
-        withContext(Dispatchers.IO) {
             gameItemDao.delete(item)
         }
     }
+
     fun deleteAndQueryAllItems(item: GameItemDb) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
@@ -122,6 +160,9 @@ class GamesViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             val gameItems = gameItemDao.getAllGameItems()
             _gameItemsLiveData.postValue(gameItems)
+
+            val allWords = allWordsDao.getAllWords()
+            _allItemsLiveData.postValue(allWords)
         }
     }
 

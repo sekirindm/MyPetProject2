@@ -11,6 +11,7 @@ import com.example.mypetproject2.data.*
 import com.example.mypetproject2.features.ui.games.Rules
 import com.example.mypetproject2.features.ui.games.spelling.transformWord
 import com.example.mypetproject2.features.ui.games.spelling.transformWordSuf
+import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
 import java.util.*
 
 
@@ -33,12 +34,14 @@ fun markString(string: String): String {
     return markedString
 }
 fun main() {
-    for(wordIndex in spellingPref.indices) {
-        var words = spellingPref[wordIndex].replace("!", "")
-        words = transformWord(words).lowercase()
-        val markerWord = words
+//    for(wordIndex in spellingPref.indices) {
+//        var words = spellingPref[wordIndex].replace("!", "")
+//        words = transformWord(words).lowercase()
+//        val markerWord = words
+//
+//        println("\"$markerWord\" to \"\",")
 
-        println("\"$markerWord\" to \"\",")
+
     }
 
 
@@ -57,7 +60,7 @@ fun main() {
 //
 //        println(rule)
 
-}
+
 
 //    val userAnswers = "прИнеприятная"
 //    val modified = userAnswers.filter { it.isLowerCase() }
@@ -194,6 +197,35 @@ fun createCustomResultSpannableStringBuilder(
 
     return builder
 }
+
+// suspend fun getRandomWord(): String? {
+//    val maxAttempts = 5 // Максимальное количество попыток получить слово
+//    var currentAttempt = 0
+//    var randomWord: String?
+//
+//    do {
+//        randomWord = getRandomWordFromDatabase()
+//        currentAttempt++
+//    } while (randomWord != null && currentAttempt < maxAttempts)
+//
+//    return randomWord
+//}
+//
+// suspend fun getRandomWordFromDatabase(viewModel: GamesViewModel, word: String): String? {
+//    val wordCount = viewModel.getWordCount(word)
+//    return if (wordCount == null || wordCount <= 5) {
+//        // Получаем слово из базы данных, у которого счетчик меньше или равен 5
+//        val wordList = viewModel.getAllItems()
+//        val filteredWords = wordList.filter { it.count <= 5 }
+//        if (filteredWords.isNotEmpty()) {
+//            filteredWords[Random().nextInt(filteredWords.size)].words
+//        } else {
+//            null // Если не осталось слов с счетчиком <= 5, вернуть null
+//        }
+//    } else {
+//        null // Если счетчик больше 5, вернуть null
+//    }
+//}
 
 
 

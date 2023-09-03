@@ -18,10 +18,15 @@ import com.example.mypetproject2.R
 import com.example.mypetproject2.data.spellingNN
 import com.example.mypetproject2.databinding.FragmentSpellingNNBinding
 import com.example.mypetproject2.features.ui.games.spelling.setupOnBackPressedCallback
+import com.example.mypetproject2.features.ui.games.spelling.transformWord
 import com.example.mypetproject2.features.ui.games.stress.GamesFragment
 import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
 import com.example.mypetproject2.utils.navigateSpellingToGameFinishedFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.util.Random
 
 
 class SpellingNNFragment : Fragment() {
@@ -36,6 +41,10 @@ class SpellingNNFragment : Fragment() {
     private var displayedWord: StringBuilder = StringBuilder()
     private var isLetterRemoved = false
     private var isUnderscorePresent = false
+
+    private var isNextButtonEnabled = true
+
+    private val random = Random()
 
     private val DELAY_MILLIS = 1000L
 
@@ -74,7 +83,7 @@ class SpellingNNFragment : Fragment() {
      *  заменяя заглавные буквы на символ подчеркивания _
      * */
     private fun generateRandomWord() {
-        words = spellingNN[wordIndex]
+        words = spellingNN[random.nextInt(spellingNN.size)]
 
         displayedWord.clear()
         isUnderscorePresent = false
@@ -173,12 +182,20 @@ class SpellingNNFragment : Fragment() {
      *Устанавливает обработчик события для кнопки bNextPage, которая выполняет проверку ответа пользователя.
      * */
     private fun setupNextPageButtonListener() {
-        val bNextPage = binding.bNextPage
-        bNextPage.isEnabled = !tvWord.text.contains("_") // Проверка наличия символа "_"
+        binding.bNextPage.setOnClickListener {
+            if (isNextButtonEnabled) {
+                isNextButtonEnabled = false
+                it.isEnabled = false
+                val userAnswer = tvWord.text.toString()
+                viewModel.getWordCount(userAnswer) // Запросите счетчик
 
-        bNextPage.setOnClickListener {
-            val userAnswer = tvWord.text.toString()
-            checkAnswer(userAnswer)
+                viewModel.wordCountLiveData.observe(viewLifecycleOwner, androidx.lifecycle.Observer { count ->
+                    val isCorrect = userAnswer.equals(transformWord(words), ignoreCase = true)
+                    val newCount = if (isCorrect) count + 1 else 0
+
+                    viewModel.insertWordToAllWords(transformWord(words), newCount)
+                })
+            }
         }
     }
 
@@ -188,8 +205,6 @@ class SpellingNNFragment : Fragment() {
      *  Запускает отложенную задачу (runnable) для отображения следующего слова.
      * */
     private fun checkAnswer(userAnswer: String) {
-         words = spellingNN[wordIndex]
-
         val isCorrect = words == userAnswer
         viewModel.updateScore(isCorrect)
         viewModel.addUserAnswer(isCorrect)
@@ -228,8 +243,10 @@ class SpellingNNFragment : Fragment() {
             generateRandomWord()
             displayWord()
             resetViewState()
-            binding.bNextPage.isEnabled = !isUnderscorePresent // Обновляем состояние кнопки
+            binding.bNextPage.isEnabled = !isUnderscorePresent
         }
+
+        isNextButtonEnabled = true
     }
 
 

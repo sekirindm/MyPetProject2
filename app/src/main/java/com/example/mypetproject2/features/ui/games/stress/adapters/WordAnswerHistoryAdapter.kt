@@ -1,6 +1,5 @@
 package com.example.mypetproject2.features.ui.games.stress.adapters
 
-import android.opengl.Visibility
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,10 +13,6 @@ import com.example.mypetproject2.features.markString
 import com.example.mypetproject2.features.ui.games.Rules
 import com.example.mypetproject2.features.ui.games.spelling.transformWord
 import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 class WordAnswerHistoryAdapter(
     private val wordPairs: List<Pair<String, String>>,
@@ -70,23 +65,21 @@ class WordAnswerHistoryAdapter(
             tvRightAnswer.text = formattedWordPair.first
             tvAnswerUser.text = formattedWordPair.second
 
-            CoroutineScope(Dispatchers.Main).launch {
-                var isWordAdded = viewModel.isWordAdded(word)
+            var isWordAdded = viewModel.isWordAdded(word)
 
-                updateIcon(isWordAdded)
+            updateIcon(isWordAdded)
 
-                ivFavouritesWords.setOnClickListener {
-                    CoroutineScope(Dispatchers.IO).launch {
+            ivFavouritesWords.setOnClickListener {
                         if (isWordAdded) {
                             viewModel.removeWord(word)
+                            Log.d("removeWord", "gameItemToDelete ${viewModel.removeWord(word)}")
                         } else {
                             viewModel.insertWord(word)
                         }
                         isWordAdded = !isWordAdded
                         updateIcon(isWordAdded)
                     }
-                }
-            }
+
 
             val rule = applyRule(markString(formattedWordPair.first.toString()).lowercase())
             tvRules.text = rule

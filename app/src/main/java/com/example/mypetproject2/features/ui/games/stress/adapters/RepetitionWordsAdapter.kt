@@ -79,10 +79,6 @@ class RepetitionWordsAdapter(
 
         holder.tvRulesBd.text = Rules.rules[currentItem.rightAnswer.lowercase()]
 
-
-
-
-
         /**
          * Установка обработчика касания для элемента списка
          * */
