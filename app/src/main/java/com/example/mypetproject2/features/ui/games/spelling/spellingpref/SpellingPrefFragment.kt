@@ -65,7 +65,7 @@ class SpellingPrefFragment : Fragment() {
         setupOnBackPressedCallback()
 
 
-        TODO("сделать два метода, один для clicklisteners, другой для observer")
+//       "сделать два метода, один для clicklisteners, другой для observer")
         return rootView
     }
 
@@ -111,6 +111,7 @@ class SpellingPrefFragment : Fragment() {
     private fun generateRandomWord() {
         words = spellingPref[random.nextInt(spellingPref.size)]
         displayedWord.clear()
+        isUnderscorePresent = false
 
         var isReplaced = false
         for (i in words.indices) {
@@ -220,6 +221,7 @@ class SpellingPrefFragment : Fragment() {
                 it.isEnabled = false
                 val userAnswer = tvWord.text.toString()
                 viewModel.getWordCount(userAnswer) // Запросите счетчик
+                checkAnswer(userAnswer)
 
                 viewModel.wordCountLiveData.observe(viewLifecycleOwner, androidx.lifecycle.Observer { count ->
                     val isCorrect = userAnswer.equals(transformWord(words), ignoreCase = true)

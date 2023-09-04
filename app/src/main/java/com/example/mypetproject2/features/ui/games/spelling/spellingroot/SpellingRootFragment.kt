@@ -216,6 +216,7 @@ class SpellingRootFragment : Fragment() {
                 it.isEnabled = false
                 val userAnswer = tvWord.text.toString()
                 viewModel.getWordCount(userAnswer) // Запросите счетчик
+                checkAnswer(userAnswer)
 
                 viewModel.wordCountLiveData.observe(viewLifecycleOwner, androidx.lifecycle.Observer { count ->
                     val isCorrect = userAnswer.equals(transformWord(words), ignoreCase = true)
@@ -226,6 +227,7 @@ class SpellingRootFragment : Fragment() {
             }
         }
     }
+
 
     private fun showGameResults() {
         val percentage = calculatePercentage()

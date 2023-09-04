@@ -71,9 +71,10 @@ class GamesViewModel(application: Application) : AndroidViewModel(application) {
     fun isWordAdded(word: String) {
         viewModelScope.launch {
             val gameItems = gameItemDao.getAllGameItems()
-            isWordAddedLiveData.postValue(gameItems.any { it.rightAnswer == word })
+            isWordAddedLiveData.value = gameItems.any { it.rightAnswer == word }
         }
     }
+
 
 
     fun removeWord(word: String) {
@@ -105,7 +106,7 @@ class GamesViewModel(application: Application) : AndroidViewModel(application) {
             val allWords = allWordsDao.getAllWords()
             val wordItem = allWords.find { it.words == word }
             val count = wordItem?.count ?: 0
-            wordCountLiveData.postValue(count)
+            wordCountLiveData.value = count
         }
     }
 
@@ -128,23 +129,31 @@ class GamesViewModel(application: Application) : AndroidViewModel(application) {
 
     fun insertWord(word: String) {
         viewModelScope.launch {
-
             val currentItems = gameItemsLiveData.value ?: emptyList()
             val newPosition = currentItems.size
             val gameItem = GameItemDb(rightAnswer = word, position = newPosition)
 
-            withContext(Dispatchers.IO) {
-                gameItemDao.insert(gameItem)
-            }
+            gameItemDao.insert(gameItem)
+            Log.d("GamesViewModel", "Inserted word: $word")
 
-            queryAllItems()
+
+            updateRecyclerViewData()
         }
     }
 
-    fun deleteGameItem(item: GameItemDb) {
+
+
+    private fun updateRecyclerViewData() {
         viewModelScope.launch {
-            gameItemDao.delete(item)
+            val updatedData = gameItemDao.getAllGameItems()
+            _gameItemsLiveData.value = updatedData
+            Log.d("GamesViewModel", "Updated RecyclerView data")
         }
+    }
+
+
+    fun deleteGameItem(item: GameItemDb) {
+        gameItemDao.delete(item)
     }
 
     fun deleteAndQueryAllItems(item: GameItemDb) {
@@ -156,13 +165,10 @@ class GamesViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-     fun queryAllItems() {
+    fun queryAllItems() {
         viewModelScope.launch {
             val gameItems = gameItemDao.getAllGameItems()
-            _gameItemsLiveData.postValue(gameItems)
-
-            val allWords = allWordsDao.getAllWords()
-            _allItemsLiveData.postValue(allWords)
+            _gameItemsLiveData.value = gameItems
         }
     }
 

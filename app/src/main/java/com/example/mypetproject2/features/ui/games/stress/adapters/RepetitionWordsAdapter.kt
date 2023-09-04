@@ -23,6 +23,8 @@ class RepetitionWordsAdapter(
      * */
     private var items: List<GameItemDb> = emptyList()
 
+
+
     /**
      *Внутренний класс ViewHolder для элементов списка
      * */

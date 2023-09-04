@@ -1,6 +1,9 @@
 package com.example.mypetproject2.features.ui.notifications
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,10 +19,7 @@ import com.example.mypetproject2.databinding.FavouritesWordsRvBinding
 import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
 import com.example.mypetproject2.features.ui.games.stress.adapters.DividerItemDecoration
 import com.example.mypetproject2.features.ui.games.stress.adapters.RepetitionWordsAdapter
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class FavoritesWords : Fragment() {
     private var _binding: FavouritesWordsRvBinding? = null
@@ -28,6 +28,10 @@ class FavoritesWords : Fragment() {
     private lateinit var gameViewModel: GamesViewModel
     private lateinit var repetitionWordsAdapter: RepetitionWordsAdapter
     private lateinit var recyclerView: RecyclerView
+
+    init {
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,19 +43,23 @@ class FavoritesWords : Fragment() {
         recyclerView = binding.rvRepetition
 
         gameViewModel = ViewModelProvider(this)[GamesViewModel::class.java]
-
         repetitionWordsAdapter = RepetitionWordsAdapter(requireContext()) { item ->
             CoroutineScope(Dispatchers.IO).launch {
                 gameViewModel.deleteGameItem(item)
             }
+
+
         }
 
-        recyclerView.adapter = repetitionWordsAdapter // Сначала установите адаптер
-        recyclerView.layoutManager = LinearLayoutManager(requireContext()) // Потом layoutManager
+        repetitionWordsAdapter.setHasStableIds(false)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.adapter = repetitionWordsAdapter
 
         gameViewModel.gameItemsLiveData.observe(viewLifecycleOwner, Observer { gameItems ->
+            Log.d("FavoritesWords", "Observed gameItemsLiveData with ${gameItems.size} items")
             repetitionWordsAdapter.updateData(gameItems)
         })
+
 
         val dividerDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.divider_drawable)
         val itemDecoration = DividerItemDecoration(requireContext(), dividerDrawable!!)
@@ -78,17 +86,22 @@ class FavoritesWords : Fragment() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                CoroutineScope(Dispatchers.IO).launch {
                     val position = viewHolder.adapterPosition
                     val item = repetitionWordsAdapter.getItemAtPosition(position)
-
+                CoroutineScope(Dispatchers.IO).launch {
                     gameViewModel.deleteGameItem(item)
+                }
 
-                    delay(100)
-                    gameViewModel.deleteAndQueryAllItems(item)
+
+                val handler = Handler(Looper.getMainLooper())
+
+                handler.postDelayed({
+                        gameViewModel.deleteAndQueryAllItems(item)
+
+                    },100)
+
                 }
             }
-        }
         val itemTouchHelper = ItemTouchHelper(callback)
         itemTouchHelper.attachToRecyclerView(rvShopList)
     }

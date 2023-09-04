@@ -95,7 +95,7 @@ fun getPairSpellingRoot(userAnswers: List<String>): List<Pair<String, String>> {
     val map = mutableListOf<Pair<String, String>>()
     userAnswers.forEach { answer ->
         spellingRoot.forEach {
-            if (answer.replace(Regex("[А-Я!]")) { "" } == it.replace(Regex("[А-Я!]")) { "" })
+            if (answer.replace(Regex("[А-Я@]")) { "" } == it.replace(Regex("[А-Я@]")) { "" })
                 map.add(Pair(transformWordSuf(it), answer))
         }
     }

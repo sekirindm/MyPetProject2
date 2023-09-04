@@ -9,7 +9,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.mypetproject2.data.database.allwordsdb.AllWordsDao
 import com.example.mypetproject2.data.database.allwordsdb.AllWordsDb
 
-@Database(entities = [GameItemDb::class, AllWordsDb::class],  version = 2)
+@Database(entities = [GameItemDb::class, AllWordsDb::class],  version = 3)
 abstract class AppDatabase : RoomDatabase() {
 
     companion object {

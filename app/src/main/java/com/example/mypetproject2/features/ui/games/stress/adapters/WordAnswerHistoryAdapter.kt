@@ -58,28 +58,33 @@ class WordAnswerHistoryAdapter(
             }
         }
 
+        init {
+
+        }
+
         fun bind(wordPair: Pair<String, String>, viewModel: GamesViewModel) {
             val formattedWordPair = formatWordPair(wordPair)
             val word = formattedWordPair.first.toString()
 
             tvRightAnswer.text = formattedWordPair.first
             tvAnswerUser.text = formattedWordPair.second
+            viewModel.isWordAdded(word)
 
-            var isWordAdded = viewModel.isWordAdded(word)
+            viewModel.isWordAddedLiveData.observeForever { isWordAdded ->
+                updateIcon(isWordAdded)
 
-            updateIcon(isWordAdded)
+                ivFavouritesWords.setOnClickListener {
+                    if (isWordAdded) {
+                        viewModel.removeWord(word)
 
-            ivFavouritesWords.setOnClickListener {
-                        if (isWordAdded) {
-                            viewModel.removeWord(word)
-                            Log.d("removeWord", "gameItemToDelete ${viewModel.removeWord(word)}")
-                        } else {
-                            viewModel.insertWord(word)
-                        }
-                        isWordAdded = !isWordAdded
-                        updateIcon(isWordAdded)
+                    } else {
+                        viewModel.insertWord(word)
                     }
+                    val newIsWordAdded = !isWordAdded
+                    updateIcon(newIsWordAdded)
 
+                }
+            }
 
             val rule = applyRule(markString(formattedWordPair.first.toString()).lowercase())
             tvRules.text = rule
@@ -88,6 +93,7 @@ class WordAnswerHistoryAdapter(
                 "suffixRule: ${applyRule(markString(formattedWordPair.first.toString()).lowercase())}"
             )
         }
+
 
 
         private fun updateIcon(isWordAdded: Boolean) {
