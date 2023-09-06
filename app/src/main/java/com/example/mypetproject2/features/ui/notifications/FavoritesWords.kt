@@ -58,14 +58,17 @@ class FavoritesWords : Fragment() {
         gameViewModel.gameItemsLiveData.observe(viewLifecycleOwner, Observer { gameItems ->
             Log.d("FavoritesWords", "Observed gameItemsLiveData with ${gameItems.size} items")
             repetitionWordsAdapter.updateData(gameItems)
+            recyclerView.scrollToPosition(0)
+
+
         })
 
 
+        gameViewModel.updateRecyclerViewData()
         val dividerDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.divider_drawable)
         val itemDecoration = DividerItemDecoration(requireContext(), dividerDrawable!!)
         recyclerView.addItemDecoration(itemDecoration)
 
-        gameViewModel.queryAllItems()
 
         setupSwipeListener(recyclerView)
 

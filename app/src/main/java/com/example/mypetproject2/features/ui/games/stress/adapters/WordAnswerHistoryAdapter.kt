@@ -13,6 +13,9 @@ import com.example.mypetproject2.features.markString
 import com.example.mypetproject2.features.ui.games.Rules
 import com.example.mypetproject2.features.ui.games.spelling.transformWord
 import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class WordAnswerHistoryAdapter(
     private val wordPairs: List<Pair<String, String>>,
@@ -76,13 +79,12 @@ class WordAnswerHistoryAdapter(
                 ivFavouritesWords.setOnClickListener {
                     if (isWordAdded) {
                         viewModel.removeWord(word)
-
+                        Log.d("removeWord", "gameItemToDelete ${viewModel.removeWord(word)}")
                     } else {
                         viewModel.insertWord(word)
                     }
                     val newIsWordAdded = !isWordAdded
                     updateIcon(newIsWordAdded)
-
                 }
             }
 
