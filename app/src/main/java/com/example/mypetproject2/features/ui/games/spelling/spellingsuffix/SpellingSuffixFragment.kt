@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.mypetproject2.R
+import com.example.mypetproject2.data.spellingNN
 import com.example.mypetproject2.data.spellingSuffix
 import com.example.mypetproject2.databinding.FragmentSpellingSuffixBinding
 import com.example.mypetproject2.features.ui.games.spelling.setupOnBackPressedCallback
@@ -102,7 +103,9 @@ class SpellingSuffixFragment : Fragment() {
     }
 
     private fun generateRandomWord() {
-        words = spellingSuffix[random.nextInt(spellingSuffix.size)].replace("!", "")
+        val spellingSuffixList = spellingSuffix.toList()
+        val randomWord = spellingSuffixList.random().replace("!", "")
+        words = randomWord
 
         displayedWord.clear()
         isUnderscorePresent = false

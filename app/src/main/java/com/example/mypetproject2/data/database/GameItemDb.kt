@@ -19,5 +19,6 @@ data class GameItemDb(
     override fun hashCode(): Int {
         return id.hashCode()
     }
-
 }
+
+

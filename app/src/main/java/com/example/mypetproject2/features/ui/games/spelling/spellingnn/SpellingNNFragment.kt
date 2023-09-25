@@ -1,6 +1,5 @@
 package com.example.mypetproject2.features.ui.games.spelling.spellingnn
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -9,11 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import com.example.mypetproject2.R
 import com.example.mypetproject2.data.spellingNN
 import com.example.mypetproject2.databinding.FragmentSpellingNNBinding
@@ -22,11 +19,6 @@ import com.example.mypetproject2.features.ui.games.spelling.transformWord
 import com.example.mypetproject2.features.ui.games.stress.GamesFragment
 import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
 import com.example.mypetproject2.utils.navigateSpellingToGameFinishedFragment
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.util.Random
 
 
 class SpellingNNFragment : Fragment() {
@@ -44,7 +36,6 @@ class SpellingNNFragment : Fragment() {
 
     private var isNextButtonEnabled = true
 
-    private val random = Random()
 
     private val DELAY_MILLIS = 1000L
 
@@ -83,7 +74,11 @@ class SpellingNNFragment : Fragment() {
      *  заменяя заглавные буквы на символ подчеркивания _
      * */
     private fun generateRandomWord() {
-        words = spellingNN[random.nextInt(spellingNN.size)]
+        val spellingNNList = spellingNN.toList()
+        val randomWord = spellingNNList.random()
+        words = randomWord
+
+//        viewModel.checkWord(words)
 
         displayedWord.clear()
         isUnderscorePresent = false
@@ -187,7 +182,7 @@ class SpellingNNFragment : Fragment() {
                 isNextButtonEnabled = false
                 it.isEnabled = false
                 val userAnswer = tvWord.text.toString()
-                viewModel.getWordCount(userAnswer) // Запросите счетчик
+                viewModel.getWordCount(userAnswer)
                 checkAnswer(userAnswer)
 
                 viewModel.wordCountLiveData.observe(viewLifecycleOwner, androidx.lifecycle.Observer { count ->

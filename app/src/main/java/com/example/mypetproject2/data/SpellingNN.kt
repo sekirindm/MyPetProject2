@@ -1,6 +1,6 @@
 package com.example.mypetproject2.data
 
-val spellingNN = listOf(
+val spellingNN = setOf(
     "сломаННая",
     "листвеННица",
     "серебряНый ",

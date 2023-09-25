@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.mypetproject2.R
+import com.example.mypetproject2.data.spellingNN
 import com.example.mypetproject2.data.spellingPref
 import com.example.mypetproject2.databinding.FragmentSpellingPrefBinding
 import com.example.mypetproject2.features.ui.games.spelling.setupOnBackPressedCallback
@@ -109,7 +110,9 @@ class SpellingPrefFragment : Fragment() {
     }
 
     private fun generateRandomWord() {
-        words = spellingPref[random.nextInt(spellingPref.size)]
+        val spellingPrefList = spellingPref.toList()
+        val randomWord = spellingPrefList.random()
+        words = randomWord
         displayedWord.clear()
         isUnderscorePresent = false
 
@@ -220,7 +223,7 @@ class SpellingPrefFragment : Fragment() {
                 isNextButtonEnabled = false
                 it.isEnabled = false
                 val userAnswer = tvWord.text.toString()
-                viewModel.getWordCount(userAnswer) // Запросите счетчик
+                viewModel.getWordCount(userAnswer)
                 checkAnswer(userAnswer)
 
                 viewModel.wordCountLiveData.observe(viewLifecycleOwner, androidx.lifecycle.Observer { count ->

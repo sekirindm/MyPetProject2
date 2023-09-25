@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.mypetproject2.R
+import com.example.mypetproject2.data.spellingNN
 import com.example.mypetproject2.data.spellingPref
 import com.example.mypetproject2.data.spellingRoot
 import com.example.mypetproject2.databinding.FragmentSpellingPrefBinding
@@ -103,7 +104,9 @@ class SpellingRootFragment : Fragment() {
     }
 
     private fun generateRandomWord() {
-        words = spellingRoot[random.nextInt(spellingRoot.size)].replace("@", "")
+        val spellingRootList = spellingRoot.toList()
+        val randomWord = spellingRootList.random().replace("@", "")
+        words = randomWord
 
         displayedWord.clear()
         isUnderscorePresent = false

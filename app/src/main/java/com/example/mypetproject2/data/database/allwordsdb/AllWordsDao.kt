@@ -21,7 +21,7 @@ interface AllWordsDao {
     @Update
     suspend fun updateWordCount(allWordsDb: AllWordsDb)
 
-//    @Query("SELECT EXISTS(SELECT 1 FROM all_words WHERE word = :word AND (count < 5 OR count IS NULL))")
+//    @Query("SELECT EXISTS(SELECT 1 FROM all_words WHERE words = :word AND (count < 5 OR count IS NULL))")
 //    fun isWordValid(word: String): Boolean
 
 

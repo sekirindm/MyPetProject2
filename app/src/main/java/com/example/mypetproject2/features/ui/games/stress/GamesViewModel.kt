@@ -9,9 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.mypetproject2.data.database.AppDatabase
 import com.example.mypetproject2.data.database.GameItemDb
 import com.example.mypetproject2.data.database.allwordsdb.AllWordsDb
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 class GamesViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -65,26 +63,42 @@ class GamesViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 //    fun checkWord(word: String) {
-//        val isWordValid = allWordsDao.isWordValid(word)
-//        Log.d("checkWord", "isWordValid $isWordValid")
+//        CoroutineScope(Dispatchers.IO).launch {
+//            val isWordValid = allWordsDao.isWordValid(word)
+//            Log.d("checkWord", "isWordValid $isWordValid")
+//        }
 //    }
 
-    fun isWordAdded(word: String) {
+     fun isWordAdded(word: String): Boolean = runBlocking {
+        val gameItems = gameItemDao.getAllGameItems()
+        gameItems.any { it.rightAnswer == word }
+    }
+
+    fun isWordInDatabase(word: String): LiveData<Boolean> {
+        return gameItemDao.isWordInDatabase(word)
+    }
+
+    fun insertWord(word: String) {
         viewModelScope.launch {
-            val gameItems = gameItemDao.getAllGameItems()
-            val isAdded = gameItems.any { it.rightAnswer == word }
-                _isWordAddedLiveData.postValue(isAdded)
+            val currentItems = gameItemsLiveData.value ?: emptyList()
+            val newPosition = currentItems.size
+            val gameItem = GameItemDb(rightAnswer = word, position = newPosition)
+
+            withContext(Dispatchers.IO) {
+                gameItemDao.insert(gameItem)
             }
         }
+    }
 
-    fun removeWord(word: String) {
-        viewModelScope.launch {
+     fun deleteItem(word: String) {
+            CoroutineScope(Dispatchers.IO).launch {
                 val gameItemToDelete = gameItemDao.getAllGameItems().find { it.rightAnswer == word }
                 gameItemToDelete?.let {
                     gameItemDao.delete(it)
                 }
+            }
         }
-    }
+
 
 
     fun insertWordToAllWords(word: String, count: Int) {
@@ -128,19 +142,8 @@ class GamesViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun insertWord(word: String) {
-        viewModelScope.launch {
-            val currentItems = gameItemsLiveData.value ?: emptyList()
-            val newPosition = currentItems.size
-            val gameItem = GameItemDb(rightAnswer = word, position = newPosition)
 
-            gameItemDao.insert(gameItem)
-
-            updateRecyclerViewData()
-        }
-    }
-
-
+    val gameItem: LiveData<List<GameItemDb>> = gameItemDao.getAllGameItems2()
 
      fun updateRecyclerViewData() {
         viewModelScope.launch {

@@ -38,22 +38,26 @@ class DashboardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.bStartSpelling.setOnClickListener {
-            launchGame2()
+        with(binding) {
+            bStartSpelling.setOnClickListener {
+                launchGame2()
+            }
+            bStartStress.setOnClickListener {
+                launchGame1()
+            }
+            bStartSpellingPref.setOnClickListener {
+                launchGame3()
+            }
+            bStartSpellingRoot.setOnClickListener {
+                launchGame4()
+            }
+            bStartSpellingSuffix.setOnClickListener {
+                launchGame5()
+            }
+            bStartChooseWord.setOnClickListener {
+                launchGame6()
+            }
         }
-        binding.bStartStress.setOnClickListener {
-            launchGame1()
-        }
-        binding.bStartSpellingPref.setOnClickListener {
-            launchGame3()
-        }
-        binding.bStartSpellingRoot.setOnClickListener {
-            launchGame4()
-        }
-        binding.bStartSpellingSuffix.setOnClickListener {
-            launchGame5()
-        }
-
     }
 
     private fun launchGameFragment(gameNumber: Int, gameDescription: String, title: String) {
@@ -77,6 +81,7 @@ class DashboardFragment : Fragment() {
             3 -> "чики пики"
             4 -> "рики пики"
             5 -> "куки пукки"
+            6 -> "Выбери привильное слово!"
             else -> "Игра" // Заголовок по умолчанию, если нет соответствующего gameNumber
         }
         launchGameWithDescription(gameNumber, gameDescription, title)
@@ -98,6 +103,9 @@ class DashboardFragment : Fragment() {
     }
     private fun launchGame5() {
         launchGameWithDescription(5, "Правописание суффиксов")
+    }
+    private fun launchGame6() {
+        launchGameWithDescription(6, "Граматика")
     }
 
     override fun onDestroyView() {

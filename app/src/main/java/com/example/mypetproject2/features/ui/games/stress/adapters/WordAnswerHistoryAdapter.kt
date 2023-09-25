@@ -6,8 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mypetproject2.R
+import com.example.mypetproject2.data.database.GameItemDb
 import com.example.mypetproject2.features.createCustomResultSpannableStringBuilder
 import com.example.mypetproject2.features.markString
 import com.example.mypetproject2.features.ui.games.Rules
@@ -23,6 +25,8 @@ class WordAnswerHistoryAdapter(
     private val historyItems: List<Boolean>,
 ) :
         RecyclerView.Adapter<WordAnswerHistoryAdapter.ViewHolder>() {
+
+    private val favoritesState = mutableMapOf<Int, Boolean>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -41,6 +45,8 @@ class WordAnswerHistoryAdapter(
             holder.ivUserAnswer.setImageResource(R.drawable.rectangle_incorrect_answer)
         }
         holder.tvRules.visibility = if (holder.isRulesVisible) View.VISIBLE else View.GONE
+
+
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -61,32 +67,29 @@ class WordAnswerHistoryAdapter(
             }
         }
 
-        init {
-
-        }
-
         fun bind(wordPair: Pair<String, String>, viewModel: GamesViewModel) {
             val formattedWordPair = formatWordPair(wordPair)
             val word = formattedWordPair.first.toString()
 
             tvRightAnswer.text = formattedWordPair.first
             tvAnswerUser.text = formattedWordPair.second
-            viewModel.isWordAdded(word)
 
-            viewModel.isWordAddedLiveData.observeForever { isWordAdded ->
+                var isWordAdded = viewModel.isWordAdded(word)
+
                 updateIcon(isWordAdded)
 
                 ivFavouritesWords.setOnClickListener {
-                    if (isWordAdded) {
-                        viewModel.removeWord(word)
-                        Log.d("removeWord", "gameItemToDelete ${viewModel.removeWord(word)}")
-                    } else {
-                        viewModel.insertWord(word)
+                    CoroutineScope(Dispatchers.IO).launch {
+                        if (isWordAdded) {
+                            viewModel.deleteItem(word)
+                        } else {
+                            viewModel.insertWord(word)
+                        }
+                        isWordAdded = !isWordAdded
+                        updateIcon(isWordAdded)
                     }
-                    val newIsWordAdded = !isWordAdded
-                    updateIcon(newIsWordAdded)
                 }
-            }
+
 
             val rule = applyRule(markString(formattedWordPair.first.toString()).lowercase())
             tvRules.text = rule
@@ -95,8 +98,6 @@ class WordAnswerHistoryAdapter(
                 "suffixRule: ${applyRule(markString(formattedWordPair.first.toString()).lowercase())}"
             )
         }
-
-
 
         private fun updateIcon(isWordAdded: Boolean) {
             if (isWordAdded) {
@@ -142,3 +143,13 @@ class WordAnswerHistoryAdapter(
         return wordPairs.size
     }
 }
+
+
+
+//private fun updateIcon(isWordAdded: Boolean) {
+//            if (isWordAdded) {
+//                ivFavouritesWords.setImageResource(R.drawable.group_17__2_)
+//            } else {
+//                ivFavouritesWords.setImageResource(R.drawable.group_19)
+//            }
+//        }

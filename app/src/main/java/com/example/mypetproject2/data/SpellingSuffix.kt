@@ -1,6 +1,6 @@
 package com.example.mypetproject2.data
 
-val spellingSuffix = listOf(
+val spellingSuffix = setOf(
     "!щеголЕИватый!",
     "!горЕИвать!",
     "!заносчИЕвый!",

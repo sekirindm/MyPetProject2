@@ -63,6 +63,10 @@ class TitleFragment : Fragment() {
                         val action = TitleFragmentDirections.actionTitleFragmentToSpellingSuffixFragment()
                         findNavController().navigate(action)
                     }
+                    6-> {
+                        val action = TitleFragmentDirections.actionTitleFragmentToChooseWordFragment()
+                        findNavController().navigate(action)
+                    }
                     else -> {
                         //TODO
                     }
