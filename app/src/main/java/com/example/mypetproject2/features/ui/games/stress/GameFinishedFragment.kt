@@ -64,15 +64,11 @@ class GameFinishedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val navView = requireActivity().findViewById<BottomNavigationView>(R.id.nav_view)
-        navView.visibility = View.GONE
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 val navController = findNavController()
                 navController.popBackStack(R.id.navigation_dashboard, false)
-                navView.visibility = View.VISIBLE
             }
-
         })
     }
 

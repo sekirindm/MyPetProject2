@@ -69,10 +69,6 @@ fun Fragment.setupOnBackPressedCallback() {
         })
 }
 
-private fun Fragment.hideNavView() {
-    val navView = requireActivity().findViewById<BottomNavigationView>(R.id.nav_view)
-    navView.visibility = View.GONE
-}
 
 private fun Fragment.showExitConfirmationDialog() {
     val builder = AlertDialog.Builder(requireContext())
@@ -81,7 +77,6 @@ private fun Fragment.showExitConfirmationDialog() {
     builder.setPositiveButton("Да") { dialog, _ ->
         dialog.dismiss()
         findNavController().popBackStack()
-        hideNavView()
     }
     builder.setNegativeButton("Нет") { dialog, _ ->
         dialog.dismiss()

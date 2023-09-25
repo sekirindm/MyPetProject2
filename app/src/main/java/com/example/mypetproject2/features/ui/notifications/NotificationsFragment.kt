@@ -20,7 +20,11 @@ class NotificationsFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentNotificationsBinding.inflate(inflater, container, false)
-        val rootView = binding.root
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         val tabLayout = binding.tabLayout
         val viewPager = binding.viewPager
@@ -35,9 +39,8 @@ class NotificationsFragment : Fragment() {
                 else -> ""
             }
         }.attach()
-
-        return rootView
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

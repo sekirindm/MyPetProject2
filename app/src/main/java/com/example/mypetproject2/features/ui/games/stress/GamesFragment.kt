@@ -252,7 +252,7 @@ class GamesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val navView = requireActivity().findViewById<BottomNavigationView>(R.id.nav_view)
-        navView.visibility = View.GONE
+//        navView.visibility = View.GONE
 
     }
 
