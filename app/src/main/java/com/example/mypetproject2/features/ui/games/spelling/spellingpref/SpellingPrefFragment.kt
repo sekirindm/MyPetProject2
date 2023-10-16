@@ -38,9 +38,6 @@ class SpellingPrefFragment : Fragment() {
     private var words: String = ""
     private var isUnderscorePresent = false
 
-    private val random = Random()
-
-
     private var isNextButtonEnabled = true
 
     private val handler = Handler(Looper.getMainLooper())
@@ -94,11 +91,11 @@ class SpellingPrefFragment : Fragment() {
         displayWord()
         resetViewState()
 
-        tvWord.text = displayedWord  // Уберите здесь присваивание tvWord.text
-
-        setTextViewLetters(words)
+        tvWord.text = displayedWord
 
         binding.bNextPage.isEnabled = !isUnderscorePresent
+        setTextViewLetters(words)
+
 
         isNextButtonEnabled = true
     }

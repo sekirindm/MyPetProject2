@@ -41,9 +41,6 @@ class SpellingSuffixFragment : Fragment() {
     private val handler = Handler(Looper.getMainLooper())
     private val runnable = Runnable { showNextWord() }
 
-
-    private val random = Random()
-
     private val DELAY_MILLIS = 1000L
 
     override fun onCreateView(
@@ -131,17 +128,11 @@ class SpellingSuffixFragment : Fragment() {
         val tvOne = binding.tvOneN
         val tvTwo = binding.tvTwoN
 
-        tvOne.setOnClickListener {
-            handleLetterClick(tvOne, tvTwo)
-        }
+        tvOne.setOnClickListener {handleLetterClick(tvOne, tvTwo) }
 
-        tvTwo.setOnClickListener {
-            handleLetterClick(tvTwo, tvOne)
-        }
+        tvTwo.setOnClickListener {handleLetterClick(tvTwo, tvOne) }
 
-        tvWord.setOnClickListener {
-            handleTvWordClick()
-        }
+        tvWord.setOnClickListener {handleTvWordClick()}
     }
 
     private fun resetGame() {
@@ -187,7 +178,6 @@ class SpellingSuffixFragment : Fragment() {
                 updatedWord.append(letter)
             }
         }
-
         tvWord.text = updatedWord.toString()
 
         resetViewState()
@@ -281,6 +271,7 @@ class SpellingSuffixFragment : Fragment() {
         val userAnswersList = viewModel.userAnswers.value ?: mutableListOf()
         return userAnswersList.toBooleanArray()
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

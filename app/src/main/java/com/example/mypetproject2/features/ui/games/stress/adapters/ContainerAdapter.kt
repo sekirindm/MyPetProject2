@@ -20,14 +20,14 @@ class ContainerAdapter(
     private val answers: List<Boolean>,
     private val answersHistory: List<Pair<String, String>>
 
-    ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val VIEW_TYPE_SCORE = 0
     private val VIEW_TYPE_PERCENTAGE = 2
     private val VIEW_TYPE_ANSWER_HISTORY = 1
-    private val VIEW_TYPE_WORD_ANSWER_HISTORY = 3
-    private val VIEW_TYPE_REPORT = 4
-    private val VIEW_TYPE_NEW_GAME = 5
+    private val VIEW_TYPE_WORD_ANSWER_HISTORY = 4
+    private val VIEW_TYPE_REPORT = 5
+    private val VIEW_TYPE_NEW_GAME = 3
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -36,26 +36,32 @@ class ContainerAdapter(
                 val view = inflater.inflate(R.layout.item_score, parent, false)
                 ScoreViewHolder(view)
             }
+
             VIEW_TYPE_PERCENTAGE -> {
                 val view = inflater.inflate(R.layout.item_percents, parent, false)
                 PercentageViewHolder(view)
             }
+
             VIEW_TYPE_ANSWER_HISTORY -> {
                 val view = inflater.inflate(R.layout.item_answer_history_rv, parent, false)
                 AnswerHistoryViewHolder(view)
             }
+
             VIEW_TYPE_WORD_ANSWER_HISTORY -> {
                 val view = inflater.inflate(R.layout.item_full_answer_history_rv, parent, false)
                 WordAnswerHistoryViewHolder(view)
             }
+
             VIEW_TYPE_REPORT -> {
                 val view = inflater.inflate(R.layout.item_report, parent, false)
                 ReportViewHolder(view)
             }
+
             VIEW_TYPE_NEW_GAME -> {
                 val view = inflater.inflate(R.layout.item_start_new_game, parent, false)
-                StartNewGameViewHolder(view)
+                NewGame(view)
             }
+
             else -> throw IllegalArgumentException("Invalid view type")
         }
     }
@@ -66,24 +72,29 @@ class ContainerAdapter(
                 val scoreViewHolder = holder as ScoreViewHolder
                 scoreViewHolder.bind(score)
             }
+
             VIEW_TYPE_PERCENTAGE -> {
                 val percentageViewHolder = holder as PercentageViewHolder
                 percentageViewHolder.bind(percentage)
             }
+
             VIEW_TYPE_ANSWER_HISTORY -> {
                 val answerHistoryViewHolder = holder as AnswerHistoryViewHolder
                 answerHistoryViewHolder.bind(answers)
             }
+
             VIEW_TYPE_WORD_ANSWER_HISTORY -> {
                 val wordAnswerHistoryViewHolder = holder as WordAnswerHistoryViewHolder
                 wordAnswerHistoryViewHolder.bind(answersHistory)
             }
+
             VIEW_TYPE_REPORT -> {
                 val reportViewHolder = holder as ReportViewHolder
                 reportViewHolder.bind()
             }
+
             VIEW_TYPE_NEW_GAME -> {
-                val startNewGameViewHolder = holder as StartNewGameViewHolder
+                val startNewGameViewHolder = holder as NewGame
                 startNewGameViewHolder.bind()
             }
         }
@@ -98,10 +109,21 @@ class ContainerAdapter(
             0 -> VIEW_TYPE_SCORE
             1 -> VIEW_TYPE_ANSWER_HISTORY
             2 -> VIEW_TYPE_PERCENTAGE
-            4 -> VIEW_TYPE_WORD_ANSWER_HISTORY
-            3 -> VIEW_TYPE_REPORT
-            5 -> VIEW_TYPE_NEW_GAME
+            5 -> VIEW_TYPE_WORD_ANSWER_HISTORY
+            4 -> VIEW_TYPE_REPORT
+            3 -> VIEW_TYPE_NEW_GAME
             else -> throw IllegalArgumentException("Invalid position")
+        }
+    }
+
+    inner class NewGame(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val bNewGame: Button = itemView.findViewById(R.id.b_restart_game)
+        fun bind() {
+            bNewGame.setOnClickListener {
+                itemView.findNavController().navigate(R.id.action_gameFinishedFragment_to_navigation_dashboard)
+
+            }
+
         }
     }
 
@@ -124,7 +146,8 @@ class ContainerAdapter(
 
     inner class AnswerHistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        private val rvHistoryAnswer: RecyclerView = itemView.findViewById(R.id.rv_history_answer)
+        private val rvHistoryAnswer: RecyclerView =
+            itemView.findViewById(R.id.rv_history_answer)
 
         fun bind(answers: List<Boolean>) {
             val answerHistoryAdapter = AnswerHistoryAdapter(answers)
@@ -141,20 +164,20 @@ class ContainerAdapter(
             tvReport.text = "Отчет"
         }
     }
-    inner class StartNewGameViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        private val bNewGame: Button = itemView.findViewById(R.id.b_restart_game)
-
-        fun bind() {
-            bNewGame.setOnClickListener {
-                val navController = itemView.findNavController()
-                itemView.findNavController()
-                    .navigate(R.id.action_gameFinishedFragment_to_navigation_dashboard)
-                navController.popBackStack()
-
-            }
-        }
-    }
+//    inner class StartNewGameViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+//
+//        private val bNewGame: Button = itemView.findViewById(R.id.b_restart_game)
+//
+//        fun bind() {
+//            bNewGame.setOnClickListener {
+//                val navController = itemView.findNavController()
+//                itemView.findNavController()
+//                    .navigate(R.id.action_gameFinishedFragment_to_navigation_dashboard)
+//                navController.popBackStack()
+//
+//            }
+//        }
+//}
 
     inner class WordAnswerHistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -162,12 +185,14 @@ class ContainerAdapter(
             itemView.findViewById(R.id.full_answer_history_rv)
 
         fun bind(answersHistory: List<Pair<String, String>>) {
-            val wordAnswerHistoryAdapter = WordAnswerHistoryAdapter(answersHistory, viewModel, answers)
+            val wordAnswerHistoryAdapter =
+                WordAnswerHistoryAdapter(answersHistory, viewModel, answers)
             rvWordHistoryAnswer.adapter = wordAnswerHistoryAdapter
             rvWordHistoryAnswer.layoutManager =
                 LinearLayoutManager(itemView.context, LinearLayoutManager.VERTICAL, false)
 
-            val dividerDrawable = ContextCompat.getDrawable(itemView.context, R.drawable.divider_drawable)
+            val dividerDrawable =
+                ContextCompat.getDrawable(itemView.context, R.drawable.divider_drawable)
             val itemDecoration = DividerItemDecoration(itemView.context, dividerDrawable!!)
             rvWordHistoryAnswer.addItemDecoration(itemDecoration)
         }

@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,16 +49,13 @@ class GamesFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View? {
         _binding = FragmentGamesBinding.inflate(inflater, container, false)
-        val rootView = binding.root
         gamesLogic = GamesLogic()
         spannableStringBuilderHelper = SpannableStringBuilderHelper()
 
         initializeViews()
-
        setupOnBackPressedCallback()
 
-
-        return rootView
+        return binding.root
     }
 
     /**
@@ -73,7 +71,6 @@ class GamesFragment : Fragment() {
             checkWord()
 //            saveUserAnswers()
         }
-
         setupWordClick()
         tvWord.movementMethod = LinkMovementMethod.getInstance()
     }
@@ -185,35 +182,16 @@ class GamesFragment : Fragment() {
      * иначе вызывается метод showNextWord() через 1 секунду.
      * */
     private fun checkWord() {
-        val correctIndex = stress[wordIndex].indexOfFirst { it.isUpperCase() }
-        val isCorrect = correctIndex == viewModel.selectedVowelIndex.value
-        if (viewModel.selectedVowelIndex.value != -1) {
+        val correctIndex = getCorrectIndex()
+        val selectedVowelIndex = viewModel.selectedVowelIndex.value ?: -1
+        val isCorrect = correctIndex == selectedVowelIndex
+
+        if (selectedVowelIndex != -1) {
             val word = stress[wordIndex]
 
-            viewModel.getWordCount(word)
-
-            viewModel.wordCountLiveData.observe(viewLifecycleOwner) {
-
-                val newCount = if (isCorrect) it + 1 else 0
-                viewModel.insertWordToAllWords(word, newCount)
-            }
-
-            viewModel.updateScore(isCorrect)
-            viewModel.incrementTotalAttempts()
-            viewModel.addUserAnswer(isCorrect)
-
-
-            val resultSpannableStringBuilder =
-                spannableStringBuilderHelper.createResultSpannableStringBuilder(
-                    word,
-                    correctIndex,
-                    viewModel.selectedVowelIndex.value,
-                    viewModel.selectedVowelChar.value
-                )
-
-            viewModel.setUserAnswers(resultSpannableStringBuilder.toString())
-            spannableStringBuilder = resultSpannableStringBuilder
-            tvWord.text = spannableStringBuilder
+            updateWordCount(word, isCorrect)
+            updateScoreAndAttempts(isCorrect)
+            updateUI(word, correctIndex, selectedVowelIndex, isCorrect)
 
             if ((viewModel.totalAttempts.value ?: 0) >= MAX_ATTEMPTS) {
                 showGameResults()
@@ -224,6 +202,39 @@ class GamesFragment : Fragment() {
             }
         }
     }
+
+    private fun getCorrectIndex(): Int {
+        return stress[wordIndex].indexOfFirst { it.isUpperCase() }
+    }
+
+    private fun updateWordCount(word: String, isCorrect: Boolean) {
+        viewModel.getWordCount(word)
+        viewModel.wordCountLiveData.observe(viewLifecycleOwner) {
+            val newCount = if (isCorrect) it + 1 else 0
+            viewModel.insertWordToAllWords(word, newCount)
+        }
+    }
+
+    private fun updateScoreAndAttempts(isCorrect: Boolean) {
+        viewModel.updateScore(isCorrect)
+        viewModel.incrementTotalAttempts()
+        viewModel.addUserAnswer(isCorrect)
+    }
+
+    private fun updateUI(word: String, correctIndex: Int, selectedVowelIndex: Int, isCorrect: Boolean) {
+        val resultSpannableStringBuilder =
+            spannableStringBuilderHelper.createResultSpannableStringBuilder(
+                word,
+                correctIndex,
+                selectedVowelIndex,
+                viewModel.selectedVowelChar.value
+            )
+
+        viewModel.setUserAnswers(resultSpannableStringBuilder.toString())
+        spannableStringBuilder = resultSpannableStringBuilder
+        tvWord.text = spannableStringBuilder
+    }
+
 
 
     /**

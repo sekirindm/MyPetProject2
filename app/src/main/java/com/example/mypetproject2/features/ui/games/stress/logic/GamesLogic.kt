@@ -28,7 +28,6 @@ class GamesLogic {
             )
             spannableStringBuilder.replace(selectedVowelIndex, selectedVowelIndex + 1, character)
 
-            // Обновление предыдущего индекса выбранной гласной буквы
             this.previousVowelIndex = selectedVowelIndex
         }
     }

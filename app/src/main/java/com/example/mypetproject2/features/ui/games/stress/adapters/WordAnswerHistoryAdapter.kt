@@ -23,10 +23,7 @@ class WordAnswerHistoryAdapter(
     private val wordPairs: List<Pair<String, String>>,
     private val viewModel: GamesViewModel,
     private val historyItems: List<Boolean>,
-) :
-        RecyclerView.Adapter<WordAnswerHistoryAdapter.ViewHolder>() {
-
-    private val favoritesState = mutableMapOf<Int, Boolean>()
+) : RecyclerView.Adapter<WordAnswerHistoryAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -36,7 +33,7 @@ class WordAnswerHistoryAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val wordPair = wordPairs[position]
-        holder.bind(wordPair, viewModel)
+        holder.bind(wordPair)
         val item = historyItems[position]
 
         if (item) {
@@ -46,7 +43,6 @@ class WordAnswerHistoryAdapter(
         }
         holder.tvRules.visibility = if (holder.isRulesVisible) View.VISIBLE else View.GONE
 
-
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -54,11 +50,9 @@ class WordAnswerHistoryAdapter(
         private val tvAnswerUser: TextView = itemView.findViewById(R.id.tv_user_answer)
         private val ivFavouritesWords: ImageView = itemView.findViewById(R.id.iv_favourites_words)
         val ivUserAnswer: ImageView = itemView.findViewById(R.id.iv_user_answer)
-         val tvRules: TextView = itemView.findViewById(R.id.tv_rules)
+        val tvRules: TextView = itemView.findViewById(R.id.tv_rules)
         private val ivRules: ImageView = itemView.findViewById(R.id.iv_rules)
-
-         var isRulesVisible = false
-
+        var isRulesVisible = false
 
         init {
             ivRules.setOnClickListener {
@@ -67,7 +61,7 @@ class WordAnswerHistoryAdapter(
             }
         }
 
-        fun bind(wordPair: Pair<String, String>, viewModel: GamesViewModel) {
+        fun bind(wordPair: Pair<String, String>) {
             val formattedWordPair = formatWordPair(wordPair)
             val word = formattedWordPair.first.toString()
 
@@ -89,7 +83,6 @@ class WordAnswerHistoryAdapter(
                         updateIcon(isWordAdded)
                     }
                 }
-
 
             val rule = applyRule(markString(formattedWordPair.first.toString()).lowercase())
             tvRules.text = rule
@@ -120,7 +113,6 @@ class WordAnswerHistoryAdapter(
             return ""
         }
 
-
         private fun formatWordPair(wordPair: Pair<String, String>): Pair<CharSequence, CharSequence> {
             val rightAnswer = wordPair.first
             val userAnswer = wordPair.second
@@ -143,13 +135,3 @@ class WordAnswerHistoryAdapter(
         return wordPairs.size
     }
 }
-
-
-
-//private fun updateIcon(isWordAdded: Boolean) {
-//            if (isWordAdded) {
-//                ivFavouritesWords.setImageResource(R.drawable.group_17__2_)
-//            } else {
-//                ivFavouritesWords.setImageResource(R.drawable.group_19)
-//            }
-//        }

@@ -9,17 +9,42 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.mypetproject2.R
 import com.example.mypetproject2.data.spellingNN
+import com.example.mypetproject2.data.spellingSuffix
+import com.example.mypetproject2.data.stress
 import com.example.mypetproject2.databinding.FragmentSpellingNNBinding
 import com.example.mypetproject2.features.ui.games.spelling.setupOnBackPressedCallback
 import com.example.mypetproject2.features.ui.games.spelling.transformWord
+import com.example.mypetproject2.features.ui.games.stress.GameState
 import com.example.mypetproject2.features.ui.games.stress.GamesFragment
 import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
 import com.example.mypetproject2.utils.navigateSpellingToGameFinishedFragment
 
+private var wordIndex: Int = 0
+fun main() {
+
+//    val spellingNNList = spellingNN.toList()
+//    val randomWord = spellingNNList.random()
+//
+////        viewModel.checkWord(words)
+//
+//
+//    val modifiedWord = randomWord.replace("Н+".toRegex(), "_")
+//
+//    println("$randomWord $modifiedWord")
+
+
+    val a = spellingSuffix.toSet()
+    a.forEach {
+        println("\"$it\",")
+    }
+
+
+}
 
 class SpellingNNFragment : Fragment() {
 
@@ -46,26 +71,74 @@ class SpellingNNFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         _binding = FragmentSpellingNNBinding.inflate(inflater, container, false)
-        val rootView = binding.root
+        viewModel = ViewModelProvider(this)[GamesViewModel::class.java]
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        initObservers()
+        initGame()
 
         initializeViews()
-        generateRandomWord()
-        displayWord()
+//        generateRandomWord()
+//        displayWord()
 
         setupTextViewClickListeners()
-        setupNextPageButtonListener()
+//        setupNextPageButtonListener()
         setupOnBackPressedCallback()
+    }
 
-        return rootView
+    private fun initGame() {
+        viewModel.initGame()
+    }
+
+    private fun initObservers() {
+        viewModel.gameState.observe(viewLifecycleOwner) {
+            when(it) {
+                is GameState.NewWord -> {
+                    tvWord.text = it.word
+                    resetViewState()
+                    binding.bNextPage.isEnabled = false
+                    binding.tvOneN.isEnabled = true
+                    binding.tvTwoN.isEnabled = true
+                }
+                is GameState.UpdateWord -> {
+                    tvWord.text = it.word
+                    binding.tvOneN.isVisible = it.button != 0
+                    binding.tvTwoN.isVisible = it.button != 1
+
+                    binding.bNextPage.isEnabled = true
+                }
+                is GameState.CheckedAnswer -> {
+                    binding.bNextPage.isEnabled = false
+                    binding.tvOneN.isEnabled = false
+                    binding.tvTwoN.isEnabled = false
+
+                    val id = if (it.isCorrect) {
+                        R.color.green_light
+                    } else {
+                        R.color.red_light
+                    }
+                    requireView().setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            id
+                        )
+                    )
+                    viewModel.delay()
+                }
+            }
+        }
     }
 
     /**
      *Инициализирует viewModel и tvWord
      * */
     private fun initializeViews() {
-        viewModel = ViewModelProvider(this)[GamesViewModel::class.java]
         tvWord = binding.spellingWord
     }
 
@@ -73,39 +146,41 @@ class SpellingNNFragment : Fragment() {
      *  Генерирует случайное слово из доступного списка spelling и строит displayedWord,
      *  заменяя заглавные буквы на символ подчеркивания _
      * */
-    private fun generateRandomWord() {
-        val spellingNNList = spellingNN.toList()
-        val randomWord = spellingNNList.random()
-        words = randomWord
-
-//        viewModel.checkWord(words)
-
-        displayedWord.clear()
-        isUnderscorePresent = false
-
-        var isReplaced = false
-        for (i in words.indices) {
-            val letter = words[i]
-
-            if (letter.isUpperCase()) {
-                if (!isReplaced) {
-                    displayedWord.append('_')
-                    isReplaced = true
-                    isUnderscorePresent = true
-                }
-            } else {
-                displayedWord.append(letter)
-            }
-        }
-    }
+//    private fun generateRandomWord() {
+//        val spellingNNList = spellingNN.toList()
+//        val randomWord = spellingNNList.random()
+//        words = randomWord
+//
+////        viewModel.checkWord(words)
+//
+//        displayedWord.clear()
+//        isUnderscorePresent = false
+//
+//        val modifiedWord = randomWord.replace("Н+".toRegex(), "_")
+//
+//        var isReplaced = false
+//        for (i in words.indices) {
+//            val letter = words[i]
+//
+//            if (letter.isUpperCase()) {
+//                if (!isReplaced) {
+//                    displayedWord.append('_')
+//                    isReplaced = true
+//                    isUnderscorePresent = true
+//                }
+//            } else {
+//                displayedWord.append(letter)
+//            }
+//        }
+//    }
 
     /**
      *Отображает слово displayedWord в tvWord.
      * */
-    private fun displayWord() {
-        val finalWord = displayedWord.toString()
-        tvWord.text = finalWord
-    }
+//    private fun displayWord() {
+//        val finalWord = displayedWord.toString()
+//        tvWord.text = finalWord
+//    }
 
     /**
      *Устанавливает обработчики событий для нажатий на текстовые поля tvOne, tvTwo и tvWord.
@@ -115,16 +190,22 @@ class SpellingNNFragment : Fragment() {
         val tvTwo = binding.tvTwoN
 
         tvOne.setOnClickListener {
-            handleLetterClick(tvOne, tvTwo)
+            viewModel.handleWord(tvWord.text.toString(), tvOne.text.toString(), 0)
+//            handleLetterClick(tvOne)
         }
 
         tvTwo.setOnClickListener {
-            handleLetterClick(tvTwo, tvOne)
+            viewModel.handleWord(tvWord.text.toString(), tvTwo.text.toString(), 1)
+//            handleLetterClick(tvTwo)
+        }
+        binding.bNextPage.setOnClickListener {
+//            setupNextPageButtonListener()
+            viewModel.checkAnswer(tvWord.text.toString())
         }
 
-        tvWord.setOnClickListener {
-            handleTvWordClick()
-        }
+//        tvWord.setOnClickListener {
+//            handleTvWordClick()
+//        }
     }
 
     /**
@@ -132,7 +213,7 @@ class SpellingNNFragment : Fragment() {
      *  Заменяет символ подчеркивания _ в tvWord на выбранную букву,
      *  скрывает текущее текстовое поле и показывает другое текстовое поле.
      * */
-    private fun handleLetterClick(selectedLetterTextView: TextView, otherLetterTextView: TextView) {
+    private fun handleLetterClick(selectedLetterTextView: TextView) {
         val selectedLetter = selectedLetterTextView.text.toString()
         val underscoreIndex = tvWord.text.indexOf('_')
         if (underscoreIndex != -1) {
@@ -140,7 +221,6 @@ class SpellingNNFragment : Fragment() {
             tvWord.text = updatedWord
 
             selectedLetterTextView.visibility = View.GONE
-            otherLetterTextView.visibility = View.VISIBLE
         }
 
         binding.bNextPage.isEnabled = !tvWord.text.contains("_")
@@ -171,6 +251,8 @@ class SpellingNNFragment : Fragment() {
         isLetterRemoved = false
 
         binding.bNextPage.isEnabled = !tvWord.text.contains("_")
+
+
     }
 
     /**
@@ -185,12 +267,12 @@ class SpellingNNFragment : Fragment() {
                 viewModel.getWordCount(userAnswer)
                 checkAnswer(userAnswer)
 
-                viewModel.wordCountLiveData.observe(viewLifecycleOwner, androidx.lifecycle.Observer { count ->
-                    val isCorrect = userAnswer.equals(transformWord(words), ignoreCase = true)
+                viewModel.wordCountLiveData.observe(viewLifecycleOwner) { count ->
+                    val isCorrect = userAnswer.equals(words, ignoreCase = true)
                     val newCount = if (isCorrect) count + 1 else 0
 
                     viewModel.insertWordToAllWords(transformWord(words), newCount)
-                })
+                }
             }
         }
     }
@@ -236,8 +318,8 @@ class SpellingNNFragment : Fragment() {
             showGameResults()
             resetGame()
         } else {
-            generateRandomWord()
-            displayWord()
+//            generateRandomWord()
+//            displayWord()
             resetViewState()
             binding.bNextPage.isEnabled = !isUnderscorePresent
         }

@@ -7,10 +7,10 @@
     tools:context=".features.ui.games.choose.ChooseWordFragment">
 
     <TextView
-        android:id="@+id/how_right"
+        android:id="@+id/word"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Как правильно?"
+        android:text="(НЕ)ПРАВИЛЬНО"
         android:textColor="#000000"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@id/ll"
@@ -29,7 +29,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/how_right"
+        app:layout_constraintTop_toBottomOf="@+id/word"
         android:layout_marginBottom="148dp">
 
         <Button
@@ -43,7 +43,7 @@
             android:paddingTop="2dp"
             android:layout_marginBottom="8dp"
             android:paddingStart="16dp"
-            android:text="Button"
+            android:text="Слитно"
             android:textColor="#ffffff" />
 
         <Button
@@ -57,7 +57,7 @@
             android:gravity="left|center_vertical"
             android:paddingTop="2dp"
             android:paddingStart="16dp"
-            android:text="Button"
+            android:text="Раздельно"
             android:textColor="#ffffff"
             app:layout_constraintDimensionRatio="1:1" />
 
@@ -72,7 +72,7 @@
             android:gravity="left|center_vertical"
             android:paddingTop="2dp"
             android:paddingStart="16dp"
-            android:text="Button"
+            android:text="Через дефис"
             android:textColor="#ffffff" />
     </LinearLayout>
 

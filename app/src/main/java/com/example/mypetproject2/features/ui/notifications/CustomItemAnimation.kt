@@ -30,24 +30,6 @@ class CustomItemAnimation : DefaultItemAnimator() {
         // Создаем и запускаем анимацию удаления элемента
         val animatorSet = AnimatorSet()
         animatorSet.playTogether(animatorList)
-        animatorSet.addListener(object : Animator.AnimatorListener {
-            override fun onAnimationStart(animation: Animator) {
-                // Действия при начале анимации
-            }
-
-            override fun onAnimationEnd(animation: Animator) {
-                // Действия при завершении анимации
-                dispatchRemoveFinished(holder)
-            }
-
-            override fun onAnimationCancel(animation: Animator) {
-                // Действия при отмене анимации
-            }
-
-            override fun onAnimationRepeat(animation: Animator) {
-                // Действия при повторе анимации
-            }
-        })
 
         animatorSet.start()
         return true

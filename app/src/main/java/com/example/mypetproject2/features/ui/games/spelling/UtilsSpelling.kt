@@ -10,6 +10,11 @@ import com.example.mypetproject2.R
 import com.example.mypetproject2.features.ui.games.Rules
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
+fun main() {
+    print(transformWord("совершеННо"))
+    print(transformWord("совершеНо"))
+}
+
 fun transformWord(word: String): String {
     var upperCaseCount = 0
     var transformedWord = ""

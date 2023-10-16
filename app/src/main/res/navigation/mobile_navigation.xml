@@ -133,7 +133,10 @@
     tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/chooseWordFragment"
-        android:name="com.example.mypetproject2.features.ui.games.chooseword.ChooseWordFragment"
+        android:name="com.example.mypetproject2.features.ui.games.choose.ChooseWordFragment"
         android:label="fragment_choose_word"
         tools:layout="@layout/fragment_choose_word" />
+    <action
+        android:id="@+id/action_chooseWordFragment_to_gameFinishedFragment"
+        app:destination="@id/gameFinishedFragment" />
 </navigation>

@@ -48,6 +48,7 @@ class GameFinishedFragment : Fragment() {
             "spellingpref" -> getPairSpellingPref(answersHistory)
             "spellingroot" -> getPairSpellingRoot(answersHistory)
             "spellingsuffix" -> getPairSpellingSuffix(answersHistory)
+            "chooseWord" -> getPairChooseWord(answersHistory)
             else -> emptyList()
         }
 
@@ -70,6 +71,7 @@ class GameFinishedFragment : Fragment() {
                 navController.popBackStack(R.id.navigation_dashboard, false)
             }
         })
+
     }
 
     override fun onDestroyView() {

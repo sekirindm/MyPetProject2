@@ -9,9 +9,20 @@ import androidx.lifecycle.viewModelScope
 import com.example.mypetproject2.data.database.AppDatabase
 import com.example.mypetproject2.data.database.GameItemDb
 import com.example.mypetproject2.data.database.allwordsdb.AllWordsDb
+import com.example.mypetproject2.data.spellingNN
 import kotlinx.coroutines.*
 
+sealed class GameState {
+    data class NewWord(val word: String) : GameState()
+
+    data class UpdateWord(val word: String, val button: Int) : GameState()
+
+    data class CheckedAnswer(val isCorrect: Boolean) : GameState()
+}
+
 class GamesViewModel(application: Application) : AndroidViewModel(application) {
+
+    val gameState = MutableLiveData<GameState>()
 
     private val gameItemDao = AppDatabase.getInstance(application).gameItemDao()
 
@@ -23,7 +34,7 @@ class GamesViewModel(application: Application) : AndroidViewModel(application) {
     private val _allItemsLiveData = MutableLiveData<List<AllWordsDb>>()
     val allItemsLiveData: LiveData<List<AllWordsDb>> get() = _allItemsLiveData
 
-    private val _selectedVowelIndex = MutableLiveData(-1)
+    private val _selectedVowelIndex = MutableLiveData(0)
     val selectedVowelIndex: LiveData<Int> get() = _selectedVowelIndex
 
     private val _selectedVowelChar = MutableLiveData<Char?>(null)
@@ -69,7 +80,7 @@ class GamesViewModel(application: Application) : AndroidViewModel(application) {
 //        }
 //    }
 
-     fun isWordAdded(word: String): Boolean = runBlocking {
+    fun isWordAdded(word: String): Boolean = runBlocking {
         val gameItems = gameItemDao.getAllGameItems()
         gameItems.any { it.rightAnswer == word }
     }
@@ -90,15 +101,14 @@ class GamesViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-     fun deleteItem(word: String) {
-            CoroutineScope(Dispatchers.IO).launch {
-                val gameItemToDelete = gameItemDao.getAllGameItems().find { it.rightAnswer == word }
-                gameItemToDelete?.let {
-                    gameItemDao.delete(it)
-                }
+    fun deleteItem(word: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val gameItemToDelete = gameItemDao.getAllGameItems().find { it.rightAnswer == word }
+            gameItemToDelete?.let {
+                gameItemDao.delete(it)
             }
         }
-
+    }
 
 
     fun insertWordToAllWords(word: String, count: Int) {
@@ -145,7 +155,7 @@ class GamesViewModel(application: Application) : AndroidViewModel(application) {
 
     val gameItem: LiveData<List<GameItemDb>> = gameItemDao.getAllGameItems2()
 
-     fun updateRecyclerViewData() {
+    fun updateRecyclerViewData() {
         viewModelScope.launch {
             val updatedData = gameItemDao.getAllGameItems()
             _gameItemsLiveData.value = updatedData
@@ -154,7 +164,9 @@ class GamesViewModel(application: Application) : AndroidViewModel(application) {
 
 
     fun deleteGameItem(item: GameItemDb) {
-        gameItemDao.delete(item)
+        viewModelScope.launch {
+            gameItemDao.delete(item)
+        }
     }
 
     fun deleteAndQueryAllItems(item: GameItemDb) {
@@ -183,5 +195,35 @@ class GamesViewModel(application: Application) : AndroidViewModel(application) {
     fun incrementTotalAttempts() {
         val currentAttempts = _totalAttempts.value ?: 0
         _totalAttempts.value = currentAttempts + 1
+    }
+
+    fun initGame() {
+        val spellingNNList = spellingNN.toList()
+        val randomWord = spellingNNList.random()
+        val modifiedWord = randomWord.replace("Н+".toRegex(), "_")
+
+        gameState.value = GameState.NewWord(modifiedWord)
+    }
+
+    fun handleWord(word: String, letter: String, button: Int) {
+
+        val modifiedWord = if (!word.contains("_"))
+            word.replace("Н+".toRegex(), "_")
+                .replace("_", letter)
+        else
+            word.replace("_", letter)
+
+        gameState.value = GameState.UpdateWord(modifiedWord, button)
+    }
+
+    fun checkAnswer(word: String) {
+        gameState.value = GameState.CheckedAnswer(spellingNN.contains(word))
+    }
+
+    fun delay() {
+        viewModelScope.launch {
+            delay(1000)
+            initGame()
+        }
     }
 }

@@ -33,6 +33,7 @@ fun markString(string: String): String {
     val markedString = "!$string!"
     return markedString
 }
+
 fun main() {
 //    for(wordIndex in spellingPref.indices) {
 //        var words = spellingPref[wordIndex].replace("!", "")
@@ -42,8 +43,7 @@ fun main() {
 //        println("\"$markerWord\" to \"\",")
 
 
-    }
-
+}
 
 
 //    val correct = "усид!чИЕв!ый"
@@ -59,7 +59,6 @@ fun main() {
 //    val rule = rules[suffix]
 //
 //        println(rule)
-
 
 
 //    val userAnswers = "прИнеприятная"
@@ -115,6 +114,19 @@ fun getPairSpellingSuffix(userAnswers: List<String>): List<Pair<String, String>>
     return map
 }
 
+fun getPairChooseWord(userAnswers: List<String>): List<Pair<String, String>> {
+    val map = mutableListOf<Pair<String, String>>()
+    userAnswers.forEach { answer ->
+        listTriple.forEach {
+            if (answer == it.first || answer == it.second ||answer == it.third) {
+                map.add(Pair(transformWordSuf(it.first), answer))
+           }
+        }
+    }
+    Log.d("getPair", "map $map")
+    return map
+}
+
 fun getPair(userAnswers: List<String>): List<Pair<String, String>> {
     val map = mutableListOf<Pair<String, String>>()
     stress.forEach { stress ->
@@ -132,7 +144,10 @@ fun check(list: List<Pair<String, String>>) = list.map { it.first == it.second }
 // где каждая гласная буква делается кликабельной с помощью ClickableSpan.
 // createClickableSpan(characterIndex, character): Создает ClickableSpan для заданного индекса и символа гласной буквы.
 // При клике на эту букву будет вызываться метод handleVowelClick(characterIndex, character).
- fun createSpannableStringBuilder(word: String, function: (Int, Char) -> Unit): SpannableStringBuilder {
+fun createSpannableStringBuilder(
+    word: String,
+    function: (Int, Char) -> Unit
+): SpannableStringBuilder {
     val builder = SpannableStringBuilder(word.lowercase(Locale.getDefault()))
 
     for (characterIndex in word.indices) {

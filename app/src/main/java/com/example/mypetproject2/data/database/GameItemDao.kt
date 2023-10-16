@@ -13,7 +13,7 @@ interface GameItemDao {
     fun getAllGameItems2(): LiveData<List<GameItemDb>>
 
     @Delete
-    fun delete(item: GameItemDb)
+    suspend fun delete(item: GameItemDb)
 
     @Query("SELECT COUNT(*) FROM game_items WHERE rightAnswer = :word")
     fun isWordInDatabase(word: String): LiveData<Boolean>
