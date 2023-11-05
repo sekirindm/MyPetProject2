@@ -9,7 +9,7 @@
         android:id="@+id/navigation_dashboard"
         android:name="com.example.mypetproject2.features.ui.dashboard.DashboardFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" >
+        tools:layout="@layout/fragment_dashboard">
         <action
             android:id="@+id/action_navigation_dashboard_to_titleFragment"
             app:destination="@id/titleFragment" />
@@ -24,7 +24,7 @@
         android:id="@+id/gameFinishedFragment"
         android:name="com.example.mypetproject2.features.ui.games.stress.GameFinishedFragment"
         android:label="fragment_game_finished"
-        tools:layout="@layout/fragment_game_finished" >
+        tools:layout="@layout/fragment_game_finished">
 
         <argument
             android:name="score"
@@ -52,7 +52,7 @@
         android:id="@+id/gamesFragment"
         android:name="com.example.mypetproject2.features.ui.games.stress.GamesFragment"
         android:label="fragment_games"
-        tools:layout="@layout/fragment_games" >
+        tools:layout="@layout/fragment_games">
         <action
             android:id="@+id/action_gamesFragment_to_gameFinishedFragment"
             app:destination="@id/gameFinishedFragment" />
@@ -61,7 +61,7 @@
         android:id="@+id/spellingNNFragment"
         android:name="com.example.mypetproject2.features.ui.games.spelling.spellingnn.SpellingNNFragment"
         android:label="fragment_spelling_n_n"
-        tools:layout="@layout/fragment_spelling_n_n" >
+        tools:layout="@layout/fragment_spelling_n_n">
         <action
             android:id="@+id/action_spellingNNFragment_to_gameFinishedFragment"
             app:destination="@id/gameFinishedFragment" />
@@ -70,7 +70,7 @@
         android:id="@+id/spellingPrefFragment"
         android:name="com.example.mypetproject2.features.ui.games.spelling.spellingpref.SpellingPrefFragment"
         android:label="fragment_spelling_pref"
-        tools:layout="@layout/fragment_spelling_pref" >
+        tools:layout="@layout/fragment_spelling_pref">
         <action
             android:id="@+id/action_spellingPrefFragment_to_gameFinishedFragment"
             app:destination="@id/gameFinishedFragment" />
@@ -79,7 +79,7 @@
         android:id="@+id/spellingRootFragment"
         android:name="com.example.mypetproject2.features.ui.games.spelling.spellingroot.SpellingRootFragment"
         android:label="fragment_spelling_root"
-        tools:layout="@layout/fragment_spelling_root" >
+        tools:layout="@layout/fragment_spelling_root">
         <action
             android:id="@+id/action_spellingRootFragment_to_gameFinishedFragment"
             app:destination="@id/gameFinishedFragment" />
@@ -88,7 +88,7 @@
         android:id="@+id/spellingSuffixFragment"
         android:name="com.example.mypetproject2.features.ui.games.spelling.spellingsuffix.SpellingSuffixFragment"
         android:label="fragment_spelling_suffix"
-        tools:layout="@layout/fragment_spelling_suffix" >
+        tools:layout="@layout/fragment_spelling_suffix">
         <action
             android:id="@+id/action_spellingSuffixFragment_to_gameFinishedFragment"
             app:destination="@id/gameFinishedFragment" />
@@ -97,7 +97,7 @@
         android:id="@+id/titleFragment"
         android:name="com.example.mypetproject2.features.ui.games.TitleFragment"
         android:label="fragment_title"
-        tools:layout="@layout/fragment_title" >
+        tools:layout="@layout/fragment_title">
         <argument
             android:name="descriptions"
             app:argType="string" />
@@ -125,12 +125,15 @@
         <action
             android:id="@+id/action_titleFragment_to_chooseWordFragment"
             app:destination="@id/chooseWordFragment" />
+        <action
+            android:id="@+id/action_titleFragment_to_chooseSeparateSpellingWordFragment"
+            app:destination="@id/chooseSeparateSpellingWordFragment" />
     </fragment>
     <fragment
-    android:id="@+id/navigation_home"
-    android:name="com.example.mypetproject2.features.ui.home.HomeFragment"
-    android:label="@string/title_home"
-    tools:layout="@layout/fragment_home" />
+        android:id="@+id/navigation_home"
+        android:name="com.example.mypetproject2.features.ui.home.HomeFragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/chooseWordFragment"
         android:name="com.example.mypetproject2.features.ui.games.choose.ChooseWordFragment"
@@ -139,4 +142,13 @@
     <action
         android:id="@+id/action_chooseWordFragment_to_gameFinishedFragment"
         app:destination="@id/gameFinishedFragment" />
+    <fragment
+        android:id="@+id/chooseSeparateSpellingWordFragment"
+        android:name="com.example.mypetproject2.features.ui.games.choosespelling.ChooseSeparateSpellingWordFragment"
+        android:label="fragment_choose_separate_word"
+        tools:layout="@layout/fragment_choose_separate_spelling_word" />
+    <action
+        android:id="@+id/action_chooseSeparateSpellingWordFragment_to_gameFinishedFragment"
+        app:destination="@id/gameFinishedFragment" />
+
 </navigation>

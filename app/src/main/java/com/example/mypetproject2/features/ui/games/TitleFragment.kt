@@ -47,6 +47,7 @@ class TitleFragment : Fragment() {
                 4 -> { TitleFragmentDirections.actionTitleFragmentToSpellingRootFragment() }
                 5 -> { TitleFragmentDirections.actionTitleFragmentToSpellingSuffixFragment() }
                 6 -> { TitleFragmentDirections.actionTitleFragmentToChooseWordFragment() }
+                7 -> {TitleFragmentDirections.actionTitleFragmentToChooseSeparateSpellingWordFragment()}
                 else -> { TitleFragmentDirections.actionTitleFragmentToChooseWordFragment() }
             }
             findNavController().navigate(action)

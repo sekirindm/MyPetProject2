@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.mypetproject2.R
 import com.example.mypetproject2.data.listTriple
+import com.example.mypetproject2.data.separateList
 import com.example.mypetproject2.databinding.FragmentChooseWordBinding
 import com.example.mypetproject2.features.ui.games.spelling.setupOnBackPressedCallback
 import com.example.mypetproject2.features.ui.games.stress.GamesFragment
@@ -19,11 +20,11 @@ import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
 import com.example.mypetproject2.utils.navigateChooseWordFragmentToFinishedFragment
 
 
-//fun main() {
-//    var currentIndex = 0
-//    val currentTriple = listTriple.shuffled()[currentIndex].toList().shuffled()
-//    print("${currentTriple[0]},${currentTriple[1]}, ${currentTriple[2]} ")
-//}
+fun main() {
+    var wordIndex = 0
+   val list = separateList.shuffled()[wordIndex]
+    print(list.first)
+}
 
 class ChooseWordFragment : Fragment() {
     private var _binding: FragmentChooseWordBinding? = null

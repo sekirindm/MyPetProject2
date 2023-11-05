@@ -3,6 +3,8 @@ package com.example.mypetproject2.utils
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.mypetproject2.features.ui.games.choose.ChooseWordFragmentDirections
+import com.example.mypetproject2.features.ui.games.choosespelling.ChooseSeparateSpellingWordFragment
+import com.example.mypetproject2.features.ui.games.choosespelling.ChooseSeparateSpellingWordFragmentDirections
 import com.example.mypetproject2.features.ui.games.spelling.spellingnn.SpellingNNFragmentDirections
 import com.example.mypetproject2.features.ui.games.spelling.spellingpref.SpellingPrefFragmentDirections
 import com.example.mypetproject2.features.ui.games.spelling.spellingroot.SpellingRootFragmentDirections
@@ -101,6 +103,23 @@ fun Fragment.navigateChooseWordFragmentToFinishedFragment(
     gameType: String
 ) {
     val action = ChooseWordFragmentDirections.actionChooseWordFragmentToGameFinishedFragment(
+        score,
+        percentage,
+        userAnswers,
+        userAnswersHistory,
+        gameType
+    )
+    findNavController().navigate(action)
+}
+
+fun Fragment.navigateChooseSeparateWordFragmentToFinishedFragment(
+    score: Int,
+    percentage: Float,
+    userAnswers: BooleanArray,
+    userAnswersHistory: Array<String>,
+    gameType: String
+) {
+    val action = ChooseSeparateSpellingWordFragmentDirections.actionChooseWordFragmentToGameFinishedFragment(
         score,
         percentage,
         userAnswers,

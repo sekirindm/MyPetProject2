@@ -54,6 +54,9 @@ class DashboardFragment : Fragment() {
             bStartChooseWord.setOnClickListener {
                 launchGame6()
             }
+            bChooseSeparateWord.setOnClickListener {
+                launchGame7()
+            }
         }
     }
 
@@ -79,6 +82,7 @@ class DashboardFragment : Fragment() {
             4 -> "рики пики"
             5 -> "куки пукки"
             6 -> "Выбери привильное слово!"
+            7 -> "Выбери привильное слово с частицей 'НЕ'!"
             else -> "Игра" // Заголовок по умолчанию, если нет соответствующего gameNumber
         }
         launchGameWithDescription(gameNumber, gameDescription, title)
@@ -103,6 +107,9 @@ class DashboardFragment : Fragment() {
     }
     private fun launchGame6() {
         launchGameWithDescription(6, "Граматика")
+    }
+    private fun launchGame7() {
+        launchGameWithDescription(7, "Слитное раздельное написание слов с частицой 'НЕ' ")
     }
 
     override fun onDestroyView() {
