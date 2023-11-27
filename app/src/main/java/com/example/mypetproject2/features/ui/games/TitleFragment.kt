@@ -41,13 +41,14 @@ class TitleFragment : Fragment() {
 
         binding.bStartGame.setOnClickListener {
             val action = when (gameNumber) {
-                1 -> { TitleFragmentDirections.actionTitleFragmentToGamesFragment() }
+                1 -> { TitleFragmentDirections.actionTitleFragmentToStressFragment() }
                 2 -> { TitleFragmentDirections.actionTitleFragmentToSpellingNNFragment() }
                 3 -> { TitleFragmentDirections.actionTitleFragmentToSpellingPrefFragment() }
                 4 -> { TitleFragmentDirections.actionTitleFragmentToSpellingRootFragment() }
                 5 -> { TitleFragmentDirections.actionTitleFragmentToSpellingSuffixFragment() }
                 6 -> { TitleFragmentDirections.actionTitleFragmentToChooseWordFragment() }
                 7 -> {TitleFragmentDirections.actionTitleFragmentToChooseSeparateSpellingWordFragment()}
+                8 -> {TitleFragmentDirections.actionTitleFragmentToParonymGameFragment()}
                 else -> { TitleFragmentDirections.actionTitleFragmentToChooseWordFragment() }
             }
             findNavController().navigate(action)

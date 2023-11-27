@@ -1,14 +1,19 @@
 package com.example.mypetproject2.features.ui.games.spelling
 
 import android.app.AlertDialog
-import android.text.TextUtils.replace
-import android.view.View
+import android.graphics.Typeface
+import android.os.Build
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.style.StyleSpan
+import android.text.style.TypefaceSpan
 import androidx.activity.OnBackPressedCallback
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.example.mypetproject2.R
 import com.example.mypetproject2.features.ui.games.Rules
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.example.mypetproject2.features.ui.games.stress.StressFragment
+import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
 
 fun main() {
     print(transformWord("совершеННо"))
@@ -90,3 +95,30 @@ private fun Fragment.showExitConfirmationDialog() {
     dialog.show()
 }
 
+fun getUserAnswers(viewModel: GamesViewModel): BooleanArray {
+    val userAnswersList = viewModel.userAnswers.value ?: mutableListOf()
+    return userAnswersList.toBooleanArray()
+}
+
+fun stringBuilder(word: String): SpannableStringBuilder {
+    val startIndex = word.indexOf("!")
+    val endIndex = word.indexOf("!", startIndex + 1)
+
+    val spannableStringBuilder = SpannableStringBuilder(word.replace("!", ""))
+
+    if (startIndex != -1 && endIndex != -1) {
+        spannableStringBuilder.setSpan(
+            StyleSpan(Typeface.BOLD),
+            startIndex,
+            endIndex,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+    }
+
+    return spannableStringBuilder
+
+}
+
+fun calculatePercentage(viewModel: GamesViewModel): Float {
+    return (viewModel.score.value?.toFloat() ?: 0f) / StressFragment.MAX_ATTEMPTS * 100
+}

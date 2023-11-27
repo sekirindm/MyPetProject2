@@ -49,6 +49,8 @@ class GameFinishedFragment : Fragment() {
             "spellingroot" -> getPairSpellingRoot(answersHistory)
             "spellingsuffix" -> getPairSpellingSuffix(answersHistory)
             "chooseWord" -> getPairChooseWord(answersHistory)
+            "chooseSeparateWord" -> getPairChooseSeparateWord(answersHistory)
+            "paronym" -> getPairParonym(answersHistory)
             else -> emptyList()
         }
 

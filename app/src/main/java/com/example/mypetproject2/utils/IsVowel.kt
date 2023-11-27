@@ -118,20 +118,57 @@ fun getPairChooseWord(userAnswers: List<String>): List<Pair<String, String>> {
     val map = mutableListOf<Pair<String, String>>()
     userAnswers.forEach { answer ->
         listTriple.forEach {
-            if (answer == it.first || answer == it.second ||answer == it.third) {
+            if (answer == it.first || answer == it.second || answer == it.third) {
                 map.add(Pair(transformWordSuf(it.first), answer))
-           }
+            }
         }
     }
     Log.d("getPair", "map $map")
     return map
 }
 
-fun getPair(userAnswers: List<String>): List<Pair<String, String>> {
+fun getPairChooseSeparateWord(userAnswers: List<String>): List<Pair<String, String>> {
+
     val map = mutableListOf<Pair<String, String>>()
-    stress.forEach { stress ->
-        userAnswers.forEach { answer ->
-            if (answer.lowercase() == stress.lowercase()) map.add(Pair(stress, answer))
+    userAnswers.forEach { answer ->
+        separateList.forEach {
+
+            val formattedFirst = when (it.second) {
+                0 -> it.first.replace("(", "").replace(")", " ")
+                1 -> it.first.replace("(", "").replace(")", "")
+                else -> it.first.replace("(", "").replace(")", "-")
+            }
+            if (answer.replace(" ", "").replace("-", "") == formattedFirst.replace(" ", "")
+                    .replace("-", "")
+            ) {
+                map.add(Pair(transformWordSuf(formattedFirst), answer))
+            }
+        }
+    }
+    Log.d("getPair", "map $map")
+    return map
+}
+
+fun getPairParonym(userAnswers: List<String>): List<Pair<String, String>> {
+    val map = mutableListOf<Pair<String, String>>()
+    userAnswers.forEach { answer ->
+        paronymList.forEach {
+            if (answer.replace(Regex("[А-Я!]")) { "" } == it.first.replace(Regex("[А-Я!]")) { "" }) {
+                map.add(Pair(it.first, answer))
+            }
+        }
+    }
+    Log.d("getPair", "map $map")
+    return map
+}
+
+
+fun getPair(userAnswers: List<String>): List<Pair<String, String>> {
+
+    val map = mutableListOf<Pair<String, String>>()
+    userAnswers.forEach { answer ->
+        stress.forEach {
+            if (answer.lowercase() == it.lowercase()) map.add(Pair(it, answer))
         }
     }
     Log.d("getPair", "map $map")

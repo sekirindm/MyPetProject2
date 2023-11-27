@@ -49,15 +49,6 @@
 
     </fragment>
     <fragment
-        android:id="@+id/gamesFragment"
-        android:name="com.example.mypetproject2.features.ui.games.stress.GamesFragment"
-        android:label="fragment_games"
-        tools:layout="@layout/fragment_games">
-        <action
-            android:id="@+id/action_gamesFragment_to_gameFinishedFragment"
-            app:destination="@id/gameFinishedFragment" />
-    </fragment>
-    <fragment
         android:id="@+id/spellingNNFragment"
         android:name="com.example.mypetproject2.features.ui.games.spelling.spellingnn.SpellingNNFragment"
         android:label="fragment_spelling_n_n"
@@ -114,9 +105,6 @@
             android:id="@+id/action_titleFragment_to_spellingSuffixFragment"
             app:destination="@id/spellingSuffixFragment" />
         <action
-            android:id="@+id/action_titleFragment_to_gamesFragment"
-            app:destination="@id/gamesFragment" />
-        <action
             android:id="@+id/action_titleFragment_to_spellingPrefFragment"
             app:destination="@id/spellingPrefFragment" />
         <action
@@ -128,6 +116,15 @@
         <action
             android:id="@+id/action_titleFragment_to_chooseSeparateSpellingWordFragment"
             app:destination="@id/chooseSeparateSpellingWordFragment" />
+        <action
+            android:id="@+id/action_titleFragment_to_stressFragment"
+            app:destination="@id/stressFragment" />
+        <action
+            android:id="@+id/action_titleFragment_to_stressFragment2"
+            app:destination="@id/stressFragment" />
+        <action
+            android:id="@+id/action_titleFragment_to_paronymGameFragment"
+            app:destination="@id/paronymGameFragment" />
     </fragment>
     <fragment
         android:id="@+id/navigation_home"
@@ -138,7 +135,11 @@
         android:id="@+id/chooseWordFragment"
         android:name="com.example.mypetproject2.features.ui.games.choose.ChooseWordFragment"
         android:label="fragment_choose_word"
-        tools:layout="@layout/fragment_choose_word" />
+        tools:layout="@layout/fragment_choose_word" >
+        <action
+            android:id="@+id/action_chooseWordFragment_to_gameFinishedFragment2"
+            app:destination="@id/gameFinishedFragment" />
+    </fragment>
     <action
         android:id="@+id/action_chooseWordFragment_to_gameFinishedFragment"
         app:destination="@id/gameFinishedFragment" />
@@ -146,9 +147,31 @@
         android:id="@+id/chooseSeparateSpellingWordFragment"
         android:name="com.example.mypetproject2.features.ui.games.choosespelling.ChooseSeparateSpellingWordFragment"
         android:label="fragment_choose_separate_word"
-        tools:layout="@layout/fragment_choose_separate_spelling_word" />
+        tools:layout="@layout/fragment_choose_separate_spelling_word" >
+        <action
+            android:id="@+id/action_chooseSeparateSpellingWordFragment_to_gameFinishedFragment2"
+            app:destination="@id/gameFinishedFragment" />
+    </fragment>
     <action
         android:id="@+id/action_chooseSeparateSpellingWordFragment_to_gameFinishedFragment"
         app:destination="@id/gameFinishedFragment" />
+    <fragment
+        android:id="@+id/stressFragment"
+        android:name="com.example.mypetproject2.features.ui.games.stress.StressFragment"
+        android:label="fragment_games"
+        tools:layout="@layout/fragment_games" >
+        <action
+            android:id="@+id/action_stressFragment_to_gameFinishedFragment"
+            app:destination="@id/gameFinishedFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/paronymGameFragment"
+        android:name="com.example.mypetproject2.features.ui.games.paroynim.ParonymGameFragment"
+        android:label="ParonymGameFragment"
+        tools:layout="@layout/fragment_paroynim_game">
+        <action
+            android:id="@+id/action_paronymGameFragment_to_gameFinishedFragment"
+            app:destination="@id/gameFinishedFragment" />
+    </fragment>
 
 </navigation>

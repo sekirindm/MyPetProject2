@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="#FFFFFf"
     android:id="@+id/games_fragment"
-    tools:context=".features.ui.games.stress.GamesFragment">
+    tools:context=".features.ui.games.stress.StressFragment">
 
     <TextView
         android:id="@+id/tv_word"

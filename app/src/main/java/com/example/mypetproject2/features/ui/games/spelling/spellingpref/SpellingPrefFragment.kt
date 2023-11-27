@@ -12,18 +12,15 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.mypetproject2.R
-import com.example.mypetproject2.data.spellingNN
 import com.example.mypetproject2.data.spellingPref
 import com.example.mypetproject2.databinding.FragmentSpellingPrefBinding
+import com.example.mypetproject2.features.ui.games.spelling.calculatePercentage
+import com.example.mypetproject2.features.ui.games.spelling.getUserAnswers
 import com.example.mypetproject2.features.ui.games.spelling.setupOnBackPressedCallback
 import com.example.mypetproject2.features.ui.games.spelling.transformWord
-import com.example.mypetproject2.features.ui.games.stress.GamesFragment
+import com.example.mypetproject2.features.ui.games.stress.StressFragment
 import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
 import com.example.mypetproject2.utils.navigateSpellingPrefToGameFinishedFragment
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.util.*
 
 
 class SpellingPrefFragment : Fragment() {
@@ -82,7 +79,7 @@ class SpellingPrefFragment : Fragment() {
 
     private fun showNextWord() {
         wordIndex++
-        if (wordIndex >= GamesFragment.MAX_ATTEMPTS) {
+        if (wordIndex >= StressFragment.MAX_ATTEMPTS) {
             showGameResults()
             resetGame()
         }
@@ -234,8 +231,8 @@ class SpellingPrefFragment : Fragment() {
     }
 
     private fun showGameResults() {
-        val percentage = calculatePercentage()
-        val userAnswers = getUserAnswers()
+        val percentage = calculatePercentage(viewModel)
+        val userAnswers = getUserAnswers(viewModel)
         val userAnswerHistory = viewModel.userAnswersHistory.value?.toTypedArray()!!
         Log.d(
             "showGameResults",
@@ -274,15 +271,6 @@ class SpellingPrefFragment : Fragment() {
             )
         }
         handler.postDelayed(runnable, DELAY_MILLIS)
-    }
-
-    private fun calculatePercentage(): Float {
-        return (viewModel.score.value?.toFloat() ?: 0f) / GamesFragment.MAX_ATTEMPTS * 100
-    }
-
-    private fun getUserAnswers(): BooleanArray {
-        val userAnswersList = viewModel.userAnswers.value ?: mutableListOf()
-        return userAnswersList.toBooleanArray()
     }
 
     override fun onDestroyView() {

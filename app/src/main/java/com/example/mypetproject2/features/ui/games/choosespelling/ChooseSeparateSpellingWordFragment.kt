@@ -1,9 +1,12 @@
 package com.example.mypetproject2.features.ui.games.choosespelling
 
-import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.style.TypefaceSpan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,16 +16,46 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.mypetproject2.R
 import com.example.mypetproject2.data.separateList
+import com.example.mypetproject2.data.stress
 import com.example.mypetproject2.databinding.FragmentChooseSeparateSpellingWordBinding
-import com.example.mypetproject2.features.ui.games.stress.GamesFragment
+import com.example.mypetproject2.features.ui.games.spelling.calculatePercentage
+import com.example.mypetproject2.features.ui.games.spelling.getUserAnswers
+import com.example.mypetproject2.features.ui.games.spelling.stringBuilder
+import com.example.mypetproject2.features.ui.games.stress.StressFragment
 import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
 import com.example.mypetproject2.utils.navigateChooseSeparateWordFragmentToFinishedFragment
-import com.example.mypetproject2.utils.navigateChooseWordFragmentToFinishedFragment
 
 fun main() {
-    val list = separateList.shuffled()[0]
-    val options = list.toList()
-    print("${list.second}, ${list.first}")
+//    val list = separateList.shuffled()[0]
+//    val options = list.toList()
+//    print("${list.second}, ${list.first}")
+
+//    val correctDisplay = separateList.find {it.first.replace("(", "").replace(")", "").trim() == rightAnswer.trim()}?.second
+
+//    val kal = separateList.map {
+//        val word = it.first
+//        when (it.second) {
+//            0 -> word.replace("(", "").replace(")", " ")
+//            1 -> word.replace("(", "").replace(")", "")
+//            2 -> word.replace("(", "").replace(")", "-")
+//            else -> word
+//        }
+//    }
+
+    val w = stress[0].indexOfFirst { it.isUpperCase() }
+    print(w)
+//
+//    kal.forEach { println(it) }
+
+//    val word = "!(НЕ)ВЕРЮ! в то что ты ушел"
+//    val startIndex = word.indexOf("!")
+//    val endIndex = word.indexOf("!", startIndex + 1)
+//    val extractedText = if (startIndex != -1 && endIndex != -1) {
+//        word.substring(startIndex, endIndex + 1)
+//    } else {
+//        "Выделенное слово не найдено"
+//    }
+//    print(extractedText.replace("!", "").lowercase())
 }
 
 class ChooseSeparateSpellingWordFragment : Fragment() {
@@ -30,6 +63,8 @@ class ChooseSeparateSpellingWordFragment : Fragment() {
     private val binding get() = _binding!!
     private val handler = Handler(Looper.getMainLooper())
     var wordIndex = 0
+
+    private var currentWord: String = ""
 
     private var isNextButtonEnabled = true
     private var currentAnswerIndex = 0
@@ -54,18 +89,19 @@ class ChooseSeparateSpellingWordFragment : Fragment() {
 
     private fun initializeButton() {
         with(binding) {
-            b3.setOnClickListener { handleClick(1) }
+            b1.setOnClickListener { handleClick(1) }
             b2.setOnClickListener { handleClick(0) }
-            b1.setOnClickListener { handleClick(2) }
+//            b3.setOnClickListener { handleClick(2) }
         }
     }
 
     private fun displayWord() {
         val list = separateList.shuffled()[wordIndex]
-        val currentWord = list.first
-        binding.word.text = currentWord
+        currentWord = list.first
+        val formattedWord = stringBuilder(currentWord)
+        binding.word.text = formattedWord
         currentAnswerIndex = list.second
-        Log.d("displayWord", "${list.second}, ${list.first}")
+        Log.d("displayWord", "${list.first} ${list.second}, ")
     }
 
     private fun handleClick(buttonIndex: Int) {
@@ -73,15 +109,27 @@ class ChooseSeparateSpellingWordFragment : Fragment() {
         isNextButtonEnabled = false
 
         val isCorrect = buttonIndex == currentAnswerIndex
-        val userAnswer = buttons()[buttonIndex].text.toString()
+//        val userAnswer = buttons()[buttonIndex].text.toString()
         checkAnswer(buttonIndex)
+
+        val userAnswer = when (buttonIndex) {
+            0 ->  currentWord.replace("(", "").replace(")", " ")
+            1 ->  currentWord.replace("(", "").replace(")", "")
+            else -> currentWord.replace("(", "").replace(")", "-")
+
+        }
+
+//        if (buttonIndex == 0) {
+//            currentWord.replace("()", " ")
+//        }
 
         viewModel.updateScore(isCorrect)
         viewModel.addUserAnswer(isCorrect)
         viewModel.setUserAnswers(userAnswer)
     }
 
-    private fun buttons() = listOf(binding.b2, binding.b3, binding.b1)
+//    , binding.b3
+    private fun buttons() = listOf(binding.b2, binding.b1)
     private fun checkAnswer(clickedButtonIndex: Int) {
 
         for ((index, button) in buttons().withIndex()) {
@@ -111,7 +159,6 @@ class ChooseSeparateSpellingWordFragment : Fragment() {
             showNextWord()
 
         }, 1000L)
-//    }
     }
 
     private fun resetBackgroundState() {
@@ -124,7 +171,7 @@ class ChooseSeparateSpellingWordFragment : Fragment() {
 
     private fun showNextWord() {
         wordIndex++
-        if (wordIndex >= GamesFragment.MAX_ATTEMPTS) {
+        if (wordIndex >= StressFragment.MAX_ATTEMPTS) {
             showGameResults()
             resetBackgroundState()
         } else {
@@ -133,8 +180,8 @@ class ChooseSeparateSpellingWordFragment : Fragment() {
         }
     }
     private fun showGameResults() {
-        val percentage = calculatePercentage()
-        val userAnswers = getUserAnswers()
+        val percentage = calculatePercentage(viewModel)
+        val userAnswers = getUserAnswers(viewModel)
         val userAnswerHistory = viewModel.userAnswersHistory.value?.toTypedArray()!!
         Log.d(
             "showGameResults",
@@ -149,20 +196,8 @@ class ChooseSeparateSpellingWordFragment : Fragment() {
         )
     }
 
-    private fun getUserAnswers(): BooleanArray {
-        val userAnswersList = viewModel.userAnswers.value ?: mutableListOf()
-        return userAnswersList.toBooleanArray()
-    }
-
-    private fun calculatePercentage(): Float {
-        return (viewModel.score.value?.toFloat() ?: 0f) / GamesFragment.MAX_ATTEMPTS * 100
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 }
-
-
-

@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mypetproject2.R
 import com.example.mypetproject2.data.database.GameItemDb
+import com.example.mypetproject2.data.separateList
 import com.example.mypetproject2.features.createCustomResultSpannableStringBuilder
 import com.example.mypetproject2.features.markString
 import com.example.mypetproject2.features.ui.games.Rules
@@ -64,6 +65,8 @@ class WordAnswerHistoryAdapter(
         fun bind(wordPair: Pair<String, String>) {
             val formattedWordPair = formatWordPair(wordPair)
             val word = formattedWordPair.first.toString()
+//            val rightAnswer = formattedWordPair.first.toString()
+//            val userAnswer = formattedWordPair.second.toString()
 
             tvRightAnswer.text = formattedWordPair.first
             tvAnswerUser.text = formattedWordPair.second
@@ -84,6 +87,40 @@ class WordAnswerHistoryAdapter(
                     }
                 }
 
+            val kal = separateList.map {
+                val wordFirst = it.first
+                when (it.second) {
+                    0 -> wordFirst.replace("(", "").replace(")", " ")
+                    1 -> wordFirst.replace("(", "").replace(")", "")
+                    2 -> wordFirst.replace("(", "").replace(")", "-")
+                    else -> wordFirst
+                }
+            }
+
+            val correctDisplay = kal.find { it == word }?.let {
+                separateList[kal.indexOf(it)].second
+            }
+
+//            val unCorrectDisplay = kal.find { it == userAnswer }?.let {
+//                separateList[kal.indexOf(it)].second
+//            }
+
+            Log.d("separateList", "$separateList")
+            Log.d("correctDisplay", "${word.trim()}")
+
+            tvRightAnswer.text = word + when (correctDisplay) {
+                0 -> " (раздельно)"
+                1 -> " (слитно)"
+                2 -> " (через дефис)"
+                else -> ""
+            }
+
+//            tvAnswerUser.text = userAnswer + when(unCorrectDisplay) {
+//                0 -> " (раздельно)"
+//                1 -> " (слитно)"
+//                else -> " (через дефис)"
+//            }
+
             val rule = applyRule(markString(formattedWordPair.first.toString()).lowercase())
             tvRules.text = rule
             Log.d(
@@ -94,9 +131,9 @@ class WordAnswerHistoryAdapter(
 
         private fun updateIcon(isWordAdded: Boolean) {
             if (isWordAdded) {
-                ivFavouritesWords.setImageResource(R.drawable.group_17__2_)
+                ivFavouritesWords.setImageResource(R.drawable.frame_98)
             } else {
-                ivFavouritesWords.setImageResource(R.drawable.group_19)
+                ivFavouritesWords.setImageResource(R.drawable.frame_110)
             }
         }
 

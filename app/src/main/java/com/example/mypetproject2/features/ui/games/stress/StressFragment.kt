@@ -23,7 +23,7 @@ import com.example.mypetproject2.utils.navigateToGameFinishedFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.util.*
 
-class GamesFragment : Fragment() {
+class StressFragment : Fragment() {
 
     private var _binding: FragmentGamesBinding? = null
     private val binding get() = _binding!!
@@ -189,6 +189,9 @@ class GamesFragment : Fragment() {
         if (selectedVowelIndex != -1) {
             val word = stress[wordIndex]
 
+//            Log.d("selectedVowelIndex", "$selectedVowelIndex")
+
+            Log.d("isCorrect", "$isCorrect")
             updateWordCount(word, isCorrect)
             updateScoreAndAttempts(isCorrect)
             updateUI(word, correctIndex, selectedVowelIndex, isCorrect)

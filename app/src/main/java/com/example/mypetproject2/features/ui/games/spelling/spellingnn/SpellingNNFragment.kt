@@ -13,14 +13,14 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.mypetproject2.R
-import com.example.mypetproject2.data.spellingNN
-import com.example.mypetproject2.data.spellingSuffix
-import com.example.mypetproject2.data.stress
+import com.example.mypetproject2.data.spellingRoot
 import com.example.mypetproject2.databinding.FragmentSpellingNNBinding
+import com.example.mypetproject2.features.ui.games.spelling.calculatePercentage
+import com.example.mypetproject2.features.ui.games.spelling.getUserAnswers
 import com.example.mypetproject2.features.ui.games.spelling.setupOnBackPressedCallback
 import com.example.mypetproject2.features.ui.games.spelling.transformWord
 import com.example.mypetproject2.features.ui.games.stress.GameState
-import com.example.mypetproject2.features.ui.games.stress.GamesFragment
+import com.example.mypetproject2.features.ui.games.stress.StressFragment
 import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
 import com.example.mypetproject2.utils.navigateSpellingToGameFinishedFragment
 
@@ -38,7 +38,7 @@ fun main() {
 //    println("$randomWord $modifiedWord")
 
 
-    val a = spellingSuffix.toSet()
+    val a = spellingRoot.toSet()
     a.forEach {
         println("\"$it\",")
     }
@@ -314,7 +314,7 @@ class SpellingNNFragment : Fragment() {
      * */
     private fun showNextWord() {
         wordIndex++
-        if (wordIndex >= GamesFragment.MAX_ATTEMPTS) {
+        if (wordIndex >= StressFragment.MAX_ATTEMPTS) {
             showGameResults()
             resetGame()
         } else {
@@ -350,13 +350,7 @@ class SpellingNNFragment : Fragment() {
         requireView().setBackgroundResource(R.color.white)
     }
 
-    /**
-     * Возвращает ответы пользователя в виде массива Boolean
-     * */
-    private fun getUserAnswers(): BooleanArray {
-        val userAnswersList = viewModel.userAnswers.value ?: mutableListOf()
-        return userAnswersList.toBooleanArray()
-    }
+
 
     /**
      * Отображает результаты игры, вычисляет процент правильных ответов,
@@ -366,8 +360,8 @@ class SpellingNNFragment : Fragment() {
 
     // SpellingNNFragment
     private fun showGameResults() {
-        val percentage = calculatePercentage()
-        val userAnswers = getUserAnswers()
+        val percentage = calculatePercentage(viewModel)
+        val userAnswers = getUserAnswers(viewModel)
         val userAnswerHistory = viewModel.userAnswersHistory.value?.toTypedArray()!!
         Log.d(
             "showGameResults",
@@ -380,13 +374,6 @@ class SpellingNNFragment : Fragment() {
             userAnswerHistory,
             "spelling"
         )
-    }
-
-    /**
-     *Вычисляет процент правильных ответов в игре.
-     * */
-    private fun calculatePercentage(): Float {
-        return (viewModel.score.value?.toFloat() ?: 0f) / GamesFragment.MAX_ATTEMPTS * 100
     }
 
     override fun onDestroyView() {

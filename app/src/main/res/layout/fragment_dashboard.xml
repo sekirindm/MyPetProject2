@@ -13,12 +13,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="24sp"
+        android:gravity="center"
         android:textStyle="bold"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="16dp"
         android:layout_marginStart="16dp"
-        android:textColor="#151515"
-        android:text="Games" />
+        android:textColor="#545434"
+        android:text="Игры" />
 
     <TextView
         android:id="@+id/textView5"
@@ -29,7 +30,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginBottom="8dp"
-        android:text="Арфоэпика" />
+        android:text="Орфоэпия" />
 
     <Button
         android:id="@+id/b_start_stress"
@@ -38,7 +39,7 @@
         android:background="@drawable/group_8"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="8dp"/>
 
     <TextView
         android:id="@+id/textView10"
@@ -87,26 +88,6 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"/>
 
-    <TextView
-        android:id="@+id/textView11"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="Граматика" />
-
-    <Button
-        android:id="@+id/b_start_choose_word"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/group_25"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"/>
-
     <Button
         android:id="@+id/b_choose_separate_word"
         android:layout_width="match_parent"
@@ -115,6 +96,38 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"/>
+
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="Лексика" />
+
+    <Button
+        android:id="@+id/b_start_choose_word"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/group_25" />
+
+    <Button
+        android:id="@+id/b_start_paronym"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/group_103" />
+
+
 
 
 </LinearLayout>

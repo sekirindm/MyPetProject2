@@ -7,74 +7,49 @@
 
     <TextView
         android:id="@+id/word"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:gravity="center"
         android:text="(НЕ)ПРАВИЛЬНО"
         android:textColor="#000000"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@id/ll"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/ll"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.401" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
+        android:layout_margin="16dp"
+        android:layout_marginBottom="892dp"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/word"
-        android:layout_marginBottom="148dp">
+        app:layout_constraintStart_toStartOf="parent">
 
-        <Button
-            android:id="@+id/b_3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/rectangle_111"
-            android:gravity="left|center_vertical"
-            android:paddingTop="2dp"
-            android:layout_marginBottom="8dp"
-            android:paddingStart="16dp"
-            android:text="Слитно"
-            android:textColor="#ffffff" />
-
-        <Button
-            android:id="@+id/b_2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/rectangle_111"
-            android:gravity="left|center_vertical"
-            android:paddingTop="2dp"
-            android:paddingStart="16dp"
-            android:text="Раздельно"
-            android:textColor="#ffffff"
-            app:layout_constraintDimensionRatio="1:1" />
 
         <Button
             android:id="@+id/b_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/rectangle_111"
-            android:gravity="left|center_vertical"
-            android:paddingTop="2dp"
-            android:paddingStart="16dp"
-            android:text="Через дефис"
-            android:textColor="#ffffff" />
-    </LinearLayout>
+            android:layout_weight="1"
+            android:background="@drawable/group_97__1_"
+            android:textColor="#ffffff"
+            android:layout_marginEnd="4dp"
+            android:text="Слитно" />
 
+        <Button
+            android:id="@+id/b_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="4dp"
+            android:background="@drawable/group_97__1_"
+            android:textColor="#ffffff"
+            android:text="Раздельно" />
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

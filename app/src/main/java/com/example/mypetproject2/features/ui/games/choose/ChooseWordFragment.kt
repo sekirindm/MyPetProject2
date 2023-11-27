@@ -14,8 +14,10 @@ import com.example.mypetproject2.R
 import com.example.mypetproject2.data.listTriple
 import com.example.mypetproject2.data.separateList
 import com.example.mypetproject2.databinding.FragmentChooseWordBinding
+import com.example.mypetproject2.features.ui.games.spelling.calculatePercentage
+import com.example.mypetproject2.features.ui.games.spelling.getUserAnswers
 import com.example.mypetproject2.features.ui.games.spelling.setupOnBackPressedCallback
-import com.example.mypetproject2.features.ui.games.stress.GamesFragment
+import com.example.mypetproject2.features.ui.games.stress.StressFragment
 import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
 import com.example.mypetproject2.utils.navigateChooseWordFragmentToFinishedFragment
 
@@ -123,7 +125,7 @@ class ChooseWordFragment : Fragment() {
 
     private fun showNextWord() {
         currentIndex++
-        if (currentIndex >= GamesFragment.MAX_ATTEMPTS) {
+        if (currentIndex >= StressFragment.MAX_ATTEMPTS) {
             showGameResults()
             resetBackgroundState()
         } else {
@@ -141,8 +143,8 @@ class ChooseWordFragment : Fragment() {
     }
 
     private fun showGameResults() {
-        val percentage = calculatePercentage()
-        val userAnswers = getUserAnswers()
+        val percentage = calculatePercentage(viewModel)
+        val userAnswers = getUserAnswers(viewModel)
         val userAnswerHistory = viewModel.userAnswersHistory.value?.toTypedArray()!!
         Log.d(
             "showGameResults",
@@ -155,15 +157,6 @@ class ChooseWordFragment : Fragment() {
             userAnswerHistory,
             "chooseWord"
         )
-    }
-
-    private fun getUserAnswers(): BooleanArray {
-        val userAnswersList = viewModel.userAnswers.value ?: mutableListOf()
-        return userAnswersList.toBooleanArray()
-    }
-
-    private fun calculatePercentage(): Float {
-        return (viewModel.score.value?.toFloat() ?: 0f) / GamesFragment.MAX_ATTEMPTS * 100
     }
 
     override fun onDestroyView() {

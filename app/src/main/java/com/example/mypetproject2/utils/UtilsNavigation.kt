@@ -5,11 +5,13 @@ import androidx.navigation.fragment.findNavController
 import com.example.mypetproject2.features.ui.games.choose.ChooseWordFragmentDirections
 import com.example.mypetproject2.features.ui.games.choosespelling.ChooseSeparateSpellingWordFragment
 import com.example.mypetproject2.features.ui.games.choosespelling.ChooseSeparateSpellingWordFragmentDirections
+import com.example.mypetproject2.features.ui.games.paroynim.ParonymGameFragmentDirections
 import com.example.mypetproject2.features.ui.games.spelling.spellingnn.SpellingNNFragmentDirections
 import com.example.mypetproject2.features.ui.games.spelling.spellingpref.SpellingPrefFragmentDirections
 import com.example.mypetproject2.features.ui.games.spelling.spellingroot.SpellingRootFragmentDirections
 import com.example.mypetproject2.features.ui.games.spelling.spellingsuffix.SpellingSuffixFragmentDirections
-import com.example.mypetproject2.features.ui.games.stress.GamesFragmentDirections
+import com.example.mypetproject2.features.ui.games.stress.StressFragment
+import com.example.mypetproject2.features.ui.games.stress.StressFragmentDirections
 
 fun Fragment.navigateToGameFinishedFragment(
     score: Int,
@@ -18,7 +20,7 @@ fun Fragment.navigateToGameFinishedFragment(
     userAnswersHistory: Array<String>,
     gameType: String
 ) {
-    val action = GamesFragmentDirections.actionGamesFragmentToGameFinishedFragment(
+    val action = StressFragmentDirections.actionStressFragmentToGameFinishedFragment(
         score,
         percentage,
         userAnswers,
@@ -120,6 +122,23 @@ fun Fragment.navigateChooseSeparateWordFragmentToFinishedFragment(
     gameType: String
 ) {
     val action = ChooseSeparateSpellingWordFragmentDirections.actionChooseWordFragmentToGameFinishedFragment(
+        score,
+        percentage,
+        userAnswers,
+        userAnswersHistory,
+        gameType
+    )
+    findNavController().navigate(action)
+}
+
+fun Fragment.navigateParonymGameFragmentToFinishedFragment(
+    score: Int,
+    percentage: Float,
+    userAnswers: BooleanArray,
+    userAnswersHistory: Array<String>,
+    gameType: String
+) {
+    val action = ParonymGameFragmentDirections.actionParonymGameFragmentToGameFinishedFragment(
         score,
         percentage,
         userAnswers,
