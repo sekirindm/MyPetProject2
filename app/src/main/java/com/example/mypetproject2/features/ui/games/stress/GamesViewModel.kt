@@ -12,17 +12,33 @@ import com.example.mypetproject2.data.database.allwordsdb.AllWordsDb
 import com.example.mypetproject2.data.spellingNN
 import kotlinx.coroutines.*
 
+data class State(
+    val score: Int,
+    val answers: MutableList<Pair<String, String>> = mutableListOf()
+)
+
+/**
+ *
+ * Sealed class (изолированный класс) — это класс, который является абстрактным и используется в Kotlin для ограничения классов, которые могут наследоваться от него.
+ * Основная идея заключается в том, что sealed class позволяет определить ограниченный и известный заранее набор подклассов, которые могут быть использованы.
+ *
+ * Удобно использовать в перечислениях (when)
+ * */
 sealed class GameState {
     data class NewWord(val word: String) : GameState()
 
     data class UpdateWord(val word: String, val button: Int) : GameState()
 
-    data class CheckedAnswer(val isCorrect: Boolean) : GameState()
+    data class CheckedAnswer(val state: State) : GameState()
+
+    data class FinishGame(val state: State) : GameState()
 }
 
 class GamesViewModel(application: Application) : AndroidViewModel(application) {
 
-    val gameState = MutableLiveData<GameState>()
+    private var state = State(0)
+
+    val gameState = MutableLiveData<GameState>() // позволяет использовать лишь один MutableLiveData для всех состояний игры
 
     private val gameItemDao = AppDatabase.getInstance(application).gameItemDao()
 
@@ -118,7 +134,7 @@ class GamesViewModel(application: Application) : AndroidViewModel(application) {
 
             if (existingWord != null) {
                 existingWord.count = count
-                allWordsDao.updateWordCount(existingWord)
+//                allWordsDao.updateWordCount(existingWord)
             } else {
                 val newWord = AllWordsDb(words = word, count = count)
                 allWordsDao.insert(newWord)
@@ -146,10 +162,12 @@ class GamesViewModel(application: Application) : AndroidViewModel(application) {
 
 
     fun updateWordCount(word: String, countDelta: Int) {
-        viewModelScope.launch {
-            val currentCount = allWordsDao.getWordCount(word) ?: 0
-            allWordsDao.updateWordCount(word, currentCount + countDelta)
-        }
+//        viewModelScope.launch {
+//            val currentCount = allWordsDao.getWordCount(word)
+//            currentCount.collect {
+//                allWordsDao.updateWordCount(word, (it?:0) + countDelta)
+//            }
+//        }
     }
 
 
@@ -197,33 +215,111 @@ class GamesViewModel(application: Application) : AndroidViewModel(application) {
         _totalAttempts.value = currentAttempts + 1
     }
 
+
+
+
+
+
+
+
+
+
+    /**
+     * Тут начинаем нашу игрулю
+     * */
     fun initGame() {
-        val spellingNNList = spellingNN.toList()
-        val randomWord = spellingNNList.random()
-        val modifiedWord = randomWord.replace("Н+".toRegex(), "_")
+        viewModelScope.launch {
 
-        gameState.value = GameState.NewWord(modifiedWord)
+
+            val spellingNNList = spellingNN.toList().take(7) // получаем список в виде листа
+            var randomWord = spellingNNList.random() // берем рандомное слово
+
+            var doesWordMeetCriteria = allWordsDao.doesWordMeetCriteria(randomWord)
+            Log.i("TAGG", "b $doesWordMeetCriteria")
+
+            // TODO: может породить бесконечний цикл, если в списке не осталось подходящих слов
+            while (state.answers.any { it.first ==  randomWord} || !doesWordMeetCriteria) { // проверяем, есть ли это слово в списе ответов (чтобы избежать повторений)
+
+                Log.i("TAGG", "wrong $randomWord MeetCriteria $doesWordMeetCriteria")
+                randomWord = spellingNNList.random()  // если оно там есть, берем новое слово до тех пор, пока оно не будет не быть в списке
+                doesWordMeetCriteria = allWordsDao.doesWordMeetCriteria(randomWord)
+                Log.i("TAGG", "doesWord $randomWord MeetCriteria $doesWordMeetCriteria")
+            }
+
+            Log.i("TAGG", "after")
+            val modifiedWord = randomWord.replace("Н+".toRegex(), "_") // заменяем Н или НН на _  (листвеННица -> листве_ица)
+            val answer = randomWord to ""
+            val answers = state.answers.apply {
+                add(answer)
+            }
+
+            allWordsDao.insertSmart(randomWord)
+            state = state.copy(answers = answers) // копируем состояние с заменой списка ответов на новый. Это позваляет всегда иметь актуальное состояние
+            gameState.postValue(GameState.NewWord(modifiedWord))  // упаковываем это слово в объект NewWord, которое на фрагменте поможет понять на каком мы этапе
+        }
     }
 
+
+    /**
+     * Сюда попадает слова после нажатия на любую букву.
+     *
+     * [letter] - Н или НН
+     * */
     fun handleWord(word: String, letter: String, button: Int) {
+        val modifiedWord = if (!word.contains("_")) // если в слове уже заменена _ на букву Н, то заменяем ее на _
+            word.replace("Н+".toRegex(), "_")  // то заменяем ее на _, (листвеННица -> листве_ица)
+                .replace("_", letter)             // а затем заменяем на [letter] (листве_ица -> листвеНица)
+        else                                              // если это первая замена, т.е. _ есще в слове,
+            word.replace("_", letter)             // то просто заменяем _ на [letter] (листве_ица -> листвеНица)
 
-        val modifiedWord = if (!word.contains("_"))
-            word.replace("Н+".toRegex(), "_")
-                .replace("_", letter)
-        else
-            word.replace("_", letter)
-
-        gameState.value = GameState.UpdateWord(modifiedWord, button)
+        gameState.value = GameState.UpdateWord(modifiedWord, button) // упаковываем это слово в объект UpdateWord, которое на фрагменте поможет понять на каком мы этапе
     }
 
+    /**
+     * ʕ•́ᴥ•̀ʔっ ʕ•́ᴥ•̀ʔっ ʕ•́ᴥ•̀ʔっ ʕ•́ᴥ•̀ʔっ ʕ•́ᴥ•̀ʔっ ʕ•́ᴥ•̀ʔっ
+     *
+     * Вот что должно происходить при проверке ответа :
+     *
+     * 1. проверяем, правильный ли ответ TRUE / FALSE
+     * 2. обновляем счет +1 / +0
+     * 3. обновить слово в бд
+     * 4. добавить в список для экрана результатов (─‿‿─)
+     *
+     * */
     fun checkAnswer(word: String) {
-        gameState.value = GameState.CheckedAnswer(spellingNN.contains(word))
+        viewModelScope.launch {
+            val updatedList = state.answers.apply { // обновляем список ответов
+                val last = last().copy(second = word) // добавляем в пару к изначальному слову ответ пользователя
+                set(lastIndex, last) // устанавливаем пару в список. Метод set заменяет элемент списка на переданный
+            }
+            val isAnswerRight = spellingNN.contains(word)
+            val score = if (isAnswerRight) state.score + 1 else state.score
+
+            allWordsDao.updateSmart(state.answers.last().first, isAnswerRight)
+
+            state = state.copy(score = score, answers = updatedList) // копируем состояние с заменой счета и списка ответов на новый. Это позваляет всегда иметь актуальное состояние
+
+            gameState.postValue(GameState.CheckedAnswer(state))
+        }
     }
 
     fun delay() {
         viewModelScope.launch {
             delay(1000)
-            initGame()
+            if (state.answers.size < MAX_ATTEMPTS)
+                initGame()
+            else
+                gameState.value = GameState.FinishGame(state)
         }
+    }
+
+    fun delete(){
+        viewModelScope.launch {
+            allWordsDao.deleteAll()
+        }
+    }
+
+    companion object {
+        const val MAX_ATTEMPTS = 5
     }
 }
