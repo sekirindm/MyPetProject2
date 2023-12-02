@@ -1,15 +1,18 @@
 package com.example.mypetproject2.features.ui.home
 
+import android.annotation.SuppressLint
+import android.graphics.Typeface
 import android.os.Bundle
+import android.text.Html
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.RelativeSizeSpan
+import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.example.mypetproject2.databinding.FragmentHomeBinding
-import com.example.mypetproject2.databinding.FragmentNotificationsBinding
-import com.example.mypetproject2.features.ui.notifications.NotificationsViewModel
 
 class HomeFragment : Fragment() {
 
@@ -24,9 +27,22 @@ class HomeFragment : Fragment() {
     ): View {
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-        return root
+        webViewTest()
+        return binding.root
     }
+//    A<sup>2</sup> + B<sup>2</sup> = C<sup>2</sup>
+//    @SuppressLint("SetJavaScriptEnabled", "SetTextI18n")
+    fun webViewTest() {
+    val textView = binding.textView
+
+    val htmlText = "Всем привет<sub>▢</sub> я ваш босс"
+    textView.text = Html.fromHtml(htmlText, Html.FROM_HTML_MODE_LEGACY)
+
+
+}
+//        val webView = binding.textView
+//        webView.text = "<style>body { font-size: 20px; }</style>Всем привет<sub>▢</sub>я ваш босс"
+
 
     override fun onDestroyView() {
         super.onDestroyView()

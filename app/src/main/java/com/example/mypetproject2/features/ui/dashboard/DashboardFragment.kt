@@ -13,22 +13,15 @@ import com.example.mypetproject2.features.ui.home.HomeViewModel
 class DashboardFragment : Fragment() {
 
     private var gameNumber = 0
-
     private var _binding: FragmentDashboardBinding? = null
-
     private val binding get() = _binding!!
-
-
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        val homeViewModel =
-            ViewModelProvider(this)[HomeViewModel::class.java]
-
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
+
         return binding.root
     }
 
@@ -60,6 +53,9 @@ class DashboardFragment : Fragment() {
             bStartParonym.setOnClickListener {
                 launchGame8()
             }
+            bStartScreenPunctuation.setOnClickListener {
+                startPunctuation()
+            }
         }
     }
 
@@ -86,7 +82,7 @@ class DashboardFragment : Fragment() {
             5 -> "куки пукки"
             6 -> "Выбери привильное слово!"
             7 -> "Выбери привильное слово с частицей 'НЕ'!"
-            8-> "Исправь слово подобрав правильный пароним!"
+            8 -> "Исправь слово подобрав правильный пароним!"
             else -> "Игра" // Заголовок по умолчанию, если нет соответствующего gameNumber
         }
         launchGameWithDescription(gameNumber, gameDescription, title)
@@ -99,6 +95,7 @@ class DashboardFragment : Fragment() {
     private fun launchGame2() {
         launchGameWithDescription(2, "Н и НН")
     }
+
     private fun launchGame3() {
         launchGameWithDescription(3, "Правописание приставок")
     }
@@ -106,17 +103,27 @@ class DashboardFragment : Fragment() {
     private fun launchGame4() {
         launchGameWithDescription(4, "Правописание корней")
     }
+
     private fun launchGame5() {
         launchGameWithDescription(5, "Правописание суффиксов")
     }
+
     private fun launchGame6() {
         launchGameWithDescription(6, "Граматика")
     }
+
     private fun launchGame7() {
         launchGameWithDescription(7, "Слитное раздельное написание слов с частицой 'НЕ' ")
     }
+
     private fun launchGame8() {
         launchGameWithDescription(8, "Паронимы")
+    }
+
+    fun startPunctuation() {
+        val action = DashboardFragmentDirections.actionNavigationDashboardToPunctuationFragment()
+        findNavController().navigate(action)
+
     }
 
     override fun onDestroyView() {

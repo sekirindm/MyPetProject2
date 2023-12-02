@@ -15,6 +15,7 @@ import com.example.mypetproject2.R
 import com.example.mypetproject2.data.database.GameItemDb
 import com.example.mypetproject2.features.ui.games.Rules
 import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
+import kotlinx.coroutines.CoroutineScope
 
 class RepetitionWordsAdapter(
     private val deleteListener: (GameItemDb, Int) -> Unit,
@@ -66,6 +67,7 @@ class RepetitionWordsAdapter(
         val currentItem = items[position]
         holder.wordTextView.text = currentItem.rightAnswer
         holder.ivDelete.setOnClickListener {
+
             // Вызывайте колбэк удаления, анимацию добавим вручную
             deleteListener(currentItem, position)
         }
@@ -75,8 +77,6 @@ class RepetitionWordsAdapter(
 
     fun updateData(newItems: List<GameItemDb>) {
         items = newItems.toMutableList()
-        items.clear()
-        items.addAll(newItems)
         notifyDataSetChanged()
     }
 }

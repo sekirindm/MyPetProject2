@@ -49,6 +49,7 @@ class TitleFragment : Fragment() {
                 6 -> { TitleFragmentDirections.actionTitleFragmentToChooseWordFragment() }
                 7 -> {TitleFragmentDirections.actionTitleFragmentToChooseSeparateSpellingWordFragment()}
                 8 -> {TitleFragmentDirections.actionTitleFragmentToParonymGameFragment()}
+                9 -> {TitleFragmentDirections.actionTitleFragmentToPunctuationGameOneFragment()}
                 else -> { TitleFragmentDirections.actionTitleFragmentToChooseWordFragment() }
             }
             findNavController().navigate(action)

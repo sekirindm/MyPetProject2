@@ -47,9 +47,11 @@ class FavoritesWords : Fragment() {
 
         gameViewModel = ViewModelProvider(this)[GamesViewModel::class.java]
 
+
         repetitionWordsAdapter = RepetitionWordsAdapter { gameItem, position ->
             customAnimations(position)
         }
+
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = repetitionWordsAdapter
@@ -59,7 +61,6 @@ class FavoritesWords : Fragment() {
             Log.d("FavoritesWords", "Observed gameItemsLiveData with ${gameItems.size} items")
             repetitionWordsAdapter.updateData(gameItems)
         })
-
         gameViewModel.updateRecyclerViewData()
 
         val dividerDrawable =
@@ -98,6 +99,7 @@ class FavoritesWords : Fragment() {
 
             animatorSet.addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationEnd(animation: Animator, isReverse: Boolean) {
+
                     gameViewModel.deleteGameItem(deletedItem)
 
                     // Удалить элемент из адаптера после завершения анимации

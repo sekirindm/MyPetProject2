@@ -165,8 +165,8 @@ class GamesViewModel(application: Application) : AndroidViewModel(application) {
 
     fun deleteGameItem(item: GameItemDb) {
         viewModelScope.launch {
-            gameItemDao.delete(item)
-        }
+                gameItemDao.delete(item)
+            }
     }
 
     fun deleteAndQueryAllItems(item: GameItemDb) {
