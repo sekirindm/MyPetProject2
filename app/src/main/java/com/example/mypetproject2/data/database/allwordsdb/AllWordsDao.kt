@@ -22,7 +22,10 @@ interface AllWordsDao {
     @Query("SELECT * FROM all_words WHERE words = :word")
     suspend fun getWordsDb(word: String): AllWordsDb?
 
-    @Query("SELECT EXISTS (SELECT 1 FROM all_words WHERE words = :word AND count < 5)")
+//    @Query("SELECT EXISTS (SELECT 1 FROM all_words WHERE words = :word AND count < 5)")
+//    suspend fun doesWordMeetCriteria(word: String): Boolean
+
+    @Query("SELECT CASE WHEN EXISTS (SELECT 1 FROM all_words WHERE words = :word AND count >= 5) THEN 0 ELSE 1 END")
     suspend fun doesWordMeetCriteria(word: String): Boolean
 
     @Query("SELECT EXISTS (SELECT 1 FROM all_words WHERE words = :word)")
@@ -35,6 +38,12 @@ interface AllWordsDao {
     suspend fun updateWordCount(allWordsDb: AllWordsDb)
 
 
+//    @Transaction
+//    suspend fun doesWordExistAndMeetCriteria(word: String): Boolean {
+//        if (!doesWordExist(word)!!) {
+//            insert(AllWordsDb(word, 0))
+//        }
+//    }
     @Transaction
     suspend fun insertSmart(word: String) {
         if (!doesWordExist(word)!!) {
