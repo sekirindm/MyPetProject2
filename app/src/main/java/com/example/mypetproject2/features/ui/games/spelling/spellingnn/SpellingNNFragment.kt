@@ -40,32 +40,16 @@ fun main() {
 
     val a = spellingRoot.toSet()
     a.forEach {
-        println("\"$it\",")
+        println("\"${it.trim()}\",")
     }
-
-
 }
 
 class SpellingNNFragment : Fragment() {
 
-    private var wordIndex: Int = 0
     private lateinit var viewModel: GamesViewModel
     private lateinit var tvWord: TextView
     private var _binding: FragmentSpellingNNBinding? = null
     private val binding get() = _binding!!
-    private var words: String = ""
-
-    private var displayedWord: StringBuilder = StringBuilder()
-    private var isLetterRemoved = false
-    private var isUnderscorePresent = false
-
-    private var isNextButtonEnabled = true
-
-
-    private val DELAY_MILLIS = 1000L
-
-    private val handler = Handler(Looper.getMainLooper())
-    private val runnable = Runnable { showNextWord() }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -82,13 +66,8 @@ class SpellingNNFragment : Fragment() {
 
         initObservers()
         initGame()
-
         initializeViews()
-//        generateRandomWord()
-//        displayWord()
-
         setupTextViewClickListeners()
-//        setupNextPageButtonListener()
         setupOnBackPressedCallback()
     }
 
@@ -96,29 +75,39 @@ class SpellingNNFragment : Fragment() {
         viewModel.initGame()
     }
 
+    /**
+     *
+     * Данный метод обрабатывает все состояния нашей игры
+     * */
     private fun initObservers() {
         viewModel.gameState.observe(viewLifecycleOwner) {
             when(it) {
-                is GameState.NewWord -> {
-                    tvWord.text = it.word
-                    resetViewState()
+                is GameState.NewWord -> { // начало игры
+                    tvWord.text = it.word  // тут у нас выбранное рандомно слово, которое мы упаковывали в NewWord
+                    resetViewState()  // восстанавливаем состояние экрана в начале каждой итерации, т.е. при каждом новом слове
+
                     binding.bNextPage.isEnabled = false
                     binding.tvOneN.isEnabled = true
                     binding.tvTwoN.isEnabled = true
                 }
-                is GameState.UpdateWord -> {
+                is GameState.UpdateWord -> { //
                     tvWord.text = it.word
                     binding.tvOneN.isVisible = it.button != 0
                     binding.tvTwoN.isVisible = it.button != 1
 
                     binding.bNextPage.isEnabled = true
                 }
-                is GameState.CheckedAnswer -> {
+                is GameState.CheckedAnswer -> { //
+
+                    val lastAnswer = it.state.answers.last()
+                    val isCorrect = lastAnswer.first == lastAnswer.second
+
+                    Log.i("TAGG", "state ${it.state}")
                     binding.bNextPage.isEnabled = false
                     binding.tvOneN.isEnabled = false
                     binding.tvTwoN.isEnabled = false
 
-                    val id = if (it.isCorrect) {
+                    val id = if (isCorrect) {
                         R.color.green_light
                     } else {
                         R.color.red_light
@@ -130,6 +119,23 @@ class SpellingNNFragment : Fragment() {
                         )
                     )
                     viewModel.delay()
+                }
+                is GameState.FinishGame -> {
+                    val state = it.state
+                    val percentage = state.score / 5f * 100f
+                    val userAnswers = state.answers.map { pair -> pair.first == pair.second }.toBooleanArray()
+                    val userAnswerHistory = state.answers.map { it.second }.toTypedArray()
+                    Log.d(
+                        "showGameResults",
+                        "userAnswerHistory $userAnswerHistory"
+                    )
+                    navigateSpellingToGameFinishedFragment(
+                        viewModel.score.value ?: 0,
+                        percentage,
+                        userAnswers,
+                        userAnswerHistory,
+                        "spelling"
+                    )
                 }
             }
         }
@@ -143,202 +149,25 @@ class SpellingNNFragment : Fragment() {
     }
 
     /**
-     *  Генерирует случайное слово из доступного списка spelling и строит displayedWord,
-     *  заменяя заглавные буквы на символ подчеркивания _
-     * */
-//    private fun generateRandomWord() {
-//        val spellingNNList = spellingNN.toList()
-//        val randomWord = spellingNNList.random()
-//        words = randomWord
-//
-////        viewModel.checkWord(words)
-//
-//        displayedWord.clear()
-//        isUnderscorePresent = false
-//
-//        val modifiedWord = randomWord.replace("Н+".toRegex(), "_")
-//
-//        var isReplaced = false
-//        for (i in words.indices) {
-//            val letter = words[i]
-//
-//            if (letter.isUpperCase()) {
-//                if (!isReplaced) {
-//                    displayedWord.append('_')
-//                    isReplaced = true
-//                    isUnderscorePresent = true
-//                }
-//            } else {
-//                displayedWord.append(letter)
-//            }
-//        }
-//    }
-
-    /**
-     *Отображает слово displayedWord в tvWord.
-     * */
-//    private fun displayWord() {
-//        val finalWord = displayedWord.toString()
-//        tvWord.text = finalWord
-//    }
-
-    /**
      *Устанавливает обработчики событий для нажатий на текстовые поля tvOne, tvTwo и tvWord.
      * */
     private fun setupTextViewClickListeners() {
         val tvOne = binding.tvOneN
         val tvTwo = binding.tvTwoN
 
-        tvOne.setOnClickListener {
+        tvOne.setOnClickListener { // нажали на одну Н
             viewModel.handleWord(tvWord.text.toString(), tvOne.text.toString(), 0)
-//            handleLetterClick(tvOne)
         }
 
-        tvTwo.setOnClickListener {
+        tvTwo.setOnClickListener { // нажали на НН
             viewModel.handleWord(tvWord.text.toString(), tvTwo.text.toString(), 1)
-//            handleLetterClick(tvTwo)
         }
         binding.bNextPage.setOnClickListener {
-//            setupNextPageButtonListener()
             viewModel.checkAnswer(tvWord.text.toString())
         }
-
-//        tvWord.setOnClickListener {
-//            handleTvWordClick()
-//        }
-    }
-
-    /**
-     *Обрабатывает нажатие на текстовое поле с выбранной буквой.
-     *  Заменяет символ подчеркивания _ в tvWord на выбранную букву,
-     *  скрывает текущее текстовое поле и показывает другое текстовое поле.
-     * */
-    private fun handleLetterClick(selectedLetterTextView: TextView) {
-        val selectedLetter = selectedLetterTextView.text.toString()
-        val underscoreIndex = tvWord.text.indexOf('_')
-        if (underscoreIndex != -1) {
-            val updatedWord = tvWord.text.replaceRange(underscoreIndex, underscoreIndex + 1, selectedLetter)
-            tvWord.text = updatedWord
-
-            selectedLetterTextView.visibility = View.GONE
+        tvWord.setOnClickListener {
+            viewModel.delete()
         }
-
-        binding.bNextPage.isEnabled = !tvWord.text.contains("_")
-    }
-
-    /**
-     *Обрабатывает нажатие на tvWord.
-     *  Заменяет все буквы в tvWord на символы подчеркивания _
-     *  и сбрасывает видимость текстовых полей tvOne и tvTwo
-     * */
-    private fun handleTvWordClick() {
-        val word = displayedWord.toString()
-        val updatedWord = StringBuilder()
-
-        for (i in word.indices) {
-            val letter = word[i]
-            if (letter.isUpperCase()) {
-                updatedWord.append('_')
-            } else {
-                updatedWord.append(letter)
-            }
-        }
-
-        tvWord.text = updatedWord.toString()
-
-        resetViewState()
-
-        isLetterRemoved = false
-
-        binding.bNextPage.isEnabled = !tvWord.text.contains("_")
-
-
-    }
-
-    /**
-     *Устанавливает обработчик события для кнопки bNextPage, которая выполняет проверку ответа пользователя.
-     * */
-    private fun setupNextPageButtonListener() {
-        binding.bNextPage.setOnClickListener {
-            if (isNextButtonEnabled) {
-                isNextButtonEnabled = false
-                it.isEnabled = false
-                val userAnswer = tvWord.text.toString()
-                viewModel.getWordCount(userAnswer)
-                checkAnswer(userAnswer)
-
-                viewModel.wordCountLiveData.observe(viewLifecycleOwner) { count ->
-                    val isCorrect = userAnswer.equals(words, ignoreCase = true)
-                    val newCount = if (isCorrect) count + 1 else 0
-
-                    viewModel.insertWordToAllWords(transformWord(words), newCount)
-                }
-            }
-        }
-    }
-
-    /**
-     *  Проверяет ответ пользователя, сравнивая его с правильным ответом (randomWord).
-     *  Изменяет цвет фона представления в соответствии с правильностью ответа.
-     *  Запускает отложенную задачу (runnable) для отображения следующего слова.
-     * */
-    private fun checkAnswer(userAnswer: String) {
-        val isCorrect = words == userAnswer
-        viewModel.updateScore(isCorrect)
-        viewModel.addUserAnswer(isCorrect)
-        viewModel.setUserAnswers(userAnswer)
-
-        if (userAnswer.equals(words, ignoreCase = true)) {
-            requireView().setBackgroundColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.green_light
-                )
-            )
-        } else {
-            requireView().setBackgroundColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.red_light
-                )
-            )
-        }
-
-        handler.postDelayed(runnable, DELAY_MILLIS)
-    }
-
-    /**
-     *Отображает следующее слово.
-     *  Если wordIndex достигает значения 5, вызывает функцию showGameResults и сбрасывает игру.
-     *  В противном случае, генерирует новое случайное слово, отображает его и восстанавливает состояние представлений.
-     * */
-    private fun showNextWord() {
-        wordIndex++
-        if (wordIndex >= StressFragment.MAX_ATTEMPTS) {
-            showGameResults()
-            resetGame()
-        } else {
-//            generateRandomWord()
-//            displayWord()
-            resetViewState()
-            binding.bNextPage.isEnabled = !isUnderscorePresent
-        }
-
-        isNextButtonEnabled = true
-    }
-
-
-    /**
-     *Сбрасывает состояние игры, возвращая цвет фона в исходное состояние и очищая randomWord.
-     * */
-    private fun resetGame() {
-        requireView().setBackgroundColor(
-            ContextCompat.getColor(
-                requireContext(),
-                android.R.color.transparent
-            )
-        )
-        words = ""
     }
 
     /**
@@ -350,36 +179,9 @@ class SpellingNNFragment : Fragment() {
         requireView().setBackgroundResource(R.color.white)
     }
 
-
-
-    /**
-     * Отображает результаты игры, вычисляет процент правильных ответов,
-     *  получает ответы пользователя и историю ответов, а затем переходит к фрагменту GameFinishedFragment,
-     *  передавая необходимые данные.
-     * */
-
-    // SpellingNNFragment
-    private fun showGameResults() {
-        val percentage = calculatePercentage(viewModel)
-        val userAnswers = getUserAnswers(viewModel)
-        val userAnswerHistory = viewModel.userAnswersHistory.value?.toTypedArray()!!
-        Log.d(
-            "showGameResults",
-            "userAnswerHistory $userAnswerHistory"
-        )
-        navigateSpellingToGameFinishedFragment(
-            viewModel.score.value ?: 0,
-            percentage,
-            userAnswers,
-            userAnswerHistory,
-            "spelling"
-        )
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        handler.removeCallbacks(runnable)
     }
 }
 
