@@ -40,10 +40,8 @@ fun main() {
 
     val a = spellingRoot.toSet()
     a.forEach {
-        println("\"$it\",")
+        println("\"${it.trim()}\",")
     }
-
-
 }
 
 class SpellingNNFragment : Fragment() {
@@ -52,11 +50,6 @@ class SpellingNNFragment : Fragment() {
     private lateinit var tvWord: TextView
     private var _binding: FragmentSpellingNNBinding? = null
     private val binding get() = _binding!!
-    private var words: String = ""
-
-    private var isNextButtonEnabled = true
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -174,28 +167,6 @@ class SpellingNNFragment : Fragment() {
         }
         tvWord.setOnClickListener {
             viewModel.delete()
-        }
-    }
-
-    /**
-     *Устанавливает обработчик события для кнопки bNextPage, которая выполняет проверку ответа пользователя.
-     * */
-    private fun setupNextPageButtonListener() {
-        binding.bNextPage.setOnClickListener {
-            if (isNextButtonEnabled) {
-                isNextButtonEnabled = false
-                it.isEnabled = false
-                val userAnswer = tvWord.text.toString()
-                viewModel.getWordCount(userAnswer)
-//                checkAnswer(userAnswer)
-
-                viewModel.wordCountLiveData.observe(viewLifecycleOwner) { count ->
-                    val isCorrect = userAnswer.equals(words, ignoreCase = true)
-                    val newCount = if (isCorrect) count + 1 else 0
-
-                    viewModel.insertWordToAllWords(transformWord(words), newCount)
-                }
-            }
         }
     }
 
