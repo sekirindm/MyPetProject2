@@ -1,14 +1,17 @@
 package com.example.mypetproject2.features.ui.games.spelling.spellingpref
 
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.ContentInfo
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.mypetproject2.R
@@ -18,6 +21,7 @@ import com.example.mypetproject2.features.ui.games.spelling.calculatePercentage
 import com.example.mypetproject2.features.ui.games.spelling.getUserAnswers
 import com.example.mypetproject2.features.ui.games.spelling.setupOnBackPressedCallback
 import com.example.mypetproject2.features.ui.games.spelling.transformWord
+import com.example.mypetproject2.features.ui.games.stress.GameState
 import com.example.mypetproject2.features.ui.games.stress.StressFragment
 import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
 import com.example.mypetproject2.utils.navigateSpellingPrefToGameFinishedFragment
@@ -34,11 +38,12 @@ class SpellingPrefFragment : Fragment() {
     private var isLetterRemoved = false
     private var words: String = ""
     private var isUnderscorePresent = false
+    private lateinit var gamePrefViewModel: GamePrefViewModel
 
     private var isNextButtonEnabled = true
 
     private val handler = Handler(Looper.getMainLooper())
-    private val runnable = Runnable { showNextWord() }
+//    private val runnable = Runnable { showNextWord() }
 
 
     private val DELAY_MILLIS = 1000L
@@ -51,12 +56,15 @@ class SpellingPrefFragment : Fragment() {
         val rootView = binding.root
 
         initializeViews()
-        generateRandomWord()
-        displayWord()
-
-        setTextViewLetters(words)
+        initObservers()
+        initGame()
         setupTextViewClickListeners()
-        setupNextPageButtonListener()
+//        generateRandomWord()
+//        displayWord()
+//
+//        setTextViewLetters(words)
+//        setupTextViewClickListeners()
+//        setupNextPageButtonListener()
         setupOnBackPressedCallback()
 
 
@@ -66,97 +74,167 @@ class SpellingPrefFragment : Fragment() {
 
     private fun initializeViews() {
         viewModel = ViewModelProvider(this)[GamesViewModel::class.java]
+        gamePrefViewModel = ViewModelProvider(this)[GamePrefViewModel::class.java]
         tvWord = binding.tvSpellingPref
 
     }
 
-    private fun resetViewState() {
-        binding.tvOneN.visibility = View.VISIBLE
-        binding.tvTwoN.visibility = View.VISIBLE
-        requireView().setBackgroundResource(R.color.white)
+    private fun initGame() {
+        gamePrefViewModel.initGame()
     }
 
-
-    private fun showNextWord() {
-        wordIndex++
-        if (wordIndex >= StressFragment.MAX_ATTEMPTS) {
-            showGameResults()
-            resetGame()
-        }
-
-        generateRandomWord()
-        displayWord()
-        resetViewState()
-
-        tvWord.text = displayedWord
-
-        binding.bNextPage.isEnabled = !isUnderscorePresent
-        setTextViewLetters(words)
+    private fun initObservers() {
+        gamePrefViewModel.gameState.observe(viewLifecycleOwner) {
+            when (it) {
+                is GameStatePref.NewWord -> {
+                    tvWord.text = it.word
+                    resetViewState()
+                    binding.tvOne.text = it.letters[0]
+                    binding.tvTwo.text = it.letters[1]
+                    binding.bNextPage.isEnabled = false
+                    binding.tvOne.isEnabled = true
+                    binding.tvTwo.isEnabled = true
 
 
-        isNextButtonEnabled = true
-    }
-
-
-    private fun displayWord() {
-        val finalWord = displayedWord.toString()
-        tvWord.text = finalWord
-    }
-
-    private fun generateRandomWord() {
-        val spellingPrefList = spellingPref.toList()
-        val randomWord = spellingPrefList.random()
-        words = randomWord
-        displayedWord.clear()
-        isUnderscorePresent = false
-
-        var isReplaced = false
-        for (i in words.indices) {
-            val letter = words[i]
-
-            if (letter.isUpperCase()) {
-                if (!isReplaced) {
-                    displayedWord.append('_')
-                    isReplaced = true
-                    isUnderscorePresent = true
                 }
-            } else {
-                displayedWord.append(letter)
+
+                is GameStatePref.UpdateWord -> {
+                    tvWord.text = it.word
+                    binding.tvOne.isVisible = it.button != 0
+                    binding.tvTwo.isVisible = it.button != 1
+                    binding.bNextPage.isEnabled = true
+                }
+
+                is GameStatePref.CheckedAnswer -> {
+                    val lastAnswer = it.state.answers.last()
+                    val isCorrect = lastAnswer.first == lastAnswer.second
+
+                    binding.bNextPage.isEnabled = false
+                    binding.tvOne.isEnabled = false
+                    binding.tvTwo.isEnabled = false
+
+                    val id = if (isCorrect) {
+                        R.color.green_light
+                    } else {
+                        R.color.green_light
+                    }
+                    requireView().setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireContext(), id
+                        )
+                    )
+
+                    gamePrefViewModel.delay()
+                }
+
+                is GameStatePref.FinishGame -> {
+                    val state = it.state
+                    val percentage = state.score / 5f * 100f
+                    val userAnswers = state.answers.map { pair -> pair.first == pair.second }.toBooleanArray()
+                    val userAnswersHistory = state.answers.map { it.second }.toTypedArray()
+                    navigateSpellingPrefToGameFinishedFragment(
+                        gamePrefViewModel.score.value ?: 0,
+                        percentage,
+                        userAnswers,
+                        userAnswersHistory,
+                        "spellingPref"
+                    )
+
+                }
             }
         }
     }
 
+    private fun resetViewState() {
+        binding.tvOne.visibility = View.VISIBLE
+        binding.tvTwo.visibility = View.VISIBLE
+        requireView().setBackgroundResource(R.color.white)
+    }
+
+
+//    private fun showNextWord() {
+//        wordIndex++
+//        if (wordIndex >= StressFragment.MAX_ATTEMPTS) {
+//            showGameResults()
+//            resetGame()
+//        }
+//
+//        generateRandomWord()
+//        displayWord()
+//        resetViewState()
+//
+//        tvWord.text = displayedWord
+//
+//        binding.bNextPage.isEnabled = !isUnderscorePresent
+//        setTextViewLetters(words)
+//
+//
+//        isNextButtonEnabled = true
+//    }
+
+
+//    private fun displayWord() {
+//        val finalWord = displayedWord.toString()
+//        tvWord.text = finalWord
+//    }
+
+//    private fun generateRandomWord() {
+//        val spellingPrefList = spellingPref.toList()
+//        val randomWord = spellingPrefList.random()
+//        words = randomWord
+//        displayedWord.clear()
+//        isUnderscorePresent = false
+//
+//        var isReplaced = false
+//        for (i in words.indices) {
+//            val letter = words[i]
+//
+//            if (letter.isUpperCase()) {
+//                if (!isReplaced) {
+//                    displayedWord.append('_')
+//                    isReplaced = true
+//                    isUnderscorePresent = true
+//                }
+//            } else {
+//                displayedWord.append(letter)
+//            }
+//        }
+//    }
+
     private fun setupTextViewClickListeners() {
-        val tvOne = binding.tvOneN
-        val tvTwo = binding.tvTwoN
+        val tvOne = binding.tvOne
+        val tvTwo = binding.tvTwo
+
 
         tvOne.setOnClickListener {
-            handleLetterClick(tvOne, tvTwo)
+            gamePrefViewModel.handleWord(tvWord.text.toString(), tvOne.text.toString(), 0)
         }
 
-        tvTwo.setOnClickListener {
-            handleLetterClick(tvTwo, tvOne)
+        tvOne.setOnClickListener {
+            gamePrefViewModel.handleWord(tvWord.text.toString(), tvTwo.text.toString(), 1)
         }
 
         tvWord.setOnClickListener {
-            handleTvWordClick()
+
         }
     }
 
-    private fun resetGame() {
-        requireView().setBackgroundColor(
-            ContextCompat.getColor(
-                requireContext(),
-                android.R.color.transparent
-            )
-        )
-        words = ""
-    }
+//    private fun resetGame() {
+//        requireView().setBackgroundColor(
+//            ContextCompat.getColor(
+//                requireContext(),
+//                android.R.color.transparent
+//            )
+//        )
+//        words = ""
+//    }
+
+
 
     private fun setTextViewLetters(randomWord: String) {
         val upperCaseLetters = randomWord.filter { it.isUpperCase() }
 
-        val textViews = listOf(binding.tvOneN, binding.tvTwoN)
+        val textViews = listOf(binding.tvOne, binding.tvTwo)
         val availableTextViews = textViews.toMutableList()
 
         for (i in upperCaseLetters.indices) {
@@ -174,61 +252,61 @@ class SpellingPrefFragment : Fragment() {
         }
     }
 
-    private fun handleTvWordClick() {
-        val word = displayedWord.toString()
-        val updatedWord = StringBuilder()
+//    private fun handleTvWordClick() {
+//        val word = displayedWord.toString()
+//        val updatedWord = StringBuilder()
+//
+//        for (i in word.indices) {
+//            val letter = word[i]
+//            if (letter.isUpperCase()) {
+//                updatedWord.append('_')
+//            } else {
+//                updatedWord.append(letter)
+//            }
+//        }
+//
+//        tvWord.text = updatedWord.toString()
+//
+//        resetViewState()
+//
+//        isLetterRemoved = false
+//
+//        binding.bNextPage.isEnabled = !tvWord.text.contains("_")
+//    }
 
-        for (i in word.indices) {
-            val letter = word[i]
-            if (letter.isUpperCase()) {
-                updatedWord.append('_')
-            } else {
-                updatedWord.append(letter)
-            }
-        }
-
-        tvWord.text = updatedWord.toString()
-
-        resetViewState()
-
-        isLetterRemoved = false
-
-        binding.bNextPage.isEnabled = !tvWord.text.contains("_")
-    }
-
-    private fun handleLetterClick(selectedLetterTextView: TextView, otherLetterTextView: TextView) {
-        val selectedLetter = selectedLetterTextView.text.toString()
-        val underscoreIndex = tvWord.text.indexOf('_')
-        if (underscoreIndex != -1) {
-            val updatedWord = tvWord.text.replaceRange(underscoreIndex, underscoreIndex + 1, selectedLetter)
-            tvWord.text = updatedWord
-
-            selectedLetterTextView.visibility = View.GONE
-            otherLetterTextView.visibility = View.VISIBLE
-        }
-
-        binding.bNextPage.isEnabled = !tvWord.text.contains("_")
-    }
+//    private fun handleLetterClick(selectedLetterTextView: TextView, otherLetterTextView: TextView) {
+//        val selectedLetter = selectedLetterTextView.text.toString()
+//        val underscoreIndex = tvWord.text.indexOf('_')
+//        if (underscoreIndex != -1) {
+//            val updatedWord = tvWord.text.replaceRange(underscoreIndex, underscoreIndex + 1, selectedLetter)
+//            tvWord.text = updatedWord
+//
+//            selectedLetterTextView.visibility = View.GONE
+//            otherLetterTextView.visibility = View.VISIBLE
+//        }
+//
+//        binding.bNextPage.isEnabled = !tvWord.text.contains("_")
+//    }
 
 
-    private fun setupNextPageButtonListener() {
-        binding.bNextPage.setOnClickListener {
-            if (isNextButtonEnabled) {
-                isNextButtonEnabled = false
-                it.isEnabled = false
-                val userAnswer = tvWord.text.toString()
-                viewModel.getWordCount(userAnswer)
-                checkAnswer(userAnswer)
-
-                viewModel.wordCountLiveData.observe(viewLifecycleOwner, androidx.lifecycle.Observer { count ->
-                    val isCorrect = userAnswer.equals(transformWord(words), ignoreCase = true)
-                    val newCount = if (isCorrect) count + 1 else 0
-
-                    viewModel.insertWordToAllWords(transformWord(words), newCount)
-                })
-            }
-        }
-    }
+//    private fun setupNextPageButtonListener() {
+//        binding.bNextPage.setOnClickListener {
+//            if (isNextButtonEnabled) {
+//                isNextButtonEnabled = false
+//                it.isEnabled = false
+//                val userAnswer = tvWord.text.toString()
+//                viewModel.getWordCount(userAnswer)
+//                checkAnswer(userAnswer)
+//
+//                viewModel.wordCountLiveData.observe(viewLifecycleOwner, androidx.lifecycle.Observer { count ->
+//                    val isCorrect = userAnswer.equals(transformWord(words), ignoreCase = true)
+//                    val newCount = if (isCorrect) count + 1 else 0
+//
+//                    viewModel.insertWordToAllWords(transformWord(words), newCount)
+//                })
+//            }
+//        }
+//    }
 
     private fun showGameResults() {
         val percentage = calculatePercentage(viewModel)
@@ -247,31 +325,31 @@ class SpellingPrefFragment : Fragment() {
         )
     }
 
-    private fun checkAnswer(userAnswer: String) {
-        val transformedWord = transformWord(words)
-
-        val isCorrect = transformedWord == userAnswer
-        viewModel.updateScore(isCorrect)
-        viewModel.addUserAnswer(isCorrect)
-        viewModel.setUserAnswers(userAnswer)
-
-        if (userAnswer.equals(transformedWord, ignoreCase = true)) {
-            requireView().setBackgroundColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.green_light
-                )
-            )
-        } else {
-            requireView().setBackgroundColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.red_light
-                )
-            )
-        }
-        handler.postDelayed(runnable, DELAY_MILLIS)
-    }
+//    private fun checkAnswer(userAnswer: String) {
+////        val transformedWord = transformWord(words)
+//
+//        val isCorrect = transformedWord == userAnswer
+//        viewModel.updateScore(isCorrect)
+//        viewModel.addUserAnswer(isCorrect)
+//        viewModel.setUserAnswers(userAnswer)
+//
+//        if (userAnswer.equals(transformedWord, ignoreCase = true)) {
+//            requireView().setBackgroundColor(
+//                ContextCompat.getColor(
+//                    requireContext(),
+//                    R.color.green_light
+//                )
+//            )
+//        } else {
+//            requireView().setBackgroundColor(
+//                ContextCompat.getColor(
+//                    requireContext(),
+//                    R.color.red_light
+//                )
+//            )
+//        }
+////        handler.postDelayed(runnable, DELAY_MILLIS)
+//    }
 
     override fun onDestroyView() {
         super.onDestroyView()

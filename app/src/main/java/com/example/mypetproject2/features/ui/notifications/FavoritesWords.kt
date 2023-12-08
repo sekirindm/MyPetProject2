@@ -50,6 +50,7 @@ class FavoritesWords : Fragment() {
 
         repetitionWordsAdapter = RepetitionWordsAdapter { gameItem, position ->
             customAnimations(position)
+//            gameViewModel.deleteGameItem(gameItem)
         }
 
 
