@@ -25,39 +25,6 @@ import com.example.mypetproject2.features.ui.games.stress.StressFragment
 import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
 import com.example.mypetproject2.utils.navigateChooseSeparateWordFragmentToFinishedFragment
 
-fun main() {
-//    val list = separateList.shuffled()[0]
-//    val options = list.toList()
-//    print("${list.second}, ${list.first}")
-
-//    val correctDisplay = separateList.find {it.first.replace("(", "").replace(")", "").trim() == rightAnswer.trim()}?.second
-
-//    val kal = separateList.map {
-//        val word = it.first
-//        when (it.second) {
-//            0 -> word.replace("(", "").replace(")", " ")
-//            1 -> word.replace("(", "").replace(")", "")
-//            2 -> word.replace("(", "").replace(")", "-")
-//            else -> word
-//        }
-//    }
-
-    val w = stress[0].indexOfFirst { it.isUpperCase() }
-    print(w)
-//
-//    kal.forEach { println(it) }
-
-//    val word = "!(НЕ)ВЕРЮ! в то что ты ушел"
-//    val startIndex = word.indexOf("!")
-//    val endIndex = word.indexOf("!", startIndex + 1)
-//    val extractedText = if (startIndex != -1 && endIndex != -1) {
-//        word.substring(startIndex, endIndex + 1)
-//    } else {
-//        "Выделенное слово не найдено"
-//    }
-//    print(extractedText.replace("!", "").lowercase())
-}
-
 class ChooseSeparateSpellingWordFragment : Fragment() {
     private var _binding: FragmentChooseSeparateSpellingWordBinding? = null
     private val binding get() = _binding!!
@@ -91,7 +58,6 @@ class ChooseSeparateSpellingWordFragment : Fragment() {
         with(binding) {
             b1.setOnClickListener { handleClick(1) }
             b2.setOnClickListener { handleClick(0) }
-//            b3.setOnClickListener { handleClick(2) }
         }
     }
 
@@ -109,26 +75,18 @@ class ChooseSeparateSpellingWordFragment : Fragment() {
         isNextButtonEnabled = false
 
         val isCorrect = buttonIndex == currentAnswerIndex
-//        val userAnswer = buttons()[buttonIndex].text.toString()
         checkAnswer(buttonIndex)
 
         val userAnswer = when (buttonIndex) {
             0 ->  currentWord.replace("(", "").replace(")", " ")
             1 ->  currentWord.replace("(", "").replace(")", "")
             else -> currentWord.replace("(", "").replace(")", "-")
-
         }
-
-//        if (buttonIndex == 0) {
-//            currentWord.replace("()", " ")
-//        }
-
         viewModel.updateScore(isCorrect)
         viewModel.addUserAnswer(isCorrect)
         viewModel.setUserAnswers(userAnswer)
     }
 
-//    , binding.b3
     private fun buttons() = listOf(binding.b2, binding.b1)
     private fun checkAnswer(clickedButtonIndex: Int) {
 

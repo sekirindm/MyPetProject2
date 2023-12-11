@@ -6,9 +6,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.mypetproject2.data.database.AppDatabase
-import com.example.mypetproject2.data.spellingNN
 import com.example.mypetproject2.data.spellingPref
-import com.example.mypetproject2.features.ui.games.stress.GameState
+import com.example.mypetproject2.features.ui.games.spelling.transformWord
 import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
 import com.example.mypetproject2.features.ui.games.stress.State
 import kotlinx.coroutines.launch
@@ -22,9 +21,10 @@ sealed class GameStatePref {
     data class FinishGame(val state: State) : GameStatePref()
 }
 fun main() {
+//    [wordIndex].replace(Regex("[А-Я]+")) {"_"}
     var wordIndex = 0
-    val modifiedWord = spellingPref.toList()[wordIndex].replace(Regex("[А-Я]+")) {"_"}
-    print(modifiedWord)
+    val modifiedWord = spellingPref.toList()[wordIndex]
+    print(transformWord(modifiedWord))
 }
 class GamePrefViewModel(application: Application): AndroidViewModel(application) {
 
@@ -37,7 +37,7 @@ class GamePrefViewModel(application: Application): AndroidViewModel(application)
 
     fun initGame() {
         viewModelScope.launch {
-            val spellingPrefList = spellingPref.toList().take(7)
+            val spellingPrefList = spellingPref.toList()
             var randomWord = spellingPrefList.random()
 
             var doesWordMeetCriteria = allWordDao.doesWordMeetCriteria(randomWord)
@@ -51,12 +51,14 @@ class GamePrefViewModel(application: Application): AndroidViewModel(application)
             val uppercaseList = uppercaseLetter.windowed(1)
             val uppercaseShuffled = uppercaseList.shuffled()
 
-            val answer = randomWord to ""
+            // TODO: из моего  randomWord вырезать вторую букву в верхнем регистре
+            val rightAnswer = transformWord(randomWord)
+            val answer = rightAnswer to ""
             val answers = state.answers.apply {
                 add(answer)
             }
 
-            allWordDao.insertSmart(randomWord)
+            allWordDao.insertSmart(rightAnswer)
             state = state.copy(answers = answers)
             gameState.postValue(GameStatePref.NewWord(modifiedWord, uppercaseShuffled))
         }
@@ -84,7 +86,11 @@ class GamePrefViewModel(application: Application): AndroidViewModel(application)
                     last
                 )
             }
-            val isAnswerRight = spellingNN.contains(word)
+            // TODO: сделать проврку на правильность ответа, сравня first и second последней пары из answers
+
+
+            val lastAnswer = state.answers.last()
+            val isAnswerRight = lastAnswer.first == lastAnswer.second
             val score = if (isAnswerRight) state.score + 1 else state.score
 
             allWordDao.updateSmart(state.answers.last().first, isAnswerRight)

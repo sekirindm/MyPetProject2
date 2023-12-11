@@ -33,7 +33,38 @@ fun markString(string: String): String {
     val markedString = "!$string!"
     return markedString
 }
-
+//fun main() {
+////    val list = separateList.shuffled()[0]
+////    val options = list.toList()
+////    print("${list.second}, ${list.first}")
+//
+////    val correctDisplay = separateList.find {it.first.replace("(", "").replace(")", "").trim() == rightAnswer.trim()}?.second
+//
+////    val kal = separateList.map {
+////        val word = it.first
+////        when (it.second) {
+////            0 -> word.replace("(", "").replace(")", " ")
+////            1 -> word.replace("(", "").replace(")", "")
+////            2 -> word.replace("(", "").replace(")", "-")
+////            else -> word
+////        }
+////    }
+//
+//    val w = stress[0].indexOfFirst { it.isUpperCase() }
+//    print(w)
+////
+////    kal.forEach { println(it) }
+//
+////    val word = "!(НЕ)ВЕРЮ! в то что ты ушел"
+////    val startIndex = word.indexOf("!")
+////    val endIndex = word.indexOf("!", startIndex + 1)
+////    val extractedText = if (startIndex != -1 && endIndex != -1) {
+////        word.substring(startIndex, endIndex + 1)
+////    } else {
+////        "Выделенное слово не найдено"
+////    }
+////    print(extractedText.replace("!", "").lowercase())
+//}
 fun main() {
 //    for(wordIndex in spellingPref.indices) {
 //        var words = spellingPref[wordIndex].replace("!", "")
@@ -41,7 +72,9 @@ fun main() {
 //        val markerWord = words
 //
 //        println("\"$markerWord\" to \"\",")
-
+    val spellingSeparateList = separateList
+    var randomWord = spellingSeparateList.random()
+    print(randomWord)
 
 }
 

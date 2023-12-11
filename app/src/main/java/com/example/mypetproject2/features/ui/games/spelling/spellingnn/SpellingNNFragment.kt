@@ -15,12 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.mypetproject2.R
 import com.example.mypetproject2.data.spellingRoot
 import com.example.mypetproject2.databinding.FragmentSpellingNNBinding
-import com.example.mypetproject2.features.ui.games.spelling.calculatePercentage
-import com.example.mypetproject2.features.ui.games.spelling.getUserAnswers
 import com.example.mypetproject2.features.ui.games.spelling.setupOnBackPressedCallback
-import com.example.mypetproject2.features.ui.games.spelling.transformWord
-import com.example.mypetproject2.features.ui.games.stress.GameState
-import com.example.mypetproject2.features.ui.games.stress.StressFragment
 import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
 import com.example.mypetproject2.utils.navigateSpellingToGameFinishedFragment
 
@@ -46,7 +41,7 @@ fun main() {
 
 class SpellingNNFragment : Fragment() {
 
-    private lateinit var viewModel: GamesViewModel
+    private lateinit var gameNNViewModel: GameNNViewModel
     private lateinit var tvWord: TextView
     private var _binding: FragmentSpellingNNBinding? = null
     private val binding get() = _binding!!
@@ -57,7 +52,7 @@ class SpellingNNFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentSpellingNNBinding.inflate(inflater, container, false)
-        viewModel = ViewModelProvider(this)[GamesViewModel::class.java]
+        gameNNViewModel = ViewModelProvider(this)[GameNNViewModel::class.java]
         return binding.root
     }
 
@@ -72,7 +67,7 @@ class SpellingNNFragment : Fragment() {
     }
 
     private fun initGame() {
-        viewModel.initGame()
+        gameNNViewModel.initGame()
     }
 
     /**
@@ -80,7 +75,7 @@ class SpellingNNFragment : Fragment() {
      * Данный метод обрабатывает все состояния нашей игры
      * */
     private fun initObservers() {
-        viewModel.gameState.observe(viewLifecycleOwner) {
+        gameNNViewModel.gameState.observe(viewLifecycleOwner) {
             when(it) {
                 is GameState.NewWord -> { // начало игры
                     tvWord.text = it.word  // тут у нас выбранное рандомно слово, которое мы упаковывали в NewWord
@@ -118,7 +113,7 @@ class SpellingNNFragment : Fragment() {
                             id
                         )
                     )
-                    viewModel.delay()
+                    gameNNViewModel.delay()
                 }
                 is GameState.FinishGame -> {
                     val state = it.state
@@ -130,13 +125,15 @@ class SpellingNNFragment : Fragment() {
                         "userAnswerHistory $userAnswerHistory"
                     )
                     navigateSpellingToGameFinishedFragment(
-                        viewModel.score.value ?: 0,
+                        gameNNViewModel.score.value ?: 0,
                         percentage,
                         userAnswers,
                         userAnswerHistory,
                         "spelling"
                     )
                 }
+
+                else -> {}
             }
         }
     }
@@ -156,17 +153,17 @@ class SpellingNNFragment : Fragment() {
         val tvTwo = binding.tvTwoN
 
         tvOne.setOnClickListener { // нажали на одну Н
-            viewModel.handleWord(tvWord.text.toString(), tvOne.text.toString(), 0)
+            gameNNViewModel.handleWord(tvWord.text.toString(), tvOne.text.toString(), 0)
         }
 
         tvTwo.setOnClickListener { // нажали на НН
-            viewModel.handleWord(tvWord.text.toString(), tvTwo.text.toString(), 1)
+            gameNNViewModel.handleWord(tvWord.text.toString(), tvTwo.text.toString(), 1)
         }
         binding.bNextPage.setOnClickListener {
-            viewModel.checkAnswer(tvWord.text.toString())
+            gameNNViewModel.checkAnswer(tvWord.text.toString())
         }
         tvWord.setOnClickListener {
-            viewModel.delete()
+            gameNNViewModel.delete()
         }
     }
 

@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.mypetproject2.R
@@ -26,19 +27,8 @@ import com.example.mypetproject2.utils.navigateSpellingSuffixToGameFinishedFragm
 class SpellingSuffixFragment : Fragment() {
     private var _binding: FragmentSpellingSuffixBinding? = null
     private val binding get() = _binding!!
-    private var wordIndex: Int = 0
-    private lateinit var viewModel: GamesViewModel
     private lateinit var tvWord: TextView
-    private var displayedWord: StringBuilder = StringBuilder()
-    private var isLetterRemoved = false
-    private var words: String = ""
-    private var isUnderscorePresent = false
-    private var isNextButtonEnabled = true
-
-    private val handler = Handler(Looper.getMainLooper())
-    private val runnable = Runnable { showNextWord() }
-
-    private val DELAY_MILLIS = 1000L
+    private lateinit var gameSuffixViewModel: GameSuffixViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,218 +38,108 @@ class SpellingSuffixFragment : Fragment() {
         val rootView = binding.root
 
         initializeViews()
-
-        generateRandomWord()
-        displayWord()
-
-        setTextViewLetters(words)
+        initGame()
+        initObserver()
         setupTextViewClickListeners()
-        setupNextPageButtonListener()
         setupOnBackPressedCallback()
 
         return rootView
     }
 
     private fun initializeViews() {
-        viewModel = ViewModelProvider(this)[GamesViewModel::class.java]
+        gameSuffixViewModel = ViewModelProvider(this)[GameSuffixViewModel::class.java]
         tvWord = binding.tvSpellingPref
     }
 
+    private fun initGame() {
+        gameSuffixViewModel.initGame()
+    }
+
+    private fun initObserver() {
+        gameSuffixViewModel.gameState.observe(viewLifecycleOwner) {
+            when (it) {
+                is GameStateSuffix.NewWord -> {
+                    tvWord.text = it.word
+                    resetViewState()
+                    binding.tvOne.text = it.letters[0]
+                    binding.tvTwo.text = it.letters[1]
+                    binding.bNextPage.isEnabled = false
+                    binding.tvOne.isEnabled = true
+                    binding.tvTwo.isEnabled = true
+                }
+
+                is GameStateSuffix.UpdateWord -> {
+                    tvWord.text = it.word
+                    binding.tvOne.isVisible = it.button != 0
+                    binding.tvTwo.isVisible = it.button != 1
+                    binding.bNextPage.isEnabled = true
+                }
+
+                is GameStateSuffix.CheckedAnswer -> {
+                    val lastAnswer = it.state.answers.last()
+                    val isCorrect = lastAnswer.first == lastAnswer.second
+
+                    binding.bNextPage.isEnabled = false
+                    binding.tvOne.isEnabled = false
+                    binding.tvTwo.isEnabled = false
+
+                    val id = if (isCorrect) {
+                        R.color.green_light
+                    } else {
+                        R.color.red_light
+                    }
+                    requireView().setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireContext(), id
+                        )
+                    )
+                    gameSuffixViewModel.delay()
+                }
+
+                is GameStateSuffix.FinishGame -> {
+                    val state = it.state
+                    val percentage = state.score / 100f * 5f
+                    val userAnswer =
+                        state.answers.map { pair -> pair.first == pair.second }.toBooleanArray()
+                    val userAnswerHistory = state.answers.map { pair -> pair.second }.toTypedArray()
+                    navigateSpellingSuffixToGameFinishedFragment(
+                        gameSuffixViewModel.score.value ?: 0,
+                        percentage,
+                        userAnswer,
+                        userAnswerHistory,
+                        "spellingsuffix"
+                    )
+
+                }
+            }
+        }
+    }
+
     private fun resetViewState() {
-        binding.tvOneN.visibility = View.VISIBLE
-        binding.tvTwoN.visibility = View.VISIBLE
+        binding.tvOne.visibility = View.VISIBLE
+        binding.tvTwo.visibility = View.VISIBLE
         requireView().setBackgroundResource(R.color.white)
     }
 
-    private fun showNextWord() {
-        wordIndex++
-        if (wordIndex >= StressFragment.MAX_ATTEMPTS) {
-            showGameResults()
-            resetGame()
-        }
-
-        generateRandomWord()
-        displayWord()
-        resetViewState()
-
-        tvWord.text = displayedWord
-
-        setTextViewLetters(words)
-
-        binding.bNextPage.isEnabled = !isUnderscorePresent
-
-        isNextButtonEnabled = true
-    }
-
-    private fun displayWord() {
-        val finalWord = displayedWord.toString()
-        tvWord.text = finalWord
-    }
-
-    private fun generateRandomWord() {
-        val spellingSuffixList = spellingSuffix.toList()
-        val randomWord = spellingSuffixList.random().replace("!", "")
-        words = randomWord
-
-        displayedWord.clear()
-        isUnderscorePresent = false
-
-        var isReplaced = false
-        for (i in words.indices) {
-            val letter = words[i]
-
-            if (letter.isUpperCase()) {
-                if (!isReplaced) {
-                    displayedWord.append('_')
-                    isReplaced = true
-                    isUnderscorePresent = true
-                }
-            } else {
-                displayedWord.append(letter)
-            }
-        }
-    }
-
-
     private fun setupTextViewClickListeners() {
-        val tvOne = binding.tvOneN
-        val tvTwo = binding.tvTwoN
+        val tvOne = binding.tvOne
+        val tvTwo = binding.tvTwo
 
-        tvOne.setOnClickListener {handleLetterClick(tvOne, tvTwo) }
-
-        tvTwo.setOnClickListener {handleLetterClick(tvTwo, tvOne) }
-
-        tvWord.setOnClickListener {handleTvWordClick()}
-    }
-
-    private fun resetGame() {
-        requireView().setBackgroundColor(
-            ContextCompat.getColor(
-                requireContext(),
-                android.R.color.transparent
-            )
-        )
-        words = ""
-    }
-
-    private fun setTextViewLetters(randomWord: String) {
-        val upperCaseLetters = randomWord.filter { it.isUpperCase() }
-
-        val textViews = listOf(binding.tvOneN, binding.tvTwoN)
-        val availableTextViews = textViews.toMutableList()
-
-        for (i in upperCaseLetters.indices) {
-            val letter = upperCaseLetters[i]
-
-            if (availableTextViews.isNotEmpty()) {
-                val randomIndex = (0 until availableTextViews.size).random()
-                val textView = availableTextViews[randomIndex]
-
-                textView.text = letter.toString()
-                availableTextViews.removeAt(randomIndex)
-            } else {
-                break
-            }
-        }
-    }
-
-    private fun handleTvWordClick() {
-        val word = displayedWord.toString()
-        val updatedWord = StringBuilder()
-
-        for (i in word.indices) {
-            val letter = word[i]
-            if (letter.isUpperCase()) {
-                updatedWord.append('_')
-            } else {
-                updatedWord.append(letter)
-            }
-        }
-        tvWord.text = updatedWord.toString()
-
-        resetViewState()
-
-        isLetterRemoved = false
-
-        binding.bNextPage.isEnabled = !tvWord.text.contains("_")
-    }
-
-    private fun handleLetterClick(selectedLetterTextView: TextView, otherLetterTextView: TextView) {
-        val selectedLetter = selectedLetterTextView.text.toString()
-        val underscoreIndex = tvWord.text.indexOf('_')
-        if (underscoreIndex != -1) {
-            val updatedWord = tvWord.text.replaceRange(underscoreIndex, underscoreIndex + 1, selectedLetter)
-            tvWord.text = updatedWord
-
-            selectedLetterTextView.visibility = View.GONE
-            otherLetterTextView.visibility = View.VISIBLE
+        tvOne.setOnClickListener {
+            gameSuffixViewModel.handleWord(tvWord.text.toString(), tvOne.text.toString(), 0)
         }
 
-        binding.bNextPage.isEnabled = !tvWord.text.contains("_")
-    }
+        tvTwo.setOnClickListener {
+            gameSuffixViewModel.handleWord(tvWord.text.toString(), tvTwo.text.toString(), 1)
+        }
 
-    private fun setupNextPageButtonListener() {
         binding.bNextPage.setOnClickListener {
-            if (isNextButtonEnabled) {
-                isNextButtonEnabled = false
-                it.isEnabled = false
-                val userAnswer = tvWord.text.toString()
-                viewModel.getWordCount(userAnswer)
-                checkAnswer(userAnswer)
-
-                viewModel.wordCountLiveData.observe(viewLifecycleOwner, androidx.lifecycle.Observer { count ->
-                    val isCorrect = userAnswer.equals(transformWord(words), ignoreCase = true)
-                    val newCount = if (isCorrect) count + 1 else 0
-
-                    viewModel.insertWordToAllWords(transformWord(words), newCount)
-                })
-            }
+            gameSuffixViewModel.checkAnswer(tvWord.text.toString())
         }
+
+        tvWord.setOnClickListener { gameSuffixViewModel.delete() }
+
     }
-
-    private fun showGameResults() {
-        val percentage = calculatePercentage(viewModel)
-        val userAnswers = getUserAnswers(viewModel)
-        val userAnswerHistory = viewModel.userAnswersHistory.value?.toTypedArray()!!
-        Log.d(
-            "showGameResults",
-            "userAnswerHistory $userAnswerHistory"
-        )
-        navigateSpellingSuffixToGameFinishedFragment(
-            viewModel.score.value ?: 0,
-            percentage,
-            userAnswers,
-            userAnswerHistory,
-            "spellingsuffix"
-        )
-    }
-
-    private fun checkAnswer(userAnswer: String) {
-        val transformedWord = transformWord(words)
-
-        val isCorrect = transformedWord == userAnswer
-        viewModel.updateScore(isCorrect)
-        viewModel.addUserAnswer(isCorrect)
-        viewModel.setUserAnswers(userAnswer)
-
-        if (userAnswer.equals(transformedWord, ignoreCase = true)) {
-            requireView().setBackgroundColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.green_light
-                )
-            )
-        } else {
-            requireView().setBackgroundColor(
-                ContextCompat.getColor(
-                    requireContext(),
-                    R.color.red_light
-                )
-            )
-        }
-        handler.postDelayed(runnable, DELAY_MILLIS)
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

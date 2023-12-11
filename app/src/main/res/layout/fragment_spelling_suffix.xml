@@ -24,7 +24,7 @@
         android:id="@+id/tv_spelling_pref"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="усидчивый"
+        tools:text="усидчивый"
         android:textAlignment="center"
         android:textColor="#000000"
         android:textSize="28sp"
@@ -36,25 +36,25 @@
 
 
     <TextView
-        android:id="@+id/tv_one_n"
+        android:id="@+id/tv_one"
         style="@style/SpellingTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="132dp"
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
-        android:text="А"
+        tools:text="А"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_spelling_pref" />
 
     <TextView
-        android:id="@+id/tv_two_n"
+        android:id="@+id/tv_two"
         style="@style/SpellingTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="132dp"
-        android:text="О"
+        tools:text="О"
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
         app:layout_constraintDimensionRatio="1:1"
