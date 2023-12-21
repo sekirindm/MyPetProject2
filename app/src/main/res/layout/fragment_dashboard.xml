@@ -43,7 +43,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:background="@drawable/group_8" />
+            android:background="@drawable/rectangle_106"
+            android:fontFamily="@font/eb_garamond"
+            android:textStyle="bold"
+            android:gravity="left|center"
+            android:paddingStart="16dp"
+            android:text="Ударения"
+            android:textAllCaps="false"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/textView10"
@@ -60,35 +68,90 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:background="@drawable/group_9" />
+            android:background="@drawable/rectangle_106"
+            android:fontFamily="@font/eb_garamond"
+            android:textStyle="bold"
+            android:gravity="left|center"
+            android:paddingStart="16dp"
+            android:text="Н и НН"
+            android:textAllCaps="false"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/b_start_spelling_pref"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:background="@drawable/group_10" />
+            android:background="@drawable/rectangle_106"
+            android:fontFamily="@font/eb_garamond"
+            android:textStyle="bold"
+            android:gravity="left|center"
+            android:paddingStart="16dp"
+            android:text="Приставки"
+            android:textAllCaps="false"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/b_start_spelling_suffix"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:background="@drawable/group_14" />
+            android:background="@drawable/rectangle_106"
+            android:fontFamily="@font/eb_garamond"
+            android:textStyle="bold"
+            android:gravity="left|center"
+            android:paddingStart="16dp"
+            android:text="Суффиксы"
+            android:textAllCaps="false"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/b_start_spelling_root"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:background="@drawable/group_12" />
+            android:background="@drawable/rectangle_106"
+            android:fontFamily="@font/eb_garamond"
+            android:textStyle="bold"
+            android:gravity="left|center"
+            android:paddingStart="16dp"
+            android:text="Корни"
+            android:textAllCaps="false"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/b_choose_separate_word"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:background="@drawable/group_59" />
+            android:background="@drawable/rectangle_106"
+            android:fontFamily="@font/eb_garamond"
+            android:textStyle="bold"
+            android:gravity="left|center"
+            android:paddingStart="16dp"
+            android:text="Слитное и раздельное правописание с НЕ"
+            android:textAllCaps="false"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/b_spelling_twelve"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/rectangle_106"
+            android:fontFamily="@font/eb_garamond"
+            android:textStyle="bold"
+            android:gravity="left|center"
+            android:paddingStart="16dp"
+            android:text="Окончания глаголов и суффиксов причастий"
+            android:textAllCaps="false"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
 
 
         <TextView
@@ -106,14 +169,30 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:background="@drawable/group_25" />
+            android:background="@drawable/rectangle_106"
+            android:fontFamily="@font/eb_garamond"
+            android:textStyle="bold"
+            android:gravity="left|center"
+            android:paddingStart="16dp"
+            android:text="Грамматика"
+            android:textAllCaps="false"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/b_start_paronym"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:background="@drawable/group_103" />
+            android:background="@drawable/rectangle_106"
+            android:fontFamily="@font/eb_garamond"
+            android:textStyle="bold"
+            android:gravity="left|center"
+            android:paddingStart="16dp"
+            android:text="Паронимы"
+            android:textAllCaps="false"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/textView13"
@@ -130,7 +209,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:background="@drawable/group_104" />
+            android:background="@drawable/rectangle_106"
+            android:fontFamily="@font/eb_garamond"
+            android:textStyle="bold"
+            android:gravity="left|center"
+            android:paddingStart="16dp"
+            android:text="Пунктуация"
+            android:textAllCaps="false"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
     </LinearLayout>
 </ScrollView>
 

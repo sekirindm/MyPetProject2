@@ -56,6 +56,9 @@ class DashboardFragment : Fragment() {
             bStartScreenPunctuation.setOnClickListener {
                 startPunctuation()
             }
+            bSpellingTwelve.setOnClickListener {
+                launchGame9()
+            }
         }
     }
 
@@ -83,6 +86,7 @@ class DashboardFragment : Fragment() {
             6 -> "Выбери привильное слово!"
             7 -> "Выбери привильное слово с частицей 'НЕ'!"
             8 -> "Исправь слово подобрав правильный пароним!"
+            9 -> "Выбери правильное написание личных окончаний глаголов и суффикосов причастий"
             else -> "Игра" // Заголовок по умолчанию, если нет соответствующего gameNumber
         }
         launchGameWithDescription(gameNumber, gameDescription, title)
@@ -118,6 +122,10 @@ class DashboardFragment : Fragment() {
 
     private fun launchGame8() {
         launchGameWithDescription(8, "Паронимы")
+    }
+
+    private fun launchGame9() {
+        launchGameWithDescription(9, "Правописание личных окончаний глаголов и суффикосов причастий")
     }
 
     fun startPunctuation() {

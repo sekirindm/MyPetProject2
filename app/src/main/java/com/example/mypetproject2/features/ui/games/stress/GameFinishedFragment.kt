@@ -51,6 +51,7 @@ class GameFinishedFragment : Fragment() {
             "chooseWord" -> getPairChooseWord(answersHistory)
             "chooseSeparateWord" -> getPairChooseSeparateWord(answersHistory)
             "paronym" -> getPairParonym(answersHistory)
+            "spellingtwelve" -> getPairSpellingTwelve(answersHistory)
             else -> emptyList()
         }
 

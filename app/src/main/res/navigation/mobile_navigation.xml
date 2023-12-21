@@ -131,6 +131,9 @@
         <action
             android:id="@+id/action_titleFragment_to_punctuationGameOneFragment"
             app:destination="@id/punctuationGameOneFragment" />
+        <action
+            android:id="@+id/action_titleFragment_to_gameTwelveFragment"
+            app:destination="@id/gameTwelveFragment" />
     </fragment>
     <fragment
         android:id="@+id/navigation_home"
@@ -193,7 +196,20 @@
         android:id="@+id/punctuationGameOneFragment"
         android:name="com.example.mypetproject2.features.ui.games.punctuationgames.PunctuationGameOneFragment"
         android:label="fragment_punctuation_game_one"
-        tools:layout="@layout/fragment_punctuation_game_one" />
+        tools:layout="@layout/fragment_punctuation_game_one" >
+        <argument
+            android:name="gameNumber"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/gameTwelveFragment"
+        android:name="com.example.mypetproject2.features.ui.games.spellingtwelve.GameTwelveFragment"
+        android:label="fragment_game_twelve"
+        tools:layout="@layout/fragment_game_twelve" >
+        <action
+            android:id="@+id/action_gameTwelveFragment_to_gameFinishedFragment"
+            app:destination="@id/gameFinishedFragment" />
+    </fragment>
 
 
 </navigation>

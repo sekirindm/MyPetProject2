@@ -6,55 +6,34 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.mypetproject2.R
+import com.example.mypetproject2.databinding.FragmentChooseSeparateSpellingWordBinding
+import com.example.mypetproject2.databinding.FragmentPunctuationBinding
+import com.example.mypetproject2.databinding.FragmentPunctuationGameOneBinding
+import com.example.mypetproject2.features.ui.games.choosespelling.GameSeparateWordViewModel
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [PunctuationGameOneFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class PunctuationGameOneFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
+    private var _binding: FragmentPunctuationGameOneBinding? = null
+    private val binding get() = _binding!!
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_punctuation_game_one, container, false)
-    }
+        _binding = FragmentPunctuationGameOneBinding.inflate(inflater, container, false)
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment PunctuationGameOneFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            PunctuationGameOneFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+        val text = binding.tvWord
+        val gameNumber = arguments?.getInt("gameNumber") ?: 0
+
+        when (gameNumber) {
+            1 -> text.text = "Первая"
+            2 -> text.text = "Вторая"
+            3 -> text.text = "Третья"
+            4 -> text.text = "Четвертая"
+        }
+        return binding.root
     }
 }

@@ -24,6 +24,7 @@ import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
 import com.example.mypetproject2.features.ui.games.stress.adapters.DividerItemDecoration
 import com.example.mypetproject2.features.ui.games.stress.adapters.RepetitionWordsAdapter
 import android.view.animation.AnimationUtils
+import androidx.recyclerview.widget.DefaultItemAnimator
 import kotlinx.coroutines.*
 
 
@@ -47,16 +48,12 @@ class FavoritesWords : Fragment() {
 
         gameViewModel = ViewModelProvider(this)[GamesViewModel::class.java]
 
-
-        repetitionWordsAdapter = RepetitionWordsAdapter { gameItem, position ->
-            customAnimations(position)
-//            gameViewModel.deleteGameItem(gameItem)
+        repetitionWordsAdapter = RepetitionWordsAdapter { gameItem ->
+            gameViewModel.deleteGameItem(gameItem)
         }
-
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = repetitionWordsAdapter
-
 
         gameViewModel.gameItem.observe(viewLifecycleOwner, Observer { gameItems ->
             Log.d("FavoritesWords", "Observed gameItemsLiveData with ${gameItems.size} items")
@@ -73,46 +70,46 @@ class FavoritesWords : Fragment() {
         return rootView
     }
 
-    fun customAnimations(position: Int) {
-        // Устанавливаем анимацию удаления для элемента
-        recyclerView.layoutManager?.findViewByPosition(position)?.let { itemView ->
-            val animatorList = mutableListOf<Animator>()
-            val deletedItem = repetitionWordsAdapter.items[position]
-
-            // Устанавливаем анимацию альфа-прозрачности для исчезания элемента
-            val alphaAnimator = ObjectAnimator.ofFloat(itemView, "alpha", 1f, 0f)
-            alphaAnimator.duration = 300
-
-            // Устанавливаем анимацию масштабирования для исчезания элемента
-            val scaleXAnimator = ObjectAnimator.ofFloat(itemView, "scaleX", 1f, 0f)
-            val scaleYAnimator = ObjectAnimator.ofFloat(itemView, "scaleY", 1f, 0f)
-            scaleXAnimator.duration = 300
-            scaleYAnimator.duration = 300
-
-            // Добавляем анимации в список
-            animatorList.add(alphaAnimator)
-            animatorList.add(scaleXAnimator)
-            animatorList.add(scaleYAnimator)
-
-            // Создаем и запускаем анимацию удаления элемента
-            val animatorSet = AnimatorSet()
-            animatorSet.playTogether(animatorList)
-
-            animatorSet.addListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator, isReverse: Boolean) {
-
-                    gameViewModel.deleteGameItem(deletedItem)
-
-                    // Удалить элемент из адаптера после завершения анимации
-                    repetitionWordsAdapter.items.removeAt(position)
-                    repetitionWordsAdapter.notifyItemRemoved(position)
-                }
-
-            })
-
-            animatorSet.start()
-        }
-    }
+//    fun customAnimations(position: Int) {
+//        // Устанавливаем анимацию удаления для элемента
+//        recyclerView.layoutManager?.findViewByPosition(position)?.let { itemView ->
+//            val animatorList = mutableListOf<Animator>()
+//            val deletedItem = repetitionWordsAdapter.items[position]
+//
+//            // Устанавливаем анимацию альфа-прозрачности для исчезания элемента
+//            val alphaAnimator = ObjectAnimator.ofFloat(itemView, "alpha", 1f, 0f)
+//            alphaAnimator.duration = 300
+//
+//            // Устанавливаем анимацию масштабирования для исчезания элемента
+//            val scaleXAnimator = ObjectAnimator.ofFloat(itemView, "scaleX", 1f, 0f)
+//            val scaleYAnimator = ObjectAnimator.ofFloat(itemView, "scaleY", 1f, 0f)
+//            scaleXAnimator.duration = 300
+//            scaleYAnimator.duration = 300
+//
+//            // Добавляем анимации в список
+//            animatorList.add(alphaAnimator)
+//            animatorList.add(scaleXAnimator)
+//            animatorList.add(scaleYAnimator)
+//
+//            // Создаем и запускаем анимацию удаления элемента
+//            val animatorSet = AnimatorSet()
+//            animatorSet.playTogether(animatorList)
+//
+//            animatorSet.addListener(object : AnimatorListenerAdapter() {
+//                override fun onAnimationEnd(animation: Animator, isReverse: Boolean) {
+//
+//                    gameViewModel.deleteGameItem(deletedItem)
+//
+//                    // Удалить элемент из адаптера после завершения анимации
+//                    repetitionWordsAdapter.items.removeAt(position)
+//                    repetitionWordsAdapter.notifyItemRemoved(position)
+//                }
+//
+//            })
+//
+//            animatorSet.start()
+//        }
+//    }
 
     override fun onDestroyView() {
         super.onDestroyView()

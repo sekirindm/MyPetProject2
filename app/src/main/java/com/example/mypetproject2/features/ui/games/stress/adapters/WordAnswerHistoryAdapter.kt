@@ -18,6 +18,10 @@ import com.example.mypetproject2.features.ui.games.spelling.transformWord
 import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
 class WordAnswerHistoryAdapter(
@@ -65,6 +69,8 @@ class WordAnswerHistoryAdapter(
         fun bind(wordPair: Pair<String, String>) {
             val formattedWordPair = formatWordPair(wordPair)
             val word = formattedWordPair.first.toString()
+            val context = Job() + Dispatchers.Default
+            val scope = CoroutineScope(context)
 //            val rightAnswer = formattedWordPair.first.toString()
 //            val userAnswer = formattedWordPair.second.toString()
 
@@ -76,7 +82,7 @@ class WordAnswerHistoryAdapter(
                 updateIcon(isWordAdded)
 
                 ivFavouritesWords.setOnClickListener {
-                    CoroutineScope(Dispatchers.IO).launch {
+                    scope.launch {
                         if (isWordAdded) {
                             viewModel.deleteItem(word)
                         } else {
@@ -86,8 +92,7 @@ class WordAnswerHistoryAdapter(
                         updateIcon(isWordAdded)
                     }
                 }
-
-            val kal = separateList.map {
+            val dopWord = separateList.map {
                 val wordFirst = it.first
                 when (it.second) {
                     0 -> wordFirst.replace("(", "").replace(")", " ")
@@ -97,8 +102,8 @@ class WordAnswerHistoryAdapter(
                 }
             }
 
-            val correctDisplay = kal.find { it == word }?.let {
-                separateList[kal.indexOf(it)].second
+            val correctDisplay = dopWord.find { it == word }?.let {
+                separateList[dopWord.indexOf(it)].second
             }
 
 //            val unCorrectDisplay = kal.find { it == userAnswer }?.let {

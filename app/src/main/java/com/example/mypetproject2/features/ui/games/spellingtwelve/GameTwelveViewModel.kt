@@ -1,4 +1,4 @@
-package com.example.mypetproject2.features.ui.games.spelling.spellingpref
+package com.example.mypetproject2.features.ui.games.spellingtwelve
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -7,43 +7,40 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.mypetproject2.data.database.AppDatabase
 import com.example.mypetproject2.data.spellingPref
+import com.example.mypetproject2.data.spellingTwelveList
+import com.example.mypetproject2.features.ui.games.spelling.spellingpref.GameStatePref
 import com.example.mypetproject2.features.ui.games.spelling.transformWord
 import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
 import com.example.mypetproject2.features.ui.games.stress.State
 import kotlinx.coroutines.launch
-sealed class GameStatePref {
-    data class NewWord(val word: String, val letters: List<String>) : GameStatePref()
 
-    data class UpdateWord(val word: String, val button: Int) : GameStatePref()
+sealed class GameStateTwelve {
+    data class NewWord(val word: String, val letters: List<String>) : GameStateTwelve()
 
-    data class CheckedAnswer(val state: State) : GameStatePref()
+    data class UpdateWord(val word: String, val button: Int) : GameStateTwelve()
 
-    data class FinishGame(val state: State) : GameStatePref()
+    data class CheckedAnswer(val state: State) : GameStateTwelve()
+
+    data class FinishGame(val state: State) : GameStateTwelve()
 }
-fun main() {
-//    [wordIndex].replace(Regex("[А-Я]+")) {"_"}
-    var wordIndex = 0
-    val modifiedWord = spellingPref.toList()[wordIndex]
-    print(transformWord(modifiedWord))
-}
-class GamePrefViewModel(application: Application): AndroidViewModel(application) {
 
+class GameTwelveViewModel(application: Application): AndroidViewModel(application) {
     private val allWordDao = AppDatabase.getInstance(application).allWordsDao()
 
     private var state = State(0)
-    val gameState = MutableLiveData<GameStatePref>()
+    val gameState = MutableLiveData<GameStateTwelve>()
     private val _score = MutableLiveData(0)
     val score: LiveData<Int> get() = _score
 
     fun initGame() {
         viewModelScope.launch {
-            val spellingPrefList = spellingPref.toList()
+            val spellingPrefList = spellingTwelveList.toList()
             var randomWord = spellingPrefList.random()
 
             var doesWordMeetCriteria = allWordDao.doesWordMeetCriteria(randomWord)
             while (state.answers.any {it.first == randomWord } || !doesWordMeetCriteria) {
-                 randomWord = spellingPrefList.random()
-                 doesWordMeetCriteria = allWordDao.doesWordMeetCriteria(randomWord)
+                randomWord = spellingPrefList.random()
+                doesWordMeetCriteria = allWordDao.doesWordMeetCriteria(randomWord)
             }
 
             val modifiedWord = randomWord.replace(Regex("[А-Я]+"), "_")
@@ -60,17 +57,17 @@ class GamePrefViewModel(application: Application): AndroidViewModel(application)
 
             allWordDao.insertSmart(rightAnswer)
             state = state.copy(answers = answers)
-            gameState.postValue(GameStatePref.NewWord(modifiedWord, uppercaseShuffled))
+            gameState.postValue(GameStateTwelve.NewWord(modifiedWord, uppercaseShuffled))
         }
     }
 
     fun handleWord(word: String, letter: String, button: Int){
-       val modifiedWord = if (!word.contains("_"))
+        val modifiedWord = if (!word.contains("_"))
             word.replace(Regex("[А-Я]+"), "_").replace("_", letter)
         else {
             word.replace("_", letter)
         }
-        gameState.value = GameStatePref.UpdateWord(
+        gameState.value = GameStateTwelve.UpdateWord(
             modifiedWord,
             button
         )
@@ -99,7 +96,7 @@ class GamePrefViewModel(application: Application): AndroidViewModel(application)
                 answers = updatedList
             )
 
-            gameState.postValue(GameStatePref.CheckedAnswer(state))
+            gameState.postValue(GameStateTwelve.CheckedAnswer(state))
         }
     }
 
@@ -109,7 +106,7 @@ class GamePrefViewModel(application: Application): AndroidViewModel(application)
             if (state.answers.size < GamesViewModel.MAX_ATTEMPTS)
                 initGame()
             else
-                gameState.value = GameStatePref.FinishGame(state)
+                gameState.value = GameStateTwelve.FinishGame(state)
         }
     }
 
@@ -118,5 +115,4 @@ class GamePrefViewModel(application: Application): AndroidViewModel(application)
             allWordDao.deleteAll()
         }
     }
-
 }

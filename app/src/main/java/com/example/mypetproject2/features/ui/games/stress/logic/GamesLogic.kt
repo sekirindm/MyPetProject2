@@ -17,11 +17,11 @@ class GamesLogic {
             val previousVowelIndex = this.previousVowelIndex
             if (previousVowelIndex in 0 until spannableLength) {
                 val previousVowelChar = spannableStringBuilder[previousVowelIndex]
-                spannableStringBuilder.removeSpan(ForegroundColorSpan(Color.BLACK))
+                spannableStringBuilder.removeSpan(ForegroundColorSpan(Color.parseColor("#ffffbb33")))
                 spannableStringBuilder.replace(previousVowelIndex, previousVowelIndex + 1, previousVowelChar.lowercase().toString())
             }
             spannableStringBuilder.setSpan(
-                ForegroundColorSpan(Color.BLACK),
+                ForegroundColorSpan(Color.parseColor("#ffffbb33")),
                 selectedVowelIndex,
                 selectedVowelIndex + 1,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE

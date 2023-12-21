@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -24,134 +25,94 @@ import com.example.mypetproject2.features.ui.games.spelling.stringBuilder
 import com.example.mypetproject2.features.ui.games.stress.StressFragment
 import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
 import com.example.mypetproject2.utils.navigateChooseSeparateWordFragmentToFinishedFragment
+import com.example.mypetproject2.utils.navigateSpellingPrefToGameFinishedFragment
 
 class ChooseSeparateSpellingWordFragment : Fragment() {
     private var _binding: FragmentChooseSeparateSpellingWordBinding? = null
     private val binding get() = _binding!!
-    private val handler = Handler(Looper.getMainLooper())
-    var wordIndex = 0
-
-    private var currentWord: String = ""
-
-    private var isNextButtonEnabled = true
-    private var currentAnswerIndex = 0
-    private lateinit var viewModel: GamesViewModel
+    lateinit var viewModelSeparate: GameSeparateWordViewModel
+    private lateinit var tvWord: TextView
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        displayWord()
-        initializeButton()
+        initGame()
+        initObserver()
+        setupButtonClickListener()
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         _binding = FragmentChooseSeparateSpellingWordBinding.inflate(inflater, container, false)
-        viewModel = ViewModelProvider(this)[GamesViewModel::class.java]
+        initViewModel()
         return binding.root
     }
 
-    private fun initializeButton() {
-        with(binding) {
-            b1.setOnClickListener { handleClick(1) }
-            b2.setOnClickListener { handleClick(0) }
-        }
-    }
 
-    private fun displayWord() {
-        val list = separateList.shuffled()[wordIndex]
-        currentWord = list.first
-        val formattedWord = stringBuilder(currentWord)
-        binding.word.text = formattedWord
-        currentAnswerIndex = list.second
-        Log.d("displayWord", "${list.first} ${list.second}, ")
-    }
+    private fun initObserver() {
+        viewModelSeparate.gameState.observe(viewLifecycleOwner) {
+            when (it) {
+                is GameStateSeparate.NewWord -> {
+                    tvWord.text = it.word
+                    requireView().setBackgroundResource(R.color.white)
 
-    private fun handleClick(buttonIndex: Int) {
-        if (!isNextButtonEnabled) return
-        isNextButtonEnabled = false
-
-        val isCorrect = buttonIndex == currentAnswerIndex
-        checkAnswer(buttonIndex)
-
-        val userAnswer = when (buttonIndex) {
-            0 ->  currentWord.replace("(", "").replace(")", " ")
-            1 ->  currentWord.replace("(", "").replace(")", "")
-            else -> currentWord.replace("(", "").replace(")", "-")
-        }
-        viewModel.updateScore(isCorrect)
-        viewModel.addUserAnswer(isCorrect)
-        viewModel.setUserAnswers(userAnswer)
-    }
-
-    private fun buttons() = listOf(binding.b2, binding.b1)
-    private fun checkAnswer(clickedButtonIndex: Int) {
-
-        for ((index, button) in buttons().withIndex()) {
-            when (index) {
-                currentAnswerIndex -> {
-                    button.setBackgroundColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.green_light
-                        )
-                    )
                 }
 
-                clickedButtonIndex -> {
-                    button.setBackgroundColor(
+                is GameStateSeparate.CheckAnswer -> {
+                    val lastAnswer = it.state.answers.last()
+                    val isCorrect = lastAnswer.first == lastAnswer.second
+                    Log.d("lastAnswer", "${lastAnswer.first}, ${lastAnswer.second}")
+
+                    val id = if (isCorrect) {
+                        R.color.green_light
+                    } else {
+                        R.color.red_light
+                    }
+                    requireView().setBackgroundColor(
                         ContextCompat.getColor(
-                            requireContext(),
-                            R.color.red_light
+                            requireContext(), id
                         )
                     )
+                    viewModelSeparate.delay()
+                }
+
+                is GameStateSeparate.FinishGame -> {
+                    val state = it.state
+                    val percentage = state.score / 5f * 100f
+                    val userAnswers =
+                        state.answers.map { pair -> pair.first == pair.second }.toBooleanArray()
+                    val userAnswersHistory = state.answers.map { it.second }.toTypedArray()
+                    navigateChooseSeparateWordFragmentToFinishedFragment(
+                        viewModelSeparate.score.value ?: 0,
+                        percentage,
+                        userAnswers,
+                        userAnswersHistory,
+                        "chooseSeparateWord"
+                    )
+
                 }
             }
         }
-        handler.postDelayed({
-            resetBackgroundState()
-            isNextButtonEnabled = true
-            showNextWord()
-
-        }, 1000L)
     }
 
-    private fun resetBackgroundState() {
-        val defaultBackground =
-            ContextCompat.getDrawable(requireContext(), R.drawable.rectangle_111)
-        for (button in buttons()) {
-            button.background = defaultBackground
+
+    private fun initViewModel() {
+        viewModelSeparate = ViewModelProvider(this)[GameSeparateWordViewModel::class.java]
+        tvWord = binding.word
+    }
+    private fun initGame() {
+        viewModelSeparate.initGame()
+    }
+
+    private fun setupButtonClickListener() {
+        binding.b1.setOnClickListener {
+            viewModelSeparate.checkAnswer(tvWord.text.toString(), 1)
         }
-    }
-
-    private fun showNextWord() {
-        wordIndex++
-        if (wordIndex >= StressFragment.MAX_ATTEMPTS) {
-            showGameResults()
-            resetBackgroundState()
-        } else {
-            displayWord()
-            resetBackgroundState()
+        binding.b2.setOnClickListener {
+            viewModelSeparate.checkAnswer(tvWord.text.toString(), 0)
         }
-    }
-    private fun showGameResults() {
-        val percentage = calculatePercentage(viewModel)
-        val userAnswers = getUserAnswers(viewModel)
-        val userAnswerHistory = viewModel.userAnswersHistory.value?.toTypedArray()!!
-        Log.d(
-            "showGameResults",
-            "userAnswerHistory $userAnswerHistory"
-        )
-        navigateChooseSeparateWordFragmentToFinishedFragment(
-            viewModel.score.value ?: 0,
-            percentage,
-            userAnswers,
-            userAnswerHistory,
-            "chooseSeparateWord"
-        )
     }
 
     override fun onDestroyView() {

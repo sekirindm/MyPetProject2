@@ -90,7 +90,7 @@ class StressFragment : Fragment() {
      * */
     private fun setupWordClick() {
         val word = getRandomWordFromList()
-        spannableStringBuilder = createSpannableStringBuilder(word) { characterIndex, character ->
+        spannableStringBuilder = createSpannableStringBuilder(word, requireContext()) { characterIndex, character ->
             handleVowelClick(characterIndex, character)
         }
         binding.tvWord.text = spannableStringBuilder
@@ -129,7 +129,7 @@ class StressFragment : Fragment() {
      * Предыдущая выбранная гласная буква возвращается в нижний регистр, а новая выбранная гласная буква выделяется жирным шрифтом и становится черной.
      * Обновленный SpannableStringBuilder устанавливается в tvWord.
      * */
-    private fun updateSelectedVowelFormatting() {
+    fun updateSelectedVowelFormatting() {
         val selectedVowelIndex = viewModel.selectedVowelIndex.value ?: -1
         val selectedVowelChar = viewModel.selectedVowelChar.value
 

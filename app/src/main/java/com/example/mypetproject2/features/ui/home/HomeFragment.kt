@@ -1,22 +1,26 @@
 package com.example.mypetproject2.features.ui.home
 
-import android.annotation.SuppressLint
-import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Html
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.style.RelativeSizeSpan
-import android.text.style.StyleSpan
+import android.text.SpannableStringBuilder
+import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import com.example.mypetproject2.data.listPunctuationGameTwo
 import com.example.mypetproject2.databinding.FragmentHomeBinding
+import com.example.mypetproject2.features.spannableStringBuilderUnicode
+import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
+import com.example.mypetproject2.features.ui.games.stress.logic.GamesLogic
 
 class HomeFragment : Fragment() {
+    private lateinit var spannableStringBuilder: SpannableStringBuilder
 
+    private lateinit var viewModel: GamesViewModel
     private var _binding: FragmentHomeBinding? = null
+private val gamesLogic = GamesLogic()
 
     private val binding get() = _binding!!
 
@@ -27,23 +31,56 @@ class HomeFragment : Fragment() {
     ): View {
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        webViewTest()
+
+        viewModel = ViewModelProvider(this)[GamesViewModel::class.java]
+        spannableStringBuilder = SpannableStringBuilder()
+        binding.textView .movementMethod = LinkMovementMethod.getInstance()
+//        webViewTest()
+        setupWordClick()
+//        updateSelectedVowelFormatting()
         return binding.root
     }
-//    A<sup>2</sup> + B<sup>2</sup> = C<sup>2</sup>
-//    @SuppressLint("SetJavaScriptEnabled", "SetTextI18n")
+
     fun webViewTest() {
-    val textView = binding.textView
+        val textView = binding.textView
 
-    val htmlText = "Всем привет<sub>▢</sub> я ваш босс"
-    textView.text = Html.fromHtml(htmlText, Html.FROM_HTML_MODE_LEGACY)
+        val list = listPunctuationGameTwo.random()
+        val htmlText = "<sub>▢</sub>"
+        val modifiedListToUnicode = list.replace(",", htmlText)
+        val unicode = Html.fromHtml(modifiedListToUnicode, Html.FROM_HTML_MODE_LEGACY)
+        val span = spannableStringBuilderUnicode(unicode, requireContext())
 
+        textView.text = span
+//        Log.d("span", "$span")
+//
+    }
 
-}
-//        val webView = binding.textView
-//        webView.text = "<style>body { font-size: 20px; }</style>Всем привет<sub>▢</sub>я ваш босс"
+//    fun updateSelectedVowelFormatting() {
+//        val selectedVowelIndex = viewModel.selectedVowelIndex.value ?: -1
+//        val selectedVowelChar = viewModel.selectedVowelChar.value
+//
+//        val spannableLength = spannableStringBuilder.length
+//        if (selectedVowelIndex in 0 until spannableLength && selectedVowelChar != null) {
+//           gamesLogic.updateSelectedVowelFormatting(
+//                spannableStringBuilder,
+//                selectedVowelIndex,
+//                selectedVowelChar
+//            )
+//            binding.textView.text = spannableStringBuilder
+//        }
+//    }
 
+    private fun setupWordClick() {
+        val list = listPunctuationGameTwo.random()
+        val htmlText = "<sub>▢</sub>"
+        val modifiedListToUnicode = list.replace(",", htmlText)
+        val unicode = Html.fromHtml(modifiedListToUnicode, Html.FROM_HTML_MODE_LEGACY)
+        spannableStringBuilder =
+            spannableStringBuilderUnicode(unicode, requireContext())
+//                handleVowelClick(characterIndex, character)
 
+        binding.textView.text = spannableStringBuilder
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

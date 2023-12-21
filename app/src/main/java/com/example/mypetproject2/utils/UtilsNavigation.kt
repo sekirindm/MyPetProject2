@@ -10,6 +10,7 @@ import com.example.mypetproject2.features.ui.games.spelling.spellingnn.SpellingN
 import com.example.mypetproject2.features.ui.games.spelling.spellingpref.SpellingPrefFragmentDirections
 import com.example.mypetproject2.features.ui.games.spelling.spellingroot.SpellingRootFragmentDirections
 import com.example.mypetproject2.features.ui.games.spelling.spellingsuffix.SpellingSuffixFragmentDirections
+import com.example.mypetproject2.features.ui.games.spellingtwelve.GameTwelveFragmentDirections
 import com.example.mypetproject2.features.ui.games.stress.StressFragment
 import com.example.mypetproject2.features.ui.games.stress.StressFragmentDirections
 
@@ -38,6 +39,23 @@ fun Fragment.navigateSpellingToGameFinishedFragment(
     gameType: String
 ) {
     val action = SpellingNNFragmentDirections.actionSpellingNNFragmentToGameFinishedFragment(
+        score,
+        percentage,
+        userAnswers,
+        userAnswersHistory,
+        gameType
+    )
+    findNavController().navigate(action)
+}
+
+fun Fragment.navigateSpellingTwelveToGameFinishedFragment(
+    score: Int,
+    percentage: Float,
+    userAnswers: BooleanArray,
+    userAnswersHistory: Array<String>,
+    gameType: String
+) {
+    val action =  GameTwelveFragmentDirections.actionGameTwelveFragmentToGameFinishedFragment(
         score,
         percentage,
         userAnswers,

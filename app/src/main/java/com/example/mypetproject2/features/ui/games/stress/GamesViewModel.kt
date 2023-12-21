@@ -11,6 +11,7 @@ import com.example.mypetproject2.data.database.GameItemDb
 import com.example.mypetproject2.data.database.allwordsdb.AllWordsDb
 import com.example.mypetproject2.data.spellingNN
 import kotlinx.coroutines.*
+import java.text.FieldPosition
 
 data class State(
     val score: Int,
@@ -82,15 +83,14 @@ class GamesViewModel(application: Application) : AndroidViewModel(application) {
             val currentItems = gameItemsLiveData.value ?: emptyList()
             val newPosition = currentItems.size
             val gameItem = GameItemDb(rightAnswer = word, position = newPosition)
-
-            withContext(Dispatchers.IO) {
+            launch {
                 gameItemDao.insert(gameItem)
             }
         }
     }
 
     fun deleteItem(word: String) {
-        CoroutineScope(Dispatchers.IO).launch {
+        viewModelScope.launch {
             val gameItemToDelete = gameItemDao.getAllGameItems().find { it.rightAnswer == word }
             gameItemToDelete?.let {
                 gameItemDao.delete(it)
@@ -139,7 +139,7 @@ class GamesViewModel(application: Application) : AndroidViewModel(application) {
 
     fun deleteGameItem(item: GameItemDb) {
         viewModelScope.launch {
-                gameItemDao.delete(item)
+            gameItemDao.delete(item)
         }
     }
 

@@ -33,7 +33,8 @@ class SpannableStringBuilderHelper {
         selectedVowelIndex?.let {
             selectedVowelChar?.let { char ->
                 val selectedCharIndex = word.indexOf(char)
-                val color = if (selectedCharIndex == correctIndex) Color.GREEN else Color.RED
+                val color = if (selectedCharIndex == correctIndex) Color.parseColor(colorGreen) else Color.parseColor(
+                    colorRed)
 
                 if (selectedCharIndex != -1 && selectedCharIndex == selectedVowelIndex) {
                     builder.setSpan(
@@ -57,6 +58,11 @@ class SpannableStringBuilderHelper {
     private fun createForegroundColorSpan(index: Int, correctIndex: Int): ForegroundColorSpan {
         val color = if (index == correctIndex) Color.GREEN else Color.RED
         return ForegroundColorSpan(color)
+    }
+
+    private companion object {
+        const val colorRed = "#FF0404"
+        const val colorGreen = "#82F25C"
     }
 }
 

@@ -58,26 +58,26 @@ class PunctuationFragment : Fragment() {
 
     private fun launchGameWithDescription(gameNumber: Int, gameDescription: String) {
         val title = when (gameNumber) {
-            9 -> "хряч"
-            10 -> "Игра Спеллинг с буквой 'Н' - это увлекательная игра, в которой вам нужно правильно составить слова, используя одну или две буквы Н. Вам будет представлено случайно выбранное слово, в котором одна или две буквы Н заменены символами подчеркивания _. Ваша задача - угадать пропущенные буквы и правильно составить слово"
-            11 -> "чики пики"
-            12 -> "рики пики"
+            10 -> "Первая"
+            11 -> "Вторая"
+            12 -> "Третья"
+            13 -> "Четвертая"
             else -> "Игра" // Заголовок по умолчанию, если нет соответствующего gameNumber
         }
         launchGameWithDescription(gameNumber, gameDescription, title)
     }
 
     private fun launchGame9() {
-        launchGameWithDescription(9, "срааака")
+        launchGameWithDescription(10, "Первая")
     }
     private fun launchGame10() {
-        launchGameWithDescription(10, "еее")
+        launchGameWithDescription(11, "Вторая")
     }
     private fun launchGame11() {
-        launchGameWithDescription(11, "ииии")
+        launchGameWithDescription(12, "Третья")
     }
     private fun launchGame12() {
-        launchGameWithDescription(12, "ннннн")
+        launchGameWithDescription(13, "Четвертая")
     }
 
 }
