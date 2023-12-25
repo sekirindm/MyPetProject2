@@ -35,8 +35,8 @@ private val gamesLogic = GamesLogic()
         viewModel = ViewModelProvider(this)[GamesViewModel::class.java]
         spannableStringBuilder = SpannableStringBuilder()
         binding.textView .movementMethod = LinkMovementMethod.getInstance()
-//        webViewTest()
-        setupWordClick()
+        webViewTest()
+//        setupWordClick()
 //        updateSelectedVowelFormatting()
         return binding.root
     }
@@ -45,10 +45,10 @@ private val gamesLogic = GamesLogic()
         val textView = binding.textView
 
         val list = listPunctuationGameTwo.random()
-        val htmlText = "<sub>▢</sub>"
+        val htmlText = "▢"
         val modifiedListToUnicode = list.replace(",", htmlText)
-        val unicode = Html.fromHtml(modifiedListToUnicode, Html.FROM_HTML_MODE_LEGACY)
-        val span = spannableStringBuilderUnicode(unicode, requireContext())
+//        val unicode = Html.fromHtml(modifiedListToUnicode, Html.FROM_HTML_MODE_LEGACY)
+        val span = spannableStringBuilderUnicode(modifiedListToUnicode, requireContext(), textView)
 
         textView.text = span
 //        Log.d("span", "$span")
@@ -70,17 +70,17 @@ private val gamesLogic = GamesLogic()
 //        }
 //    }
 
-    private fun setupWordClick() {
-        val list = listPunctuationGameTwo.random()
-        val htmlText = "<sub>▢</sub>"
-        val modifiedListToUnicode = list.replace(",", htmlText)
-        val unicode = Html.fromHtml(modifiedListToUnicode, Html.FROM_HTML_MODE_LEGACY)
-        spannableStringBuilder =
-            spannableStringBuilderUnicode(unicode, requireContext())
-//                handleVowelClick(characterIndex, character)
-
-        binding.textView.text = spannableStringBuilder
-    }
+//    private fun setupWordClick() {
+//        val list = listPunctuationGameTwo.random()
+//        val htmlText = "<sub>▢</sub>"
+//        val modifiedListToUnicode = list.replace(",", htmlText)
+//        val unicode = Html.fromHtml(modifiedListToUnicode, Html.FROM_HTML_MODE_LEGACY)
+//        spannableStringBuilder =
+//            spannableStringBuilderUnicode(list, requireContext(), te)
+////                handleVowelClick(characterIndex, character)
+//
+//        binding.textView.text = spannableStringBuilder
+//    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

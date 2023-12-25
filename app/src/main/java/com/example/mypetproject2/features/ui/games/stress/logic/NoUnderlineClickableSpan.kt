@@ -7,7 +7,7 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import com.example.mypetproject2.R
 //private val onClickListener: () -> Unit
-open class NoUnderlineClickableSpan(private val textColor: Int) : ClickableSpan() {
+open class NoUnderlineClickableSpan(private val textColor: Int, private val textBgColor: Int) : ClickableSpan() {
 
     override fun onClick(widget: View) {
 //        onClickListener.invoke()
@@ -19,5 +19,6 @@ open class NoUnderlineClickableSpan(private val textColor: Int) : ClickableSpan(
         ds.isUnderlineText = false
         // Устанавливаем желаемый цвет
         ds.color = textColor
+        ds.bgColor = textBgColor
     }
 }

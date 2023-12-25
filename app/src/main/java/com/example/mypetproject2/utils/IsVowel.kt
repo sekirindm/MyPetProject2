@@ -10,11 +10,13 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
+import android.text.style.RelativeSizeSpan
 import android.text.style.StyleSpan
 import android.text.style.SubscriptSpan
 import android.text.style.TypefaceSpan
 import android.util.Log
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.example.mypetproject2.R
@@ -33,10 +35,10 @@ fun isVowel(c: Char): Boolean {
     val vowels = listOf('а', 'е', 'ё', 'и', 'о', 'у', 'ы', 'э', 'ю', 'я')
     return c.lowercaseChar() in vowels
 }
-fun isSubUnicode(s: Spanned): Boolean {
-    val htmlText = "<sub>▢</sub>"
-    val unicode = Html.fromHtml(htmlText, Html.FROM_HTML_MODE_LEGACY)
-    return s in unicode
+
+fun isSubUnicode(s: Char): Boolean {
+    val htmlText = "▢"
+    return s in htmlText
 
 }
 
@@ -46,42 +48,67 @@ fun main() {
         val htmlText = "<sub>▢</sub>"
         val modifiedListToUnicode = list.replace(",", htmlText)
         val unicode = Html.fromHtml(modifiedListToUnicode, Html.FROM_HTML_MODE_LEGACY)
-        isSubUnicode(unicode)
+//        isSubUnicode(unicode)
     }
 }
+
 @SuppressLint("ResourceType")
 fun spannableStringBuilderUnicode(
-    word: Spanned,
-    context: Context
+    word: String,
+    context: Context,
+    textView: TextView
 ): SpannableStringBuilder {
 
-    val htmlText = "<sub>▢</sub>"
-    val unicode = Html.fromHtml(htmlText, Html.FROM_HTML_MODE_LEGACY)
-    word.getSpanStart(unicode.toString())
-    Log.d("getSpanStart", "${word.getSpanStart(unicode.toString())}")
+    val htmlText = "▢"
     val builder = SpannableStringBuilder(word)
-    for (char in word.indices)
-    if (isSubUnicode(unicode)) {
-        val clickableSpan = object : ClickableSpan() {
-            override fun onClick(widget: View) {
-                Toast.makeText(widget.context, "ewwefwef", Toast.LENGTH_SHORT).show()
+    for (char in word.indices) {
+        val character = word[char]
+        if (isSubUnicode(character)) {
+            val clickableSpan = object : NoUnderlineClickableSpan(ContextCompat.getColor(context, R.color.gray), ContextCompat.getColor(context, android.R.color.white)) {
+                override fun onClick(widget: View) {
+                     builder.replace(char, char + 1, ",").toString()
+
+                    val spans = builder.getSpans(char, char+1, Any::class.java)
+                    for (span in spans) {
+                        builder.removeSpan(span)
+                    }
+                    textView.text = builder
+                    Toast.makeText(widget.context, " ", Toast.LENGTH_SHORT).show()
+
+                }
+
             }
+            builder.setSpan(
+                clickableSpan,
+                char,
+                char + 1,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            builder.setSpan(
+                SubscriptSpan(),
+                char,
+                char + 1,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            builder.setSpan(
+                RelativeSizeSpan(1.1f),
+                char, // start
+                char + 1, // end
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+
+            )
+            builder.setSpan(
+                StyleSpan(Typeface.BOLD),
+                char, // start
+                char + 1, // end
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+
+            )
         }
-        builder.setSpan(
-            clickableSpan,
-           45,
-            46,
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        )
-//        builder.setSpan(
-//            SubscriptSpan(),
-//            45,
-//           46,
-//            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-//        )
     }
     return builder
 }
+
 /**
  * нам нужен метод gatPairSpelling который будет сравнивать слово из списка с сответом пользователя.
  * 1. Ответ пользователя нужно передавать в параметры(List<String>).
@@ -297,7 +324,12 @@ fun createSpannableStringBuilder(
     for (characterIndex in word.indices) {
         val character = word[characterIndex]
         if (isVowel(character)) {
-            val clickableSpan = object : CustomClickableSpan(ContextCompat.getColor(context, android.R.color.holo_orange_light)) {
+            val clickableSpan = object : CustomClickableSpan(
+                ContextCompat.getColor(
+                    context,
+                    android.R.color.holo_orange_light
+                )
+            ) {
                 override fun onClick(widget: View) {
                     function(characterIndex, character)
                 }
@@ -344,7 +376,8 @@ fun createCustomResultSpannableStringBuilder(
         val currentChar = word[i]
 
         if (currentChar.isUpperCase()) {
-            val color = if (correctIndex) Color.parseColor("#82F25C") else Color.parseColor("#FF0404")
+            val color =
+                if (correctIndex) Color.parseColor("#82F25C") else Color.parseColor("#FF0404")
 
             if (i == selectedVowelIndex && selectedVowelChar != null) {
                 if (currentChar.equals(selectedVowelChar, ignoreCase = true)) {
