@@ -39,18 +39,21 @@ class GameSeparateWordViewModel(application: Application) : AndroidViewModel(app
             val spellingSeparateList = separateList.random()
             var randomWord = spellingSeparateList.first
             val rightIndex = spellingSeparateList.second
-            var doesWordMeetCriteria = allWordsDao.doesWordMeetCriteria(randomWord)
-
-            while (state.answers.any { it.first == randomWord } || !doesWordMeetCriteria) {
-                randomWord = spellingSeparateList.first
-                doesWordMeetCriteria = allWordsDao.doesWordMeetCriteria(randomWord)
-            }
-
             val rightAnswer = when(rightIndex) {
                 0 ->  randomWord.replace("(", "").replace(")", " ").replace("!", "")
                 1 ->  randomWord.replace("(", "").replace(")", "").replace("!", "")
                 else -> randomWord.replace("(", "").replace(")", "-").replace("!", "")
             }
+
+            // TODO: проверять в дао райтансвер
+            var doesWordMeetCriteria = allWordsDao.doesWordMeetCriteria(rightAnswer)
+
+            while (state.answers.any { it.first == randomWord } || !doesWordMeetCriteria) {
+                randomWord = spellingSeparateList.first
+                doesWordMeetCriteria = allWordsDao.doesWordMeetCriteria(rightAnswer)
+            }
+
+
              val answer = rightAnswer to ""
             val answers = state.answers.apply {
                 add(answer)

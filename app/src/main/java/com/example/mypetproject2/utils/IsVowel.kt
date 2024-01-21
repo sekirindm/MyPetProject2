@@ -7,13 +7,7 @@ import android.graphics.Typeface
 import android.text.Html
 import android.text.Spannable
 import android.text.SpannableStringBuilder
-import android.text.Spanned
-import android.text.style.ClickableSpan
-import android.text.style.ForegroundColorSpan
-import android.text.style.RelativeSizeSpan
-import android.text.style.StyleSpan
-import android.text.style.SubscriptSpan
-import android.text.style.TypefaceSpan
+import android.text.style.*
 import android.util.Log
 import android.view.View
 import android.widget.TextView
@@ -27,8 +21,7 @@ import com.example.mypetproject2.features.ui.games.stress.logic.NoUnderlineClick
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.Locale
-import android.widget.Toast as Toast1
+import java.util.*
 
 
 fun isVowel(c: Char): Boolean {
@@ -66,7 +59,7 @@ fun spannableStringBuilderUnicode(
         if (isSubUnicode(character)) {
             val clickableSpan = object : NoUnderlineClickableSpan(ContextCompat.getColor(context, R.color.gray), ContextCompat.getColor(context, android.R.color.white)) {
                 override fun onClick(widget: View) {
-                     builder.replace(char, char + 1, ",").toString()
+                     builder.replace(char, char + 1, ",")
 
                     val spans = builder.getSpans(char, char+1, Any::class.java)
                     for (span in spans) {
@@ -104,6 +97,7 @@ fun spannableStringBuilderUnicode(
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
 
             )
+
         }
     }
     return builder

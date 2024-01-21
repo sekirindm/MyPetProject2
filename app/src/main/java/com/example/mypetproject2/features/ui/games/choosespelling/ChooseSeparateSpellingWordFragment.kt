@@ -50,7 +50,6 @@ class ChooseSeparateSpellingWordFragment : Fragment() {
         return binding.root
     }
 
-
     private fun initObserver() {
         viewModelSeparate.gameState.observe(viewLifecycleOwner) {
             when (it) {
