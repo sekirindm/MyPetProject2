@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.mypetproject2.R
 import com.example.mypetproject2.databinding.FragmentGameFinishedBinding
 import com.example.mypetproject2.features.*
-import com.example.mypetproject2.features.ui.games.stress.adapters.ContainerAdapter
+import com.example.mypetproject2.features.ui.adapters.ContainerAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class GameFinishedFragment : Fragment() {
@@ -52,6 +52,8 @@ class GameFinishedFragment : Fragment() {
             "chooseSeparateWord" -> getPairChooseSeparateWord(answersHistory)
             "paronym" -> getPairParonym(answersHistory)
             "spellingtwelve" -> getPairSpellingTwelve(answersHistory)
+            "punctuation" -> getPairPunctuation(answersHistory)
+            "fourteen" -> getPairGameFourteen(answersHistory)
             else -> emptyList()
         }
 

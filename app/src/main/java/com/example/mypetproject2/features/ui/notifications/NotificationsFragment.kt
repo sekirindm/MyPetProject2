@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.mypetproject2.databinding.FragmentNotificationsBinding
-import com.example.mypetproject2.features.ui.games.stress.adapters.ViewPagerAdapter
+import com.example.mypetproject2.features.ui.adapters.ViewPagerAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 
 class NotificationsFragment : Fragment() {

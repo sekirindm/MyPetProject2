@@ -1,13 +1,11 @@
 package com.example.mypetproject2.data.database
 
-import android.content.ContentValues
 import android.content.Context
-import android.database.sqlite.SQLiteDatabase
 import androidx.room.*
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.mypetproject2.data.database.allwordsdb.AllWordsDao
 import com.example.mypetproject2.data.database.allwordsdb.AllWordsDb
+import com.example.mypetproject2.data.database.gamedb.GameItemDao
+import com.example.mypetproject2.data.database.gamedb.GameItemDb
 
 @Database(entities = [GameItemDb::class, AllWordsDb::class],  version = 3)
 abstract class AppDatabase : RoomDatabase() {
@@ -28,7 +26,6 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
     }
-
 
     abstract fun gameItemDao(): GameItemDao
 

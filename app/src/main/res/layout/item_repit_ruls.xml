@@ -52,4 +52,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/frame_118" />
+
+    <ImageView
+        android:id="@+id/iv_full_bd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/iv_rules_bd"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/frame_126" />
 </androidx.constraintlayout.widget.ConstraintLayout>

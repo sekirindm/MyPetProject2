@@ -13,7 +13,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/rectangle_61__1_"
+        android:background="@drawable/rectangle_184__1_"
         android:text="проверить"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"

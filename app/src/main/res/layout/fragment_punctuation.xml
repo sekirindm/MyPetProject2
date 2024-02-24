@@ -5,8 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_gravity="center_horizontal"
-    android:layout_marginStart="8dp"
-    android:layout_marginEnd="8dp"
     tools:context=".features.ui.punctuation.PunctuationFragment">
 
     <TextView
@@ -14,68 +12,50 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Пунктуация"
-        android:layout_marginTop="8dp"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:textColor="#454543"
+        android:textColor="#ffffff"
         android:gravity="center"
+        android:background="@drawable/rectangle_184"
         android:layout_marginBottom="24dp"/>
 
-    <Button
-        android:id="@+id/b_punctuation_1"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/rectangle_106"
-        android:fontFamily="sans-serif-medium"
-        android:gravity="left|center_vertical"
-        android:paddingStart="16dp"
-        android:text="В ССП и при однородных предложениях"
-        android:textAllCaps="false"
-        android:textColor="#ffffff"
-        android:textSize="16sp" />
+        android:orientation="vertical"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp">
 
-    <Button
-        android:id="@+id/b_punctuation_2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="В причастном и деепричастном обороте"
-        android:background="@drawable/rectangle_106"
-        android:fontFamily="sans-serif-medium"
-        android:gravity="left|center_vertical"
-        android:textAllCaps="false"
-        android:paddingStart="16dp"
-        android:textColor="#ffffff"
-        android:textSize="16sp" />
+        <Button
+            android:id="@+id/b_punctuation_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/DashboardButton"
+            android:text="В причастном и деепричастном обороте" />
 
-    <Button
-        android:id="@+id/b_punctuation_3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/rectangle_106"
-        android:fontFamily="sans-serif-medium"
-        android:gravity="left|center_vertical"
-        android:textAllCaps="false"
-        android:paddingStart="16dp"
-        android:text="В ССП"
-        android:textColor="#ffffff"
-        android:textSize="16sp"/>
+        <Button
+            android:id="@+id/b_punctuation_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/DashboardButton"
+            android:text="При вводных словах и обращениях"/>
 
-    <Button
-        android:id="@+id/b_punctuation_4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/rectangle_106"
-        android:fontFamily="sans-serif-medium"
-        android:gravity="left|center_vertical"
-        android:text="В ССП при сложных случаях  "
-        android:textAllCaps="false"
-        android:paddingStart="16dp"
-        android:textColor="#ffffff"
-        android:textSize="16sp"/>
+
+        <Button
+            android:id="@+id/b_punctuation_3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/DashboardButton"
+            android:text="В ССП"/>
+
+        <Button
+            android:id="@+id/b_punctuation_4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/DashboardButton"
+            android:text="В ССП при сложных случаях  "/>
+    </LinearLayout>
+
 
 
 </LinearLayout>

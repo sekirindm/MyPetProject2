@@ -59,6 +59,15 @@ class DashboardFragment : Fragment() {
             bSpellingTwelve.setOnClickListener {
                 launchGame9()
             }
+            bStartWordFormation.setOnClickListener {
+                launchGame14()
+            }
+            bStartSpellingFourteen.setOnClickListener {
+                launchGame15()
+            }
+            bStartSearchLexicalErrors.setOnClickListener {
+                launchGame16()
+            }
         }
     }
 
@@ -87,6 +96,9 @@ class DashboardFragment : Fragment() {
             7 -> "Выбери привильное слово с частицей 'НЕ'!"
             8 -> "Исправь слово подобрав правильный пароним!"
             9 -> "Выбери правильное написание личных окончаний глаголов и суффикосов причастий"
+            14 -> "Словообразование"
+            15 -> "лайк разработчику"
+            16 -> "два лайка разработчику"
             else -> "Игра" // Заголовок по умолчанию, если нет соответствующего gameNumber
         }
         launchGameWithDescription(gameNumber, gameDescription, title)
@@ -127,8 +139,17 @@ class DashboardFragment : Fragment() {
     private fun launchGame9() {
         launchGameWithDescription(9, "Правописание личных окончаний глаголов и суффикосов причастий")
     }
+    private fun launchGame14() {
+        launchGameWithDescription(14, "Словообразование")
+    }
+    private fun launchGame15() {
+        launchGameWithDescription(15, "Раздельное, слитное и дефисное написание слов")
+    }
+    private fun launchGame16() {
+        launchGameWithDescription(16, "Поиск лексических ошибок")
+    }
 
-    fun startPunctuation() {
+     private fun startPunctuation() {
         val action = DashboardFragmentDirections.actionNavigationDashboardToPunctuationFragment()
         findNavController().navigate(action)
 

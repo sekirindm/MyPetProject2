@@ -1,8 +1,6 @@
 package com.example.mypetproject2.features.ui.games.spelling.spellingnn
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,10 +11,9 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.mypetproject2.R
-import com.example.mypetproject2.data.spellingRoot
+import com.example.mypetproject2.data.baselist.spellingRoot
 import com.example.mypetproject2.databinding.FragmentSpellingNNBinding
-import com.example.mypetproject2.features.ui.games.spelling.setupOnBackPressedCallback
-import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
+import com.example.mypetproject2.utils.setupOnBackPressedCallback
 import com.example.mypetproject2.utils.navigateSpellingToGameFinishedFragment
 
 private var wordIndex: Int = 0
@@ -114,6 +111,7 @@ class SpellingNNFragment : Fragment() {
                         )
                     )
                     gameNNViewModel.delay()
+                    gameNNViewModel.updateScore(isCorrect)
                 }
                 is GameState.FinishGame -> {
                     val state = it.state
@@ -161,9 +159,6 @@ class SpellingNNFragment : Fragment() {
         }
         binding.bNextPage.setOnClickListener {
             gameNNViewModel.checkAnswer(tvWord.text.toString())
-        }
-        tvWord.setOnClickListener {
-            gameNNViewModel.delete()
         }
     }
 

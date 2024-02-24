@@ -4,104 +4,35 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
-import android.text.Html
 import android.text.Spannable
 import android.text.SpannableStringBuilder
+import android.text.Spanned
 import android.text.style.*
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.example.mypetproject2.R
 import com.example.mypetproject2.data.*
-import com.example.mypetproject2.features.ui.games.spelling.transformWordSuf
-import com.example.mypetproject2.features.ui.games.stress.logic.CustomClickableSpan
-import com.example.mypetproject2.features.ui.games.stress.logic.NoUnderlineClickableSpan
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.example.mypetproject2.data.baselist.fourteenList
+import com.example.mypetproject2.data.baselist.listPunctuationGameFive
+import com.example.mypetproject2.data.baselist.listPunctuationGameFour
+import com.example.mypetproject2.data.baselist.listPunctuationGameThree
+import com.example.mypetproject2.data.baselist.listPunctuationGameTwo
+import com.example.mypetproject2.data.baselist.listTriple
+import com.example.mypetproject2.data.baselist.paronymList
+import com.example.mypetproject2.data.baselist.separateList
+import com.example.mypetproject2.data.baselist.spellingNN
+import com.example.mypetproject2.data.baselist.spellingPref
+import com.example.mypetproject2.data.baselist.spellingRoot
+import com.example.mypetproject2.data.baselist.spellingSuffix
+import com.example.mypetproject2.data.baselist.spellingTwelveList
+import com.example.mypetproject2.data.baselist.stress
+import com.example.mypetproject2.utils.transformWordSuf
+import com.example.mypetproject2.features.ui.ui.CustomClickableSpan
+import com.example.mypetproject2.features.ui.ui.NoUnderlineClickableSpan
 import java.util.*
-
-
-fun isVowel(c: Char): Boolean {
-    val vowels = listOf('а', 'е', 'ё', 'и', 'о', 'у', 'ы', 'э', 'ю', 'я')
-    return c.lowercaseChar() in vowels
-}
-
-fun isSubUnicode(s: Char): Boolean {
-    val htmlText = "▢"
-    return s in htmlText
-
-}
-
-fun main() {
-    CoroutineScope(Dispatchers.IO).launch {
-        val list = listPunctuationGameTwo.random()
-        val htmlText = "<sub>▢</sub>"
-        val modifiedListToUnicode = list.replace(",", htmlText)
-        val unicode = Html.fromHtml(modifiedListToUnicode, Html.FROM_HTML_MODE_LEGACY)
-//        isSubUnicode(unicode)
-    }
-}
-
-@SuppressLint("ResourceType")
-fun spannableStringBuilderUnicode(
-    word: String,
-    context: Context,
-    textView: TextView
-): SpannableStringBuilder {
-
-    val htmlText = "▢"
-    val builder = SpannableStringBuilder(word)
-    for (char in word.indices) {
-        val character = word[char]
-        if (isSubUnicode(character)) {
-            val clickableSpan = object : NoUnderlineClickableSpan(ContextCompat.getColor(context, R.color.gray), ContextCompat.getColor(context, android.R.color.white)) {
-                override fun onClick(widget: View) {
-                     builder.replace(char, char + 1, ",")
-
-                    val spans = builder.getSpans(char, char+1, Any::class.java)
-                    for (span in spans) {
-                        builder.removeSpan(span)
-                    }
-                    textView.text = builder
-                    Toast.makeText(widget.context, " ", Toast.LENGTH_SHORT).show()
-
-                }
-
-            }
-            builder.setSpan(
-                clickableSpan,
-                char,
-                char + 1,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-            builder.setSpan(
-                SubscriptSpan(),
-                char,
-                char + 1,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-            builder.setSpan(
-                RelativeSizeSpan(1.1f),
-                char, // start
-                char + 1, // end
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-
-            )
-            builder.setSpan(
-                StyleSpan(Typeface.BOLD),
-                char, // start
-                char + 1, // end
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-
-            )
-
-        }
-    }
-    return builder
-}
 
 /**
  * нам нужен метод gatPairSpelling который будет сравнивать слово из списка с сответом пользователя.
@@ -111,76 +42,11 @@ fun spannableStringBuilderUnicode(
  * 3.1
  *
  * */
-fun markString(string: String): String {
-    val markedString = "!$string!"
-    return markedString
+fun isSubUnicode(s: Char): Boolean {
+    val htmlText = "▢"
+    return s in htmlText
+
 }
-//fun main() {
-////    val list = separateList.shuffled()[0]
-////    val options = list.toList()
-////    print("${list.second}, ${list.first}")
-//
-////    val correctDisplay = separateList.find {it.first.replace("(", "").replace(")", "").trim() == rightAnswer.trim()}?.second
-//
-////    val kal = separateList.map {
-////        val word = it.first
-////        when (it.second) {
-////            0 -> word.replace("(", "").replace(")", " ")
-////            1 -> word.replace("(", "").replace(")", "")
-////            2 -> word.replace("(", "").replace(")", "-")
-////            else -> word
-////        }
-////    }
-//
-//    val w = stress[0].indexOfFirst { it.isUpperCase() }
-//    print(w)
-////
-////    kal.forEach { println(it) }
-//
-////    val word = "!(НЕ)ВЕРЮ! в то что ты ушел"
-////    val startIndex = word.indexOf("!")
-////    val endIndex = word.indexOf("!", startIndex + 1)
-////    val extractedText = if (startIndex != -1 && endIndex != -1) {
-////        word.substring(startIndex, endIndex + 1)
-////    } else {
-////        "Выделенное слово не найдено"
-////    }
-////    print(extractedText.replace("!", "").lowercase())
-//}
-//fun main() {
-////    for(wordIndex in spellingPref.indices) {
-////        var words = spellingPref[wordIndex].replace("!", "")
-////        words = transformWord(words).lowercase()
-////        val markerWord = words
-////
-////        println("\"$markerWord\" to \"\",")
-//    val spellingSeparateList = separateList
-//    var randomWord = spellingSeparateList.random()
-//    print(randomWord)
-//
-//}
-
-
-//    val correct = "усид!чИЕв!ый"
-//
-//    val rules = mapOf(
-//        "чИЕв" to "В суффиксах -ЛИВ- и -ЧИВ- (производных от -ИВ-) пишется буква и: заботлИВый, заносчИВый. Следует различать прилагательные с суффиксами -ЕВ-, с одной стороны, и -ИВ-, -ЛИВ-, -ЧИВ с другой. Слова на -ЕВый — напр., соЕВый, ферзЕВый, фланелЕВый, матчЕВый, замшЕВый, — содержат суффикс -ЕВ- (орфографическая разновидность суффикса -ОВ-), проверяющийся под ударением в таких словах, как дубо́вый, рублёвый.\n "
-//    )
-//
-//    val suffixStart = correct.indexOf('!') + 1
-//    val suffixEnd = correct.lastIndexOf('!')
-//    val suffix = correct.substring(suffixStart, suffixEnd)
-//
-//    val rule = rules[suffix]
-//
-//        println(rule)
-
-
-//    val userAnswers = "прИнеприятная"
-//    val modified = userAnswers.filter { it.isLowerCase() }
-//    println(userAnswers.filter { it.isLowerCase() } == correct.filter { it.isLowerCase() })
-
-//    println("${userAnswers.replace("ЕИ", "") == correct.replace("ЕИ", "")}")
 
 fun getPairSpelling(userAnswers: List<String>): List<Pair<String, String>> {
     val map = mutableListOf<Pair<String, String>>()
@@ -200,6 +66,32 @@ fun getPairSpellingPref(userAnswers: List<String>): List<Pair<String, String>> {
             if (answer.replace(Regex("[А-Я]")) { "" } == it.replace(Regex("[А-Я]")) { "" })
                 map.add(Pair(transformWordSuf(it), answer))
         }
+    }
+    Log.d("getPair", "map $map")
+    return map
+}
+
+fun getPairPunctuation(userAnswers: List<String>): List<Pair<String, String>> {
+    val map = mutableListOf<Pair<String, String>>()
+    userAnswers.forEach { answer ->
+        listPunctuationGameTwo.forEach {
+            if (answer.replace(Regex("[,▢]")) { "" } == it.replace(Regex("[|@#,]")) { "" })
+                map.add(Pair(transformWordSuf(it), answer))
+        }
+        listPunctuationGameThree.forEach {
+            if (answer.replace(Regex("[,▢]")) { "" } == it.replace(Regex("[|@#,]")) { "" })
+                map.add(Pair(transformWordSuf(it), answer))
+        }
+        listPunctuationGameFour.forEach {
+            if (answer.replace(Regex("[,▢]")) { "" } == it.replace(Regex("[|@#,]")) { "" })
+                map.add(Pair(transformWordSuf(it), answer))
+        }
+        listPunctuationGameFive.forEach {
+            if (answer.replace(Regex("[,▢]")) { "" } == it.replace(Regex("[#,]")) { "" })
+                map.add(Pair(transformWordSuf(it), answer))
+        }
+        Log.d("userAnswers", answer.replace(Regex("[,▢]")) { "" })
+        Log.d("listPunctuationGameTwo", answer.replace(Regex("[,▢]")) { "" })
     }
     Log.d("getPair", "map $map")
     return map
@@ -265,11 +157,39 @@ fun getPairChooseSeparateWord(userAnswers: List<String>): List<Pair<String, Stri
                 1 -> it.first.replace("(", "").replace(")", "")
                 else -> it.first.replace("(", "").replace(")", "-")
             }
+
+            Log.d("answer", answer)
+            Log.d("formattedFirst", formattedFirst)
             if (answer.replace(" ", "").replace("-", "") == formattedFirst.replace(" ", "")
-                    .replace("-", "")
+                    .replace("-", "").replace("!", "")
             ) {
-                map.add(Pair(transformWordSuf(formattedFirst), answer))
+
+                map.add((Pair(formattedFirst.replace("!", ""), answer)))
             }
+        }
+    }
+    Log.d("getPair", "map $map")
+    return map
+}
+
+fun getPairGameFourteen(userAnswers: List<String>): List<Pair<String, String>> {
+
+    val map = mutableListOf<Pair<String, String>>()
+    userAnswers.forEach { answer ->
+        fourteenList.forEach {
+            val formattedFirst = when (it.second) {
+                0 -> it.first.replace("(", "").replace(")", " ")
+                1 -> it.first.replace("(", "").replace(")", "")
+                else -> it.first.replace("(", "").replace(")", "-")
+            }
+            Log.d("answer", answer)
+            Log.d("formattedFirst", formattedFirst)
+            if (answer.replace(" ", "").replace("-", "")
+                == formattedFirst
+                    .replace(" ", "")
+                    .replace("-", "")
+                    .replace("!", "")
+            ) { map.add((Pair(formattedFirst.replace("!", ""), answer))) }
         }
     }
     Log.d("getPair", "map $map")
@@ -280,9 +200,13 @@ fun getPairParonym(userAnswers: List<String>): List<Pair<String, String>> {
     val map = mutableListOf<Pair<String, String>>()
     userAnswers.forEach { answer ->
         paronymList.forEach {
+            Log.d("answer", answer.toString())
+            Log.d("paronymList", it.first)
             if (answer.replace(Regex("[А-Я!]")) { "" } == it.first.replace(Regex("[А-Я!]")) { "" }) {
+
                 map.add(Pair(it.first, answer))
             }
+
         }
     }
     Log.d("getPair", "map $map")
@@ -301,136 +225,5 @@ fun getPair(userAnswers: List<String>): List<Pair<String, String>> {
     Log.d("getPair", "map $map")
     return map
 }
-
-fun check(list: List<Pair<String, String>>) = list.map { it.first == it.second }
-
-// createSpannableStringBuilder(word): Создает SpannableStringBuilder для заданного слова,
-// где каждая гласная буква делается кликабельной с помощью ClickableSpan.
-// createClickableSpan(characterIndex, character): Создает ClickableSpan для заданного индекса и символа гласной буквы.
-// При клике на эту букву будет вызываться метод handleVowelClick(characterIndex, character).
-fun createSpannableStringBuilder(
-    word: String,
-    context: Context,
-    function: (Int, Char) -> Unit,
-): SpannableStringBuilder {
-    val builder = SpannableStringBuilder(word.lowercase(Locale.getDefault()))
-
-    for (characterIndex in word.indices) {
-        val character = word[characterIndex]
-        if (isVowel(character)) {
-            val clickableSpan = object : CustomClickableSpan(
-                ContextCompat.getColor(
-                    context,
-                    android.R.color.holo_orange_light
-                )
-            ) {
-                override fun onClick(widget: View) {
-                    function(characterIndex, character)
-                }
-            }
-
-            builder.setSpan(
-                clickableSpan,
-                characterIndex,
-                characterIndex + 1,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-            )
-
-        }
-    }
-    return builder
-}
-
-fun replaceUnicodeWithComma(word: String): SpannableStringBuilder {
-    val result = SpannableStringBuilder()
-
-    for (char in word) {
-        // Проверяем, является ли символ Unicode запятой
-        if (Character.getType(char) == (Character.UNASSIGNED).toInt()) {
-            // Если символ не запятая, заменяем его на запятую
-            result.append(',')
-        } else {
-            // Если символ уже запятая, оставляем его без изменений
-            result.append(char)
-        }
-    }
-
-    return result
-}
-
-//для погдсветки букв в верхнем регистре на экране окончания игры
-fun createCustomResultSpannableStringBuilder(
-    word: String,
-    correctIndex: Boolean,
-    selectedVowelIndex: Int?,
-    selectedVowelChar: Char?
-): SpannableStringBuilder {
-    val builder = SpannableStringBuilder(word)
-    for (i in word.indices) {
-        val currentChar = word[i]
-
-        if (currentChar.isUpperCase()) {
-            val color =
-                if (correctIndex) Color.parseColor("#82F25C") else Color.parseColor("#FF0404")
-
-            if (i == selectedVowelIndex && selectedVowelChar != null) {
-                if (currentChar.equals(selectedVowelChar, ignoreCase = true)) {
-                    builder.setSpan(
-                        ForegroundColorSpan(Color.parseColor("#82F25C")),
-                        i,
-                        i + 1,
-                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
-                } else {
-                    builder.setSpan(
-                        ForegroundColorSpan(Color.parseColor("#FF0404")),
-                        i,
-                        i + 1,
-                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
-                }
-            } else {
-                builder.setSpan(
-                    ForegroundColorSpan(color),
-                    i,
-                    i + 1,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                )
-            }
-        }
-    }
-
-    return builder
-}
-
-// suspend fun getRandomWord(): String? {
-//    val maxAttempts = 5 // Максимальное количество попыток получить слово
-//    var currentAttempt = 0
-//    var randomWord: String?
-//
-//    do {
-//        randomWord = getRandomWordFromDatabase()
-//        currentAttempt++
-//    } while (randomWord != null && currentAttempt < maxAttempts)
-//
-//    return randomWord
-//}
-//
-// suspend fun getRandomWordFromDatabase(viewModel: GamesViewModel, word: String): String? {
-//    val wordCount = viewModel.getWordCount(word)
-//    return if (wordCount == null || wordCount <= 5) {
-//        // Получаем слово из базы данных, у которого счетчик меньше или равен 5
-//        val wordList = viewModel.getAllItems()
-//        val filteredWords = wordList.filter { it.count <= 5 }
-//        if (filteredWords.isNotEmpty()) {
-//            filteredWords[Random().nextInt(filteredWords.size)].words
-//        } else {
-//            null // Если не осталось слов с счетчиком <= 5, вернуть null
-//        }
-//    } else {
-//        null // Если счетчик больше 5, вернуть null
-//    }
-//}
-
 
 

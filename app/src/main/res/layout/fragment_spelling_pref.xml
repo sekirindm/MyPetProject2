@@ -57,7 +57,7 @@
         android:layout_marginBottom="16dp"
         android:text="ПРОверить"
         android:textColor="@color/white"
-        android:background="@drawable/rectangle_61__1_"
+        android:background="@drawable/rectangle_184__1_"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"

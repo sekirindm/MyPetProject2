@@ -37,8 +37,8 @@
 
             <TextView
                 android:id="@+id/tv_right_answer"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
+                android:layout_width="280dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="TextView"
                 android:layout_marginStart="16dp"
@@ -48,8 +48,8 @@
 
             <TextView
                 android:id="@+id/tv_user_answer"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
+                android:layout_width="280dp"
+                android:layout_height="match_parent"
                 android:layout_marginStart="16dp"
                 android:layout_weight="1"
                 android:text="TextView"
@@ -57,8 +57,8 @@
 
             <TextView
                 android:id="@+id/tv_rules"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
+                android:layout_width="280dp"
+                android:layout_height="match_parent"
                 android:layout_marginStart="16dp"
                 android:layout_weight="1"
                 android:text="TextView"
@@ -73,6 +73,17 @@
             android:gravity="end"
             android:layout_gravity="center">
 
+
+            <ImageView
+                android:id="@+id/iv_full"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:focusable="true"
+
+                app:srcCompat="@drawable/frame_126"
+                android:layout_marginEnd="8dp"/>
+
             <ImageView
                 android:id="@+id/iv_rules"
                 android:layout_width="wrap_content"
@@ -80,14 +91,14 @@
                 android:clickable="true"
                 android:focusable="true"
                 app:srcCompat="@drawable/frame_109"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="6dp"/>
 
             <ImageView
                 android:id="@+id/iv_favourites_words"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/frame_110"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="8dp"
+                app:srcCompat="@drawable/frame_110"/>
         </LinearLayout>
         </LinearLayout>
     </LinearLayout>

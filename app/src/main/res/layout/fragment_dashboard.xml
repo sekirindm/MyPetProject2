@@ -6,8 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingBottom="56dp"
-    android:layout_marginStart="8dp"
-    android:layout_marginEnd="8dp"
     tools:context=".features.ui.dashboard.DashboardFragment">
 
 
@@ -16,17 +14,24 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textView6"
+
+        <Button
+            android:id="@+id/imageView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="16dp"
-            android:gravity="center"
-            android:text="Игры"
-            android:textColor="#545434"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+            android:layout_height="match_parent"
+            android:background="@drawable/rectangle_184"
+            android:textAllCaps="false"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:text="Игры"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp">
 
         <TextView
             android:id="@+id/textView5"
@@ -36,22 +41,15 @@
             android:layout_marginBottom="8dp"
             android:text="Орфоэпия"
             android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="#9E9E9E"/>
 
         <Button
             android:id="@+id/b_start_stress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/rectangle_106"
-            android:fontFamily="@font/eb_garamond"
-            android:textStyle="bold"
-            android:gravity="left|center"
-            android:paddingStart="16dp"
-            android:text="Ударения"
-            android:textAllCaps="false"
-            android:textColor="#ffffff"
-            android:textSize="20sp" />
+            style="@style/DashboardButton"
+            android:text="Ударения" />
 
         <TextView
             android:id="@+id/textView10"
@@ -61,97 +59,57 @@
             android:layout_marginBottom="8dp"
             android:text="Правописание"
             android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <Button
-            android:id="@+id/b_start_spelling"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/rectangle_106"
-            android:fontFamily="@font/eb_garamond"
             android:textStyle="bold"
-            android:gravity="left|center"
-            android:paddingStart="16dp"
-            android:text="Н и НН"
-            android:textAllCaps="false"
-            android:textColor="#ffffff"
-            android:textSize="20sp" />
-
-        <Button
-            android:id="@+id/b_start_spelling_pref"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/rectangle_106"
-            android:fontFamily="@font/eb_garamond"
-            android:textStyle="bold"
-            android:gravity="left|center"
-            android:paddingStart="16dp"
-            android:text="Приставки"
-            android:textAllCaps="false"
-            android:textColor="#ffffff"
-            android:textSize="20sp" />
-
-        <Button
-            android:id="@+id/b_start_spelling_suffix"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/rectangle_106"
-            android:fontFamily="@font/eb_garamond"
-            android:textStyle="bold"
-            android:gravity="left|center"
-            android:paddingStart="16dp"
-            android:text="Суффиксы"
-            android:textAllCaps="false"
-            android:textColor="#ffffff"
-            android:textSize="20sp" />
+            android:textColor="#9E9E9E"/>
 
         <Button
             android:id="@+id/b_start_spelling_root"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/rectangle_106"
-            android:fontFamily="@font/eb_garamond"
-            android:textStyle="bold"
-            android:gravity="left|center"
-            android:paddingStart="16dp"
-            android:text="Корни"
-            android:textAllCaps="false"
-            android:textColor="#ffffff"
-            android:textSize="20sp" />
+            style="@style/DashboardButton"
+            android:text="Корни" />
 
         <Button
-            android:id="@+id/b_choose_separate_word"
+            android:id="@+id/b_start_spelling_pref"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/rectangle_106"
-            android:fontFamily="@font/eb_garamond"
-            android:textStyle="bold"
-            android:gravity="left|center"
-            android:paddingStart="16dp"
-            android:text="Слитное и раздельное правописание с НЕ"
-            android:textAllCaps="false"
-            android:textColor="#ffffff"
-            android:textSize="20sp" />
+            style="@style/DashboardButton"
+            android:text="Приставки" />
+
+        <Button
+            android:id="@+id/b_start_spelling_suffix"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/DashboardButton"
+            android:text="Суффиксы" />
 
         <Button
             android:id="@+id/b_spelling_twelve"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/rectangle_106"
-            android:fontFamily="@font/eb_garamond"
-            android:textStyle="bold"
-            android:gravity="left|center"
-            android:paddingStart="16dp"
-            android:text="Окончания глаголов и суффиксов причастий"
-            android:textAllCaps="false"
-            android:textColor="#ffffff"
-            android:textSize="20sp" />
+            style="@style/DashboardButton"
+            android:text="Окончания глаголов и суффиксов причастий" />
+
+        <Button
+            android:id="@+id/b_choose_separate_word"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/DashboardButton"
+            android:text="Слитное и раздельное правописание с НЕ"/>
+
+        <Button
+            android:id="@+id/b_start_spelling"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/DashboardButton"
+            android:text="Н и НН" />
+
+        <Button
+            android:id="@+id/b_start_spelling_fourteen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/DashboardButton"
+            android:text="Слитное, раздельное и дефисное правописание" />
 
 
         <TextView
@@ -162,37 +120,35 @@
             android:layout_marginBottom="8dp"
             android:text="Лексика"
             android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="#9E9E9E" />
 
         <Button
             android:id="@+id/b_start_choose_word"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/rectangle_106"
-            android:fontFamily="@font/eb_garamond"
-            android:textStyle="bold"
-            android:gravity="left|center"
-            android:paddingStart="16dp"
-            android:text="Грамматика"
-            android:textAllCaps="false"
-            android:textColor="#ffffff"
-            android:textSize="20sp" />
+            style="@style/DashboardButton"
+            android:text="Грамматика"/>
 
         <Button
             android:id="@+id/b_start_paronym"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/rectangle_106"
-            android:fontFamily="@font/eb_garamond"
-            android:textStyle="bold"
-            android:gravity="left|center"
-            android:paddingStart="16dp"
-            android:text="Паронимы"
-            android:textAllCaps="false"
-            android:textColor="#ffffff"
-            android:textSize="20sp" />
+            style="@style/DashboardButton"
+            android:text="Паронимы" />
+        <Button
+            android:id="@+id/b_start_word_formation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Словообразование"
+            style="@style/DashboardButton"/>
+
+        <Button
+            android:id="@+id/b_start_search_lexical_errors"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Поиск лексических ошибок"
+            style="@style/DashboardButton"/>
 
         <TextView
             android:id="@+id/textView13"
@@ -202,81 +158,15 @@
             android:layout_marginBottom="8dp"
             android:text="Пунктуация"
             android:textSize="16sp"
+            android:textColor="#9E9E9E"
             android:textStyle="bold" />
 
         <Button
             android:id="@+id/b_start_screen_punctuation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/rectangle_106"
-            android:fontFamily="@font/eb_garamond"
-            android:textStyle="bold"
-            android:gravity="left|center"
-            android:paddingStart="16dp"
-            android:text="Пунктуация"
-            android:textAllCaps="false"
-            android:textColor="#ffffff"
-            android:textSize="20sp" />
+            style="@style/DashboardButton"
+            android:text="Пунктуация"/>
+    </LinearLayout>
     </LinearLayout>
 </ScrollView>
-
-    <!--<Button-->
-    <!--android:id="@+id/b_start_stress"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginEnd="24dp"-->
-    <!--android:background="@drawable/frame_15__1_"-->
-    <!--app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--app:layout_constraintEnd_toStartOf="@+id/b_start_spelling"-->
-    <!--app:layout_constraintHorizontal_bias="0.0"-->
-    <!--app:layout_constraintStart_toStartOf="parent"-->
-    <!--app:layout_constraintTop_toTopOf="parent" />-->
-
-    <!--<Button-->
-    <!--android:id="@+id/b_start_spelling"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginStart="24dp"-->
-    <!--android:background="@drawable/frame_17__1_"-->
-    <!--app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--app:layout_constraintEnd_toEndOf="parent"-->
-    <!--app:layout_constraintHorizontal_bias="0.792"-->
-    <!--app:layout_constraintStart_toEndOf="@+id/b_start_stress"-->
-    <!--app:layout_constraintTop_toTopOf="parent" />-->
-
-    <!--<Button-->
-    <!--android:id="@+id/b_start_spelling_pref"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:text="приставки"-->
-    <!--app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--app:layout_constraintEnd_toEndOf="parent"-->
-    <!--app:layout_constraintHorizontal_bias="0.198"-->
-    <!--app:layout_constraintStart_toStartOf="parent"-->
-    <!--app:layout_constraintTop_toTopOf="parent"-->
-    <!--app:layout_constraintVertical_bias="0.667" />-->
-
-    <!--<Button-->
-    <!--android:id="@+id/b_start_spelling_root"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:text="корни"-->
-    <!--app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--app:layout_constraintEnd_toEndOf="parent"-->
-    <!--app:layout_constraintHorizontal_bias="0.755"-->
-    <!--app:layout_constraintStart_toStartOf="parent"-->
-    <!--app:layout_constraintTop_toTopOf="parent"-->
-    <!--app:layout_constraintVertical_bias="0.667" />-->
-
-    <!--<Button-->
-    <!--android:id="@+id/b_start_spelling_suffix"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:text="суффиксы"-->
-    <!--app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--app:layout_constraintEnd_toEndOf="parent"-->
-    <!--app:layout_constraintHorizontal_bias="0.198"-->
-    <!--app:layout_constraintStart_toStartOf="parent"-->
-    <!--app:layout_constraintTop_toTopOf="parent"-->
-    <!--app:layout_constraintVertical_bias="0.79" />-->

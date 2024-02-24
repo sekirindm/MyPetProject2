@@ -89,7 +89,7 @@
     </fragment>
     <fragment
         android:id="@+id/titleFragment"
-        android:name="com.example.mypetproject2.features.ui.games.TitleFragment"
+        android:name="com.example.mypetproject2.TitleFragment"
         android:label="fragment_title"
         tools:layout="@layout/fragment_title">
         <argument
@@ -134,6 +134,12 @@
         <action
             android:id="@+id/action_titleFragment_to_gameTwelveFragment"
             app:destination="@id/gameTwelveFragment" />
+        <action
+            android:id="@+id/action_titleFragment_to_gameFourteenFragment"
+            app:destination="@id/gameFourteenFragment" />
+        <action
+            android:id="@+id/action_titleFragment_to_searchLexicalErrorsFragment"
+            app:destination="@id/searchLexicalErrorsFragment" />
     </fragment>
     <fragment
         android:id="@+id/navigation_home"
@@ -142,7 +148,7 @@
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/chooseWordFragment"
-        android:name="com.example.mypetproject2.features.ui.games.choose.ChooseWordFragment"
+        android:name="com.example.mypetproject2.features.ui.games.choosecorrectword.choose.ChooseWordFragment"
         android:label="fragment_choose_word"
         tools:layout="@layout/fragment_choose_word" >
         <action
@@ -154,7 +160,7 @@
         app:destination="@id/gameFinishedFragment" />
     <fragment
         android:id="@+id/chooseSeparateSpellingWordFragment"
-        android:name="com.example.mypetproject2.features.ui.games.choosespelling.ChooseSeparateSpellingWordFragment"
+        android:name="com.example.mypetproject2.features.ui.games.choosecorrectword.gamenumber13.ChooseSeparateSpellingWordFragment"
         android:label="fragment_choose_separate_word"
         tools:layout="@layout/fragment_choose_separate_spelling_word" >
         <action
@@ -175,12 +181,15 @@
     </fragment>
     <fragment
         android:id="@+id/paronymGameFragment"
-        android:name="com.example.mypetproject2.features.ui.games.paroynim.ParonymGameFragment"
+        android:name="com.example.mypetproject2.features.ui.games.paroynimandformation.ParonymAndFormationGame"
         android:label="ParonymGameFragment"
         tools:layout="@layout/fragment_paroynim_game">
         <action
             android:id="@+id/action_paronymGameFragment_to_gameFinishedFragment"
             app:destination="@id/gameFinishedFragment" />
+        <argument
+            android:name="gameNumber"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/punctuationFragment2"
@@ -200,14 +209,35 @@
         <argument
             android:name="gameNumber"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_punctuationGameOneFragment_to_gameFinishedFragment"
+            app:destination="@id/gameFinishedFragment" />
     </fragment>
     <fragment
         android:id="@+id/gameTwelveFragment"
-        android:name="com.example.mypetproject2.features.ui.games.spellingtwelve.GameTwelveFragment"
+        android:name="com.example.mypetproject2.features.ui.games.spelling.spellingtwelve.GameTwelveFragment"
         android:label="fragment_game_twelve"
         tools:layout="@layout/fragment_game_twelve" >
         <action
             android:id="@+id/action_gameTwelveFragment_to_gameFinishedFragment"
+            app:destination="@id/gameFinishedFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/gameFourteenFragment"
+        android:name="com.example.mypetproject2.features.ui.games.choosecorrectword.gamenumber14.GameFourteenFragment"
+        android:label="fragment_game_fourteen"
+        tools:layout="@layout/fragment_game_fourteen" >
+        <action
+            android:id="@+id/action_gameFourteenFragment_to_gameFinishedFragment"
+            app:destination="@id/gameFinishedFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchLexicalErrorsFragment"
+        android:name="com.example.mypetproject2.features.ui.games.searchlexicalerrors.SearchLexicalErrorsFragment"
+        android:label="fragment_search_lexical_errors"
+        tools:layout="@layout/fragment_search_lexical_errors" >
+        <action
+            android:id="@+id/action_searchLexicalErrorsFragment_to_gameFinishedFragment"
             app:destination="@id/gameFinishedFragment" />
     </fragment>
 

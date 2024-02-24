@@ -1,16 +1,18 @@
 package com.example.mypetproject2.features.ui.games.spelling.spellingpref
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.mypetproject2.data.database.AppDatabase
-import com.example.mypetproject2.data.spellingPref
-import com.example.mypetproject2.features.ui.games.spelling.transformWord
+import com.example.mypetproject2.data.baselist.spellingPref
+import com.example.mypetproject2.features.ui.games.State
+import com.example.mypetproject2.utils.transformWord
 import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
-import com.example.mypetproject2.features.ui.games.stress.State
 import kotlinx.coroutines.launch
+
 sealed class GameStatePref {
     data class NewWord(val word: String, val letters: List<String>) : GameStatePref()
 
@@ -20,13 +22,20 @@ sealed class GameStatePref {
 
     data class FinishGame(val state: State) : GameStatePref()
 }
+fun numberToString(num: Int) = "${num}"
+
+fun checkForFactor(base: Int, factor: Int) = base%factor == 0
+
 fun main() {
 //    [wordIndex].replace(Regex("[А-Я]+")) {"_"}
-    var wordIndex = 0
-    val modifiedWord = spellingPref.toList()[wordIndex]
-    print(transformWord(modifiedWord))
+//    var wordIndex = 0
+//    val modifiedWord = spellingPref.toList()[wordIndex]
+//    print(transformWord(modifiedWord))
+
+    println(checkForFactor(8, 4))
 }
-class GamePrefViewModel(application: Application): AndroidViewModel(application) {
+
+class GamePrefViewModel(application: Application) : AndroidViewModel(application) {
 
     private val allWordDao = AppDatabase.getInstance(application).allWordsDao()
 
@@ -35,19 +44,26 @@ class GamePrefViewModel(application: Application): AndroidViewModel(application)
     private val _score = MutableLiveData(0)
     val score: LiveData<Int> get() = _score
 
+    fun updateScore(isCorrect: Boolean) {
+        _score.value = _score.value?.let { score ->
+            if (isCorrect) score + 1 else score
+        }
+        Log.d("updateScore", "_score.value ${_score.value} $isCorrect")
+    }
+
     fun initGame() {
         viewModelScope.launch {
             val spellingPrefList = spellingPref.toList()
             var randomWord = spellingPrefList.random()
 
             var doesWordMeetCriteria = allWordDao.doesWordMeetCriteria(randomWord)
-            while (state.answers.any {it.first == randomWord } || !doesWordMeetCriteria) {
-                 randomWord = spellingPrefList.random()
-                 doesWordMeetCriteria = allWordDao.doesWordMeetCriteria(randomWord)
+            while (state.answers.any { it.first == randomWord } || !doesWordMeetCriteria) {
+                randomWord = spellingPrefList.random()
+                doesWordMeetCriteria = allWordDao.doesWordMeetCriteria(randomWord)
             }
 
             val modifiedWord = randomWord.replace(Regex("[А-Я]+"), "_")
-            val uppercaseLetter = randomWord.filter {it.isUpperCase()}
+            val uppercaseLetter = randomWord.filter { it.isUpperCase() }
             val uppercaseList = uppercaseLetter.windowed(1)
             val uppercaseShuffled = uppercaseList.shuffled()
 
@@ -64,8 +80,8 @@ class GamePrefViewModel(application: Application): AndroidViewModel(application)
         }
     }
 
-    fun handleWord(word: String, letter: String, button: Int){
-       val modifiedWord = if (!word.contains("_"))
+    fun handleWord(word: String, letter: String, button: Int) {
+        val modifiedWord = if (!word.contains("_"))
             word.replace(Regex("[А-Я]+"), "_").replace("_", letter)
         else {
             word.replace("_", letter)
@@ -110,12 +126,6 @@ class GamePrefViewModel(application: Application): AndroidViewModel(application)
                 initGame()
             else
                 gameState.value = GameStatePref.FinishGame(state)
-        }
-    }
-
-    fun delete() {
-        viewModelScope.launch {
-            allWordDao.deleteAll()
         }
     }
 

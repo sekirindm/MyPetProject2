@@ -1,15 +1,16 @@
 package com.example.mypetproject2.features.ui.games.spelling.spellingroot
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.mypetproject2.data.database.AppDatabase
-import com.example.mypetproject2.data.spellingRoot
-import com.example.mypetproject2.features.ui.games.spelling.transformWord
+import com.example.mypetproject2.data.baselist.spellingRoot
+import com.example.mypetproject2.features.ui.games.State
+import com.example.mypetproject2.utils.transformWord
 import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
-import com.example.mypetproject2.features.ui.games.stress.State
 import kotlinx.coroutines.launch
 
 sealed class GameStateRoot() {
@@ -31,6 +32,14 @@ class GameRootViewModel(application: Application) : AndroidViewModel(application
 
     private val _score = MutableLiveData(0)
     val score: LiveData<Int> get() = _score
+
+    fun updateScore(isCorrect: Boolean) {
+        _score.value = _score.value?.let { score ->
+            if (isCorrect) score + 1 else score
+        }
+        Log.d("updateScore", "_score.value ${_score.value} $isCorrect")
+    }
+
     fun initGame() {
         viewModelScope.launch {
             val spellingRootList = spellingRoot.toList()
@@ -102,12 +111,6 @@ class GameRootViewModel(application: Application) : AndroidViewModel(application
                 initGame()
             else
                 gameState.value = GameStateRoot.FinishGame(state)
-        }
-    }
-
-    fun delete() {
-        viewModelScope.launch {
-            allWordsDao.deleteAll()
         }
     }
 }

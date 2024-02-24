@@ -1,4 +1,4 @@
-package com.example.mypetproject2.features.ui.games.spelling.spellingnn
+  package com.example.mypetproject2.features.ui.games.spelling.spellingnn
 
 import android.app.Application
 import android.util.Log
@@ -7,9 +7,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.mypetproject2.data.database.AppDatabase
-import com.example.mypetproject2.data.spellingNN
+import com.example.mypetproject2.data.baselist.spellingNN
+import com.example.mypetproject2.features.ui.games.State
 import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
-import com.example.mypetproject2.features.ui.games.stress.State
 import kotlinx.coroutines.launch
 
 sealed class GameState {
@@ -31,7 +31,12 @@ class GameNNViewModel(application: Application): AndroidViewModel(application) {
     val gameState = MutableLiveData<GameState>() // позволяет использовать лишь один MutableLiveData для всех состояний игры
 
     val allWordsDao = AppDatabase.getInstance(application).allWordsDao()
-
+    fun updateScore(isCorrect: Boolean) {
+        _score.value = _score.value?.let { score ->
+            if (isCorrect) score + 1 else score
+        }
+        Log.d("updateScore", "_score.value ${_score.value} $isCorrect")
+    }
 
     /**
      * Тут начинаем нашу игрулю
@@ -40,7 +45,7 @@ class GameNNViewModel(application: Application): AndroidViewModel(application) {
         viewModelScope.launch {
 
 
-            val spellingNNList = spellingNN.toList() // получаем список в виде листа
+            val spellingNNList = spellingNN.toList().take(5) // получаем список в виде листа
             var randomWord = spellingNNList.random() // берем рандомное слово
 
             var doesWordMeetCriteria = allWordsDao.doesWordMeetCriteria(randomWord)

@@ -13,15 +13,15 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.mypetproject2.R
-import com.example.mypetproject2.data.stress
+import com.example.mypetproject2.data.baselist.stress
 import com.example.mypetproject2.databinding.FragmentGamesBinding
-import com.example.mypetproject2.features.createSpannableStringBuilder
-import com.example.mypetproject2.features.ui.games.spelling.setupOnBackPressedCallback
-import com.example.mypetproject2.features.ui.games.stress.logic.GamesLogic
-import com.example.mypetproject2.features.ui.games.stress.logic.SpannableStringBuilderHelper
+import com.example.mypetproject2.features.ui.logic.GamesLogic
+import com.example.mypetproject2.features.ui.logic.SpannableStringBuilderHelper
+import com.example.mypetproject2.utils.createSpannableStringBuilder
 import com.example.mypetproject2.utils.navigateToGameFinishedFragment
+import com.example.mypetproject2.utils.setupOnBackPressedCallback
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import java.util.*
+import java.util.Random
 
 class StressFragment : Fragment() {
 

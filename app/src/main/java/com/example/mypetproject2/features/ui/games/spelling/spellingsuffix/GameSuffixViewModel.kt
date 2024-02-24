@@ -1,15 +1,16 @@
 package com.example.mypetproject2.features.ui.games.spelling.spellingsuffix
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.mypetproject2.data.database.AppDatabase
-import com.example.mypetproject2.data.spellingSuffix
-import com.example.mypetproject2.features.ui.games.spelling.transformWord
+import com.example.mypetproject2.data.baselist.spellingSuffix
+import com.example.mypetproject2.features.ui.games.State
+import com.example.mypetproject2.utils.transformWord
 import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
-import com.example.mypetproject2.features.ui.games.stress.State
 import kotlinx.coroutines.launch
 
 sealed class GameStateSuffix() {
@@ -33,6 +34,12 @@ val gameState = MutableLiveData<GameStateSuffix>()
     private val _score = MutableLiveData(0)
     val score: LiveData<Int> get() = _score
 
+    fun updateScore(isCorrect: Boolean) {
+        _score.value = _score.value?.let { score ->
+            if (isCorrect) score + 1 else score
+        }
+        Log.d("updateScore", "_score.value ${_score.value} $isCorrect")
+    }
 
     fun initGame() {
         viewModelScope.launch {

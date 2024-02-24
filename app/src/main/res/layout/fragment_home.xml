@@ -1,60 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rv_home"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff"
     tools:context=".features.ui.home.HomeFragment">
 
 
-    <com.chaos.view.PinView
-        android:id="@+id/pinview"
-        style="@style/PinWidget.PinView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:cursorVisible="true"
-        android:gravity="center"
-        android:inputType="textCapCharacters"
-        android:itemBackground="@color/white"
-        android:textAllCaps="true"
-        android:textStyle="bold"
-        app:hideLineWhenFilled="false"
-        app:itemCount="11"
-        app:cursorColor="#484543"
-        app:lineColor="#484543"
-        app:itemHeight="40dp"
-        app:itemRadius="10dp"
-        app:itemWidth="32dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textSize="20sp"
-        android:gravity="center"
-        android:lineSpacingExtra="6dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pinview" />
-
-
-    <!--    <WebView-->
-<!--        android:id="@+id/wb_test"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:foregroundGravity="center"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/pinview" />-->
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.recyclerview.widget.RecyclerView>

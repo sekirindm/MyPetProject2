@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".features.ui.games.TitleFragment">
+    tools:context=".TitleFragment">
 
 
     <TextView
         android:id="@+id/tv_descriptions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="32dp"
         android:padding="8dp"
         android:text="@string/spelling_title"
         android:textSize="18sp"
@@ -40,7 +40,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/group_7"
+        android:background="@drawable/rectangle_184__1_"
         android:text="пОНЯтно!"
         android:textColor="#ffffff"
         android:textStyle="bold"

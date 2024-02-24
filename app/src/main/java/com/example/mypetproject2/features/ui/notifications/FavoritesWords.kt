@@ -1,17 +1,10 @@
 package com.example.mypetproject2.features.ui.notifications
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
-import android.animation.AnimatorSet
-import android.animation.ObjectAnimator
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -21,11 +14,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mypetproject2.R
 import com.example.mypetproject2.databinding.FavouritesWordsRvBinding
 import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
-import com.example.mypetproject2.features.ui.games.stress.adapters.DividerItemDecoration
-import com.example.mypetproject2.features.ui.games.stress.adapters.RepetitionWordsAdapter
-import android.view.animation.AnimationUtils
-import androidx.recyclerview.widget.DefaultItemAnimator
-import kotlinx.coroutines.*
+import com.example.mypetproject2.features.ui.ui.DividerItemDecoration
+import com.example.mypetproject2.features.ui.adapters.RepetitionWordsAdapter
 
 
 class FavoritesWords : Fragment() {

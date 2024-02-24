@@ -7,17 +7,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.mypetproject2.data.database.AppDatabase
-import com.example.mypetproject2.data.database.GameItemDb
+import com.example.mypetproject2.data.database.gamedb.GameItemDb
 import com.example.mypetproject2.data.database.allwordsdb.AllWordsDb
-import com.example.mypetproject2.data.spellingNN
 import kotlinx.coroutines.*
-import java.text.FieldPosition
-
-data class State(
-    val score: Int,
-    val answers: MutableList<Pair<String, String>> = mutableListOf()
-)
-
 /**
  *
  * Sealed class (изолированный класс) — это класс, который является абстрактным и используется в Kotlin для ограничения классов, которые могут наследоваться от него.
@@ -106,7 +98,6 @@ class GamesViewModel(application: Application) : AndroidViewModel(application) {
 
             if (existingWord != null) {
                 existingWord.count = count
-//                allWordsDao.updateWordCount(existingWord)
             } else {
                 val newWord = AllWordsDb(words = word, count = count)
                 allWordsDao.insert(newWord)

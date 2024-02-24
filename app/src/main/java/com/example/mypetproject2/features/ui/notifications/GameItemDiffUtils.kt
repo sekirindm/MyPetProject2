@@ -1,7 +1,7 @@
 package com.example.mypetproject2.features.ui.notifications
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.mypetproject2.data.database.GameItemDb
+import com.example.mypetproject2.data.database.gamedb.GameItemDb
 
 class GameItemDiffUtils(
     private val oldList: List<GameItemDb>,

@@ -22,8 +22,8 @@
         android:id="@+id/ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:layout_marginBottom="892dp"
+        android:layout_margin="8dp"
+        android:layout_marginBottom="16dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -34,21 +34,21 @@
             android:id="@+id/b_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
             android:layout_weight="1"
             android:background="@drawable/group_97__1_"
-            android:textColor="#ffffff"
-            android:layout_marginEnd="4dp"
-            android:text="Слитно" />
+            android:text="Слитно"
+            android:textColor="#ffffff" />
 
         <Button
             android:id="@+id/b_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginStart="4dp"
+            android:layout_weight="1"
             android:background="@drawable/group_97__1_"
-            android:textColor="#ffffff"
-            android:text="Раздельно" />
+            android:text="Раздельно"
+            android:textColor="#ffffff" />
     </LinearLayout>
 
 

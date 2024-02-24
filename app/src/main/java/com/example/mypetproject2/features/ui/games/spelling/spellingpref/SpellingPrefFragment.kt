@@ -1,11 +1,6 @@
 package com.example.mypetproject2.features.ui.games.spelling.spellingpref
 
-import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
-import android.view.ContentInfo
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,8 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.mypetproject2.R
 import com.example.mypetproject2.databinding.FragmentSpellingPrefBinding
-import com.example.mypetproject2.features.ui.games.spelling.setupOnBackPressedCallback
-import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
+import com.example.mypetproject2.utils.setupOnBackPressedCallback
 import com.example.mypetproject2.utils.navigateSpellingPrefToGameFinishedFragment
 import kotlinx.coroutines.cancel
 
@@ -95,6 +89,7 @@ class SpellingPrefFragment : Fragment() {
                         )
                     )
                     gamePrefViewModel.delay()
+                    gamePrefViewModel.updateScore(isCorrect)
                 }
 
                 is GameStatePref.FinishGame -> {
@@ -113,6 +108,8 @@ class SpellingPrefFragment : Fragment() {
             }
         }
     }
+
+
 
     private fun resetViewState() {
         binding.tvOne.visibility = View.VISIBLE
@@ -133,9 +130,6 @@ class SpellingPrefFragment : Fragment() {
         }
         binding.bNextPage.setOnClickListener {
             gamePrefViewModel.checkAnswer(tvWord.text.toString())
-        }
-        tvWord.setOnClickListener {
-            gamePrefViewModel.delete()
         }
     }
 

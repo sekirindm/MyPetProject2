@@ -13,6 +13,9 @@
         tools:text="ПЕРВАЯ"
         android:lineSpacingExtra="6dp"
         android:textSize="18sp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginStart="4dp"
+        android:textColorHighlight="@android:color/white"
         android:gravity="center"
         android:textColor="@color/gray"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -30,10 +33,20 @@
         android:text="Проверить"
         android:textStyle="bold"
         android:textColor="@color/white"
-        android:background="@drawable/rectangle_61__1_"
+        android:background="@drawable/rectangle_184__1_"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.049"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/frame_136"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

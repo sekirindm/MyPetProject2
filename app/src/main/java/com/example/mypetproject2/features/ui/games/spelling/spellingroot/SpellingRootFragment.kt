@@ -1,8 +1,6 @@
 package com.example.mypetproject2.features.ui.games.spelling.spellingroot
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -11,20 +9,11 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.mypetproject2.R
-import com.example.mypetproject2.data.spellingRoot
 import com.example.mypetproject2.databinding.FragmentSpellingRootBinding
-import com.example.mypetproject2.features.ui.games.spelling.calculatePercentage
-import com.example.mypetproject2.features.ui.games.spelling.getUserAnswers
-import com.example.mypetproject2.features.ui.games.spelling.setupOnBackPressedCallback
-import com.example.mypetproject2.features.ui.games.spelling.transformWord
-import com.example.mypetproject2.features.ui.games.stress.StressFragment
-import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
-import com.example.mypetproject2.utils.navigateSpellingPrefToGameFinishedFragment
+import com.example.mypetproject2.utils.setupOnBackPressedCallback
 import com.example.mypetproject2.utils.navigateSpellingRootToGameFinishedFragment
-import java.util.Random
 
 class SpellingRootFragment : Fragment() {
     private var _binding: FragmentSpellingRootBinding? = null
@@ -95,11 +84,13 @@ class SpellingRootFragment : Fragment() {
                         )
                     )
                     gamesRootViewModel.delay()
+                    gamesRootViewModel.updateScore(isCorrect)
                 }
                 is GameStateRoot.FinishGame -> {
                     val state = it.state
                     val percentage = state.score / 5f * 100f
                     val userAnswers = state.answers.map { pair -> pair.first == pair.second }.toBooleanArray()
+                    Log.d("userAnswerspair", "${state.answers.map { it.first }}, ${state.answers.map { it.second }}")
                     val userAnswersHistory = state.answers.map { it.second }.toTypedArray()
                     navigateSpellingRootToGameFinishedFragment(
                         gamesRootViewModel.score.value ?: 0,
@@ -133,10 +124,6 @@ class SpellingRootFragment : Fragment() {
 
         binding.bNextPage.setOnClickListener {
             gamesRootViewModel.checkAnswer(tvWord.text.toString())
-        }
-
-        tvWord.setOnClickListener {
-            gamesRootViewModel.delete()
         }
     }
 
