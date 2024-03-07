@@ -51,13 +51,13 @@ class ParonymAndFormationGame : Fragment() {
     }
 
     private fun initGame() {
-        when (arguments?.getInt("gameNumber")?:0) {
-            1 -> viewModel.initGame(pvParonym, paronymList)
-            2 -> viewModel.initGame(pvParonym, wordFormationList)
+        when (arguments?.getInt("gameNumber") ?: 0) {
+            1 -> viewModel.initGame(paronymList)
+            2 -> viewModel.initGame(wordFormationList)
         }
     }
 
-    fun initObservers() {
+    private fun initObservers() {
         viewModel.gameState.observe(viewLifecycleOwner) {
             when (it) {
                 is GameStateParonym.NewWord -> {
@@ -83,9 +83,9 @@ class ParonymAndFormationGame : Fragment() {
                             id
                         )
                     )
-                    when (arguments?.getInt("gameNumber")?:0) {
-                        1 -> viewModel.delay(pvParonym, paronymList)
-                        2 -> viewModel.delay(pvParonym, wordFormationList)
+                    when (arguments?.getInt("gameNumber") ?: 0) {
+                        1 -> viewModel.delay(paronymList)
+                        2 -> viewModel.delay(wordFormationList)
                     }
                     viewModel.updateScore(rightAnswer)
                 }
@@ -94,7 +94,7 @@ class ParonymAndFormationGame : Fragment() {
 
                     val state = it.state
                     val percentage = state.score / 5f * 100
-                    val userAnswer = state.answers.map {pair -> pair.second == pair.first }
+                    val userAnswer = state.answers.map { pair -> pair.second == pair.first }
 
                     Log.d(
                         "userAnswer",

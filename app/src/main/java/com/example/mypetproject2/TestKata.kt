@@ -1,6 +1,8 @@
 package com.example.mypetproject2
 
 import java.util.Locale
+import kotlin.math.max
+import kotlin.math.sqrt
 
 fun main() {
 //    val arr = intArrayOf(43, 1, 5, 1)
@@ -18,17 +20,19 @@ fun main() {
 //            )
 //        ).toList()
 //    )
+
+    print(("this is a string, invoke it!" + ("wow, I am the argument!")))
 //
 //    print(romanToInt("IV"))
 ////    print(persistence(999))
 //
 //    val st = "bsjq".map { it } == "qbsj".map { it }
-val st = "abc"
-    var s1 = arrayOf<String>("hoqq", "bbllkw", "oox", "ejjuyyy", "plmiis", "xxxzgpsssa", "xxwwkktt", "znnnnfqknaz", "qqquuhii", "dvvvwz")
-    st.reduce { acc, c -> acc + c.toInt() }
-    var s2 = arrayOf<String>("cccooommaaqqoxii", "gggqaffhhh", "tttoowwwmmww")
-    print(mxdiflg(s1, s2))
-
+    val st = "abcde"
+    val str = st.sumBy { it - 'a' + 1 }
+//    var s1 = arrayOf<String>("hoqq", "bbllkw", "oox", "ejjuyyy", "plmiis", "xxxzgpsssa", "xxwwkktt", "znnnnfqknaz", "qqquuhii", "dvvvwz")
+//    st.reduce { acc, c -> acc + c.toInt() }
+//    var s2 = arrayOf<String>("cccooommaaqqoxii", "gggqaffhhh", "tttoowwwmmww")
+    print(predictAge(65, 60, 75, 55, 60, 63, 64, 45))
 
 
 //    print(mirror("Hello world"))
@@ -46,8 +50,9 @@ val st = "abc"
 
 
 }
-fun mxdiflg(a1:Array<String>, a2:Array<String>):Int {
-        return Math.abs( a1.max().length - a2.max().length)
+
+fun mxdiflg(a1: Array<String>, a2: Array<String>): Int {
+    return Math.abs(a1.max().length - a2.max().length)
 }
 //fun computeDepth(n: Int): Int {
 //    var c = n
@@ -56,16 +61,17 @@ fun mxdiflg(a1:Array<String>, a2:Array<String>):Int {
 
 fun prevMultOfThree(n: Int): Int? {
     var count = n
-    while (n%3!=0) {
+    while (n % 3 != 0) {
         count -= count.toString().takeLast(1).toInt()
 
     }
-    if (count.toString().length == 1 && count%3!=0) {
+    if (count.toString().length == 1 && count % 3 != 0) {
         return null
     }
     return count
 }
-fun hero(bullets: Int, dragons: Int) = bullets/2 > dragons
+
+fun hero(bullets: Int, dragons: Int) = bullets / 2 > dragons
 
 fun reverseLetter(str: String) = str.replace(Regex("[A-Za-z]"), "").reversed()
 //fun wave(str: String): List<String> {
@@ -106,9 +112,10 @@ fun reverseLetter(str: String) = str.replace(Regex("[A-Za-z]"), "").reversed()
 fun mirror(text: String): String {
     val lines = text.split(" ")
     val length = lines.map { it.length }.max() ?: 0
-    val mirrored = lines.map{ "* " + it.reversed().padEnd(length, ' ') + " *"}
-    return mirrored.joinToString("\n","*".repeat(length + 4) + "\n","\n" + "*".repeat(length + 4))
+    val mirrored = lines.map { "* " + it.reversed().padEnd(length, ' ') + " *" }
+    return mirrored.joinToString("\n", "*".repeat(length + 4) + "\n", "\n" + "*".repeat(length + 4))
 }
+
 
 //fun persistence(num: Int) = generateSequence(num) {
 //    it.toString().map(Character::getNumericValue).reduce { mult, element -> mult * element }
@@ -118,7 +125,43 @@ fun containAllRots(strng: String, arr: ArrayList<String>): Boolean {
 }
 
 
+//fun high(str: String) : String {
+//    var st = ""
+//    val splitStr = str.split(" ")
+//
+////    for (i in splitStr) {
+////        when (i.max()) {
+////
+////        }
+////    }
+//    return splitStr.map { it.max()}.max()
+//}
 
+fun high(str: String): String {
+    return str.split(' ').maxBy { it.sumBy { it - 'a' + 1 } }!!
+}
+
+fun predictAge(
+    age1: Int,
+    age2: Int,
+    age3: Int,
+    age4: Int,
+    age5: Int,
+    age6: Int,
+    age7: Int,
+    age8: Int
+): Int {
+    val list = listOf(age1, age2, age3, age4, age5, age6, age7, age8)
+    val sum = list.sumOf { it * it }
+    return sqrt(sum.toDouble()).toInt() / 2
+}
+
+fun repeatStr(r: Int, str: String): String = str.repeat(r)
+
+
+fun litres(time: Double): Int {
+    return (time / 0.5).toInt()
+}
 
 fun romanToInt(s: String): Int {
     var count = 0

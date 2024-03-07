@@ -136,7 +136,7 @@ class ChooseWordFragment : Fragment() {
 
     private fun resetBackgroundState() {
         val defaultBackground =
-            ContextCompat.getDrawable(requireContext(), R.drawable.rectangle_111)
+            ContextCompat.getDrawable(requireContext(), R.drawable.rectangle_106)
         for (button in buttons()) {
             button.background = defaultBackground
         }

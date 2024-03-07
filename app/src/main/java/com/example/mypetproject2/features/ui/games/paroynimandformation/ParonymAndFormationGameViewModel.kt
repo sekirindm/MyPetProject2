@@ -38,7 +38,7 @@ class GameParonymViewModel(application: Application) : AndroidViewModel(applicat
         Log.d("updateScore", "_score.value ${_score.value} $isCorrect")
     }
 
-    fun initGame(pvParonym: PinView, list: List<Pair<String, String>>) {
+    fun initGame(list: List<Pair<String, String>>) {
         viewModelScope.launch {
             val listPair = list.random()
             var randomWord = listPair.first
@@ -48,15 +48,15 @@ class GameParonymViewModel(application: Application) : AndroidViewModel(applicat
                 randomWord = listPair.first
                 doesWordMeetCriteria = allWordsDao.doesWordMeetCriteria(randomWord)
             }
-                //TODO нужно вынести добавление первой пары в метод проверки ответа, что бы перове слово в пару добавлялось только после нажатия на кнопку проверить
-            val answerText = pvParonym.text.toString().takeIf { it.isNotEmpty() } ?: "default"
-            val answer = answerText to listPair.second
-            val answers = state.answers.toMutableList().apply {
+
+            val answer = randomWord to " "
+            val answers = state.answers.apply {
                 add(answer)
             }
             state = state.copy(answers = answers)
 
             allWordsDao.insertSmart(randomWord.replace("!", ""))
+
             state.answers.apply {
                 val last = last().copy(second = listPair.second)
                 set(lastIndex, last)
@@ -71,8 +71,11 @@ class GameParonymViewModel(application: Application) : AndroidViewModel(applicat
     fun checkAnswer(pvParonym: PinView) {
         viewModelScope.launch {
             val updateList = state.answers.apply {
-                val last = last().copy(second = last().second) // тут нужна та же пара, что и в initGame()
-//                Log.d("last().second", list.second)
+                val last = last().copy(
+                    second = last().second,
+                    first = pvParonym.text.toString()
+                ) // тут нужна та же пара, что и в initGame()
+                Log.d("last().second", last.first)
                 set(lastIndex, last)
             }
             val lastAnswer = state.answers.last()
@@ -89,11 +92,11 @@ class GameParonymViewModel(application: Application) : AndroidViewModel(applicat
 
     }
 
-    fun delay(pvParonym: PinView, list: List<Pair<String, String>>) {
+    fun delay(list: List<Pair<String, String>>) {
         viewModelScope.launch {
             kotlinx.coroutines.delay(1000)
             if (state.answers.size < GamesViewModel.MAX_ATTEMPTS)
-                initGame(pvParonym, list)
+                initGame(list)
             else
                 gameState.value = GameStateParonym.FinishGame(state)
         }

@@ -1,14 +1,13 @@
-package com.example.mypetproject2.features.ui.home
+package com.example.mypetproject2.features.ui.home.minigame
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.mypetproject2.data.baselist.multiList
 import com.example.mypetproject2.data.database.AppDatabase
 import com.example.mypetproject2.features.ui.games.State
-import com.example.mypetproject2.features.ui.games.spelling.spellingroot.GameStateRoot
-import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
 import kotlinx.coroutines.launch
 
 sealed class GameStateCard() {
@@ -27,13 +26,13 @@ class GameCardViewModel(application: Application) : AndroidViewModel(application
     val allWordsDao = AppDatabase.getInstance(application).allWordsDao()
 
     fun initGame() {
-        val list = multiList.toList()
-        val randomWord = list.random()
+        val list = multiList.random()
 
-        val modifiedWord = randomWord.replace(Regex("[А-Я]+"), "_")
-        val letters = randomWord.filter { it.isUpperCase() }.windowed(1).shuffled()
+        val modifiedWord = list.replace(Regex("[А-Я]+"), "_")
+        val letters = list.filter { it.isUpperCase() }.windowed(1).shuffled()
 
         gameState.postValue(GameStateCard.NewWord(modifiedWord, letters))
+        Log.i("GameCardViewModel", " $modifiedWord, $letters")
 
     }
 

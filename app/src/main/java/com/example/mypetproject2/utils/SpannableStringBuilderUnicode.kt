@@ -15,10 +15,17 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.example.mypetproject2.R
+import com.example.mypetproject2.data.baselist.listPunctuationGameFour
+import com.example.mypetproject2.data.baselist.listPunctuationGameTwo
 import com.example.mypetproject2.features.isSubUnicode
 import com.example.mypetproject2.features.ui.ui.NoUnderlineClickableSpan
 import java.lang.Exception
-
+fun main() {
+    val word = listPunctuationGameFour[15]
+    val startIndex = word.indexOf("|")
+    val endIndex =word.lastIndexOf(">")
+    print("$startIndex, ${endIndex  - 1}")
+}
 
 @SuppressLint("ResourceType")
 fun spannableStringBuilderUnicode(
@@ -80,16 +87,14 @@ fun spannableStringBuilderUnicode(
                 char + 1, // end
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
-            try {
                 if (startIndex != -1 && endIndex != -1) {
                     builder.setSpan(
                         StyleSpan(Typeface.BOLD),
                         startIndex,
-                        endIndex,
-                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+                        endIndex - 1,
+                        0
                     )
                 }
-            } catch (_: Exception) {}
 
         }
     }

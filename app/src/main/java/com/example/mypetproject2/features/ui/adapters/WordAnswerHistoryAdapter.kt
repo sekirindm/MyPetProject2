@@ -67,15 +67,21 @@ class WordAnswerHistoryAdapter(
 
         }
 
-        @SuppressLint("SetTextI18n")
+        //TODO Подсветка символов не работает из-за того что first an second типа toString()
         fun bind(wordPair: Pair<String, String>) {
             val formattedWordPair = formatWordPair(wordPair)
             val word = formattedWordPair.first.toString().take(23)
             val context = Job() + Dispatchers.Default
             val scope = CoroutineScope(context)
 
-            tvRightAnswer.text = word
-            tvAnswerUser.text = formattedWordPair.second.toString().take(23)
+            if (formattedWordPair.first.split(' ').size > 1) {
+                tvRightAnswer.text = word
+                tvAnswerUser.text = formattedWordPair.second.toString().take(23)
+            } else {
+                tvRightAnswer.text = formattedWordPair.first
+                tvAnswerUser.text = formattedWordPair.second
+            }
+
 
             if (formattedWordPair.first.length < 25) {
                 ivFull.visibility = GONE

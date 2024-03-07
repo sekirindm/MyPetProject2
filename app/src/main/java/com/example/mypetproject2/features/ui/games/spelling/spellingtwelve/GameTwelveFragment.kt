@@ -38,7 +38,6 @@ class GameTwelveFragment : Fragment() {
         setupTextViewClickListeners()
         setupOnBackPressedCallback()
 
-//       "сделать два метода, один для clicklisteners, другой для observer")
         return rootView
     }
 

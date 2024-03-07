@@ -100,20 +100,13 @@ fun stringBuilder(word: String): SpannableStringBuilder {
     val startIndex = word.indexOf("!")
     val endIndex = word.indexOf("!", startIndex + 1)
 
-
     val spannableStringBuilder = SpannableStringBuilder(word.replace("!", ""))
-    try {
         spannableStringBuilder.setSpan(
             StyleSpan(Typeface.BOLD),
             startIndex,
-            endIndex,
-            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            endIndex - 1,
+            0
         )
-
-    } catch (_: Exception) {
-    }
-
-
     return spannableStringBuilder
 
 }

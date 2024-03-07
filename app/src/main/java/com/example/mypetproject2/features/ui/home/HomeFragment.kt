@@ -1,8 +1,6 @@
 package com.example.mypetproject2.features.ui.home
 
 import android.os.Bundle
-import android.text.SpannableStringBuilder
-import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mypetproject2.databinding.FragmentHomeBinding
 import com.example.mypetproject2.features.ui.adapters.HomeAdapter
-import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
+import com.example.mypetproject2.features.ui.home.minigame.GameCardViewModel
 
 class HomeFragment : Fragment() {
 
@@ -21,6 +19,7 @@ class HomeFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var homeAdapter: HomeAdapter
+    private lateinit var viewModel: GameCardViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,7 +28,8 @@ class HomeFragment : Fragment() {
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         recyclerView = binding.rvHome
-        homeAdapter = HomeAdapter()
+        viewModel = ViewModelProvider(this)[GameCardViewModel::class.java]
+        homeAdapter = HomeAdapter(viewModel, viewLifecycleOwner)
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = homeAdapter
