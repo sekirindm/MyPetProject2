@@ -34,14 +34,13 @@ class GameFinishedFragment : Fragment() {
     ): View? {
         _binding = FragmentGameFinishedBinding.inflate(inflater, container, false)
         val rootView = binding.root
-
+        viewModel = ViewModelProvider(this)[GamesViewModel::class.java]
 
         score = arguments?.getInt("score") ?: 0
         percentage = arguments?.getFloat("percentage") ?: 0f
         answers = arguments?.getBooleanArray("answers")?.toList() ?: emptyList()
         gameType = arguments?.getString("gameType") ?: ""
         val answersHistory = (arguments?.getStringArray("uswerAnswerHistory") ?: arrayOf()).toList()
-        viewModel = ViewModelProvider(this)[GamesViewModel::class.java]
         val pair = when (gameType) {
             "stress" -> getPair(answersHistory)
             "spelling" -> getPairSpelling(answersHistory)

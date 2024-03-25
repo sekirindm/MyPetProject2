@@ -1,6 +1,7 @@
 package com.example.mypetproject2.features.ui.games.spelling.spellingsuffix
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -69,6 +70,8 @@ class SpellingSuffixFragment : Fragment() {
                 is GameStateSuffix.CheckedAnswer -> {
                     val lastAnswer = it.state.answers.last()
                     val isCorrect = lastAnswer.first == lastAnswer.second
+
+                    Log.i("TAGGGG", "is correct answer first: ${ lastAnswer.first }")
 
                     binding.bNextPage.isEnabled = false
                     binding.tvOne.isEnabled = false

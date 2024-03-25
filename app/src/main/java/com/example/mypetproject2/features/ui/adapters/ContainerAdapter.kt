@@ -164,20 +164,6 @@ class ContainerAdapter(
             tvReport.text = "Отчет"
         }
     }
-//    inner class StartNewGameViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-//
-//        private val bNewGame: Button = itemView.findViewById(R.id.b_restart_game)
-//
-//        fun bind() {
-//            bNewGame.setOnClickListener {
-//                val navController = itemView.findNavController()
-//                itemView.findNavController()
-//                    .navigate(R.id.action_gameFinishedFragment_to_navigation_dashboard)
-//                navController.popBackStack()
-//
-//            }
-//        }
-//}
 
     inner class WordAnswerHistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -185,11 +171,13 @@ class ContainerAdapter(
             itemView.findViewById(R.id.full_answer_history_rv)
 
         fun bind(answersHistory: List<Pair<String, String>>) {
-            val wordAnswerHistoryAdapter =
-                WordAnswerHistoryAdapter(answersHistory, viewModel, answers)
+            val wordAnswerHistoryAdapter = WordAnswerHistoryAdapter(answersHistory, viewModel, answers)
             rvWordHistoryAnswer.adapter = wordAnswerHistoryAdapter
-            rvWordHistoryAnswer.layoutManager =
-                LinearLayoutManager(itemView.context, LinearLayoutManager.VERTICAL, false)
+            rvWordHistoryAnswer.layoutManager = LinearLayoutManager(
+                itemView.context,
+                LinearLayoutManager.VERTICAL,
+                false
+            )
 
             val dividerDrawable =
                 ContextCompat.getDrawable(itemView.context, R.drawable.divider_drawable)

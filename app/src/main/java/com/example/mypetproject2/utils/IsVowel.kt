@@ -42,11 +42,7 @@ import java.util.*
  * 3.1
  *
  * */
-fun isSubUnicode(s: Char): Boolean {
-    val htmlText = "▢"
-    return s in htmlText
 
-}
 
 fun getPairSpelling(userAnswers: List<String>): List<Pair<String, String>> {
     val map = mutableListOf<Pair<String, String>>()

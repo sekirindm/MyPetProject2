@@ -12,6 +12,12 @@ import com.example.mypetproject2.features.ui.games.State
 import com.example.mypetproject2.features.ui.games.stress.GamesViewModel
 import kotlinx.coroutines.launch
 
+
+  fun main() {
+      var masha = "Маша"
+      masha += " я тебя люблю"
+      print(masha)
+  }
 sealed class GameState {
     data class NewWord(val word: String) : GameState()
 

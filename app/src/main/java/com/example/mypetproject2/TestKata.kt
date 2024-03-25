@@ -2,6 +2,7 @@ package com.example.mypetproject2
 
 import java.util.Locale
 import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.sqrt
 
 fun main() {
@@ -21,7 +22,7 @@ fun main() {
 //        ).toList()
 //    )
 
-    print(("this is a string, invoke it!" + ("wow, I am the argument!")))
+    print(("bitcoin take over the world maybe who knows perhaps"))
 //
 //    print(romanToInt("IV"))
 ////    print(persistence(999))
@@ -32,7 +33,7 @@ fun main() {
 //    var s1 = arrayOf<String>("hoqq", "bbllkw", "oox", "ejjuyyy", "plmiis", "xxxzgpsssa", "xxwwkktt", "znnnnfqknaz", "qqquuhii", "dvvvwz")
 //    st.reduce { acc, c -> acc + c.toInt() }
 //    var s2 = arrayOf<String>("cccooommaaqqoxii", "gggqaffhhh", "tttoowwwmmww")
-    print(predictAge(65, 60, 75, 55, 60, 63, 64, 45))
+//    print(predictAge(65, 60, 75, 55, 60, 63, 64, 45))
 
 
 //    print(mirror("Hello world"))
@@ -116,7 +117,7 @@ fun mirror(text: String): String {
     return mirrored.joinToString("\n", "*".repeat(length + 4) + "\n", "\n" + "*".repeat(length + 4))
 }
 
-
+operator fun kotlin.Int.Companion.invoke(s: String): Int = s.toInt()
 //fun persistence(num: Int) = generateSequence(num) {
 //    it.toString().map(Character::getNumericValue).reduce { mult, element -> mult * element }
 //}.takeWhile { it > 9 }.count()
@@ -138,8 +139,15 @@ fun containAllRots(strng: String, arr: ArrayList<String>): Boolean {
 //}
 
 fun high(str: String): String {
-    return str.split(' ').maxBy { it.sumBy { it - 'a' + 1 } }!!
+    return str.split(' ').maxBy { it.sumOf { it - 'a' + 1 } }!!
 }
+
+//fun findShort(s: String):Int  {
+//
+//    return s.split(" ").minByOrNull { it.count() }!!.count()
+//}
+
+fun findShort(s: String): Int = s.split(" ").minOf{it}.count()
 
 fun predictAge(
     age1: Int,
