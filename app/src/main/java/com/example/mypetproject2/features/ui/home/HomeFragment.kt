@@ -22,8 +22,16 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var homeAdapter: HomeAdapter
     private lateinit var viewModel: GameCardViewModel
+
+    //при нажатии на кнопку добавить вариант ответа в checkWord
+    private var homeAdapter: HomeAdapter = HomeAdapter { text, bText ->
+        Log.i("homeAdapter", "$text $bText}")
+        val userAnswer = text.replace("_", bText)
+        Log.i("text", " $userAnswer")
+        viewModel.checkWord(userAnswer)
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,17 +41,8 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         initializeViewModel()
-        initGame()
-
         initObserve()
-        //при нажатии на кнопку добавить вариант ответа в checkWord
-        homeAdapter = HomeAdapter { text, bNumber ->
-            Log.i("homeAdapter", "$text $bNumber}")
-            val r = text.replace("_", bNumber)
-            Log.i("text", " $r")
-            viewModel.checkWord(r)
-
-        }
+        initGame()
 
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = homeAdapter
@@ -55,11 +54,11 @@ class HomeFragment : Fragment() {
         viewModel.gameState.observe(viewLifecycleOwner) {
             when (it) {
                 is GameStateCard.NewWord -> {
-                    submitMiniGame(it.word, it.letters)
+                    submitMiniGame(it.miniGame)
                 }
                 is GameStateCard.CheckedAnswer -> {
-                    val answer = it.state.answers.last()
-                        Log.i("text", "${answer.first}, ${answer.second}")
+                    submitMiniGame(it.miniGame)
+                        Log.i("text", "${it.miniGame}")
                     viewModel.delay()
 
             }
@@ -80,17 +79,19 @@ class HomeFragment : Fragment() {
     private fun initGame() {
         viewModel.initGame()
     }
-    private fun submitMiniGame(word: String, letters: List<String>) {
+
+    private fun submitMiniGame(miniGame: MiniGame) {
 //        viewModel.updateScreen.observe(viewLifecycleOwner) {
 //            homeAdapter.submitList(it)
 //        }
-        val submitList = listOf(HomeItemsList.HomeMiniGame(MiniGame(word, letters, false)))
+        val submitList = listOf(HomeItemsList.HomeMiniGame(miniGame))
         homeAdapter.submitList(submitList)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        Log.i("onDestroyView", "крах")
     }
 }
 

@@ -5,6 +5,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
@@ -61,6 +62,7 @@ class HomeAdapter(
         val tvWord: TextView = itemView.findViewById(R.id.tv_word_item)
         private val b1: Button = itemView.findViewById(R.id.b_1_item)
         private val b2: Button = itemView.findViewById(R.id.b_2_item)
+        private val bContainer: LinearLayout = itemView.findViewById(R.id.b_container)
 
         //При нажатии на одну из этих кнопок срабатывает лямбда, куда мы отправляем tvWord и b1, b2
         init {
@@ -72,10 +74,15 @@ class HomeAdapter(
         // в b1 и b2 вставляем рандомные варианты ответа
 
         fun bind(miniGame: MiniGame) {
-            tvWord.text = miniGame.word
+            tvWord.text = when(miniGame.rightAnswer) {
+                true -> listOf("Правильно!","Молодец!","Отлично!").random()
+                false -> listOf("Не правильно:(","Попробуй ещё!","Неудача!").random()
+                else -> miniGame.word
+            }
+            bContainer.isVisible = miniGame.rightAnswer == null
             b1.text = miniGame.letters[0]
             b2.text = miniGame.letters[1]
-            
+
         }
 
     }

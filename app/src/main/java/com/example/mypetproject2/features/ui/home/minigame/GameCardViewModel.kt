@@ -23,9 +23,9 @@ fun main() {
 }
 
 sealed class GameStateCard() {
-    data class NewWord(val word: String, val letters: List<String>) : GameStateCard()
+    data class NewWord(val miniGame: MiniGame) : GameStateCard()
 
-    data class CheckedAnswer(val state: State) : GameStateCard()
+    data class CheckedAnswer(val miniGame: MiniGame) : GameStateCard()
 
 
     data class FinishGame(val state: State) : GameStateCard()
@@ -36,10 +36,11 @@ class GameCardViewModel(application: Application) : AndroidViewModel(application
 
 
     private val _updateScreen = MutableLiveData<List<HomeItemsList>>()
-     val updateScreen: LiveData<List<HomeItemsList>> get() = _updateScreen
+    val updateScreen: LiveData<List<HomeItemsList>> get() = _updateScreen
 
     var state = State(0)
 
+    private var miniGame = MiniGame("", emptyList(), null)
     val gameState = MutableLiveData<GameStateCard>()
     val allWordsDao = AppDatabase.getInstance(application).allWordsDao()
 
@@ -53,9 +54,11 @@ class GameCardViewModel(application: Application) : AndroidViewModel(application
 
         val letters = list.filter { it.isUpperCase() }.windowed(1).shuffled()
 
-        val lettersFilter = when(upperLetters) {
+        val lettersFilter = when (upperLetters) {
             'Н' -> listOf("Н", "НН")
-            else -> {letters}
+            else -> {
+                letters
+            }
         }
 
         val rightAnswer = transformWord(list)
@@ -65,8 +68,8 @@ class GameCardViewModel(application: Application) : AndroidViewModel(application
         }
         state = state.copy(answers = answers)
         Log.d("first", "$answer")
-
-        gameState.postValue(GameStateCard.NewWord(modifiedWord, lettersFilter))
+        miniGame = MiniGame(modifiedWord, lettersFilter, null)
+        gameState.postValue(GameStateCard.NewWord(miniGame))
         Log.i("GameCardViewModel", " $modifiedWord, $letters")
 
     }
@@ -78,27 +81,26 @@ class GameCardViewModel(application: Application) : AndroidViewModel(application
         }
         state = state.copy(answers = updatedList)
 
-        gameState.postValue(GameStateCard.CheckedAnswer(state))
+        val lastAnswer = state.answers.last()
+        val isCorrect = lastAnswer.first == lastAnswer.second
+
+        gameState.postValue(GameStateCard.CheckedAnswer(miniGame.copy(rightAnswer = isCorrect)))
     }
 
     fun delay() {
         viewModelScope.launch {
-
             kotlinx.coroutines.delay(3000)
-            if (state.answers.size < 3) {
+            if (state.answers.size < 10) {
                 initGame()
             } else {
                 gameState.value = GameStateCard.FinishGame(state)
             }
-
         }
-
     }
 
-    fun updateScreen(word: String, letters: List<String>, rightAnswer: Boolean) {
+    fun updateScreen(miniGame: MiniGame) {
         _updateScreen.value = listOf(
-            HomeItemsList.HomeMiniGame(MiniGame(word, letters, rightAnswer))
+            HomeItemsList.HomeMiniGame(miniGame)
         )
     }
-
 }
